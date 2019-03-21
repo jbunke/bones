@@ -1,0 +1,11 @@
+#ignore generated binary files and auto-generated ANTLR code
+bin
+src/antlr
+out
+.idea/
+
+#ignore Java class files
+*.class
+.classpath
+.project
+*.iml

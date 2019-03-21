@@ -1,0 +1,17 @@
+package structural_representation.atoms.types.primitives;
+
+import structural_representation.atoms.types.BonesType;
+
+public class IntType extends BonesType {
+  public IntType() {}
+
+  @Override
+  public boolean equals(Object obj) {
+    return obj instanceof IntType;
+  }
+
+  @Override
+  public String toString() {
+    return "int";
+  }
+}
