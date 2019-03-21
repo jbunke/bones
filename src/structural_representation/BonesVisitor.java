@@ -4,6 +4,7 @@ import antlr.BonesParser;
 import antlr.BonesParserBaseVisitor;
 import structural_representation.atoms.Atom;
 import structural_representation.atoms.expressions.BinaryOperationAtom;
+import structural_representation.atoms.expressions.FunctionCallAtom;
 import structural_representation.atoms.expressions.UnaryOperationAtom;
 import structural_representation.atoms.expressions.assignables.ArrayElemAtom;
 import structural_representation.atoms.expressions.assignables.AssignableAtom;
@@ -258,6 +259,19 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
   @Override
   public Atom visitINT_EXPR(BonesParser.INT_EXPRContext ctx) {
     return visitInt_literal(ctx.int_literal());
+  }
+
+  @Override
+  public Atom visitFUNCTION_CALL_EXPR(BonesParser.FUNCTION_CALL_EXPRContext ctx) {
+    // TODO: temp fix - last part of method path
+    String name = ctx.ident(ctx.ident().size() - 1).
+            IDENTIFIER().getSymbol().getText();
+
+    List<ExpressionAtom> expressions = new ArrayList<>();
+
+    ctx.expr().forEach(x -> expressions.add((ExpressionAtom) visit(x)));
+
+    return new FunctionCallAtom(name, expressions);
   }
 
   @Override

@@ -42,4 +42,8 @@ public class FunctionAtom extends Atom implements Symbol {
   public BonesType getType() {
     return returnType;
   }
+
+  public ParamListAtom getParamList() {
+    return paramList;
+  }
 }

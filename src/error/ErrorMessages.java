@@ -69,4 +69,13 @@ public class ErrorMessages {
   public static String identifierIsNotAVariable(String var) {
     return "Identifier \"" + var + "\" is not a variable";
   }
+
+  public static String identifierIsNotAFunction(String func) {
+    return "Identifier \"" + func + "\" is not a function in this context";
+  }
+
+  public static String parameterArgumentAmount() {
+    return "Number of function call arguments does not match " +
+            "function parameters for this function";
+  }
 }

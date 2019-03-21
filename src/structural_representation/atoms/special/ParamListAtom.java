@@ -18,4 +18,8 @@ public class ParamListAtom extends Atom {
                                  BonesErrorListener errorListener) {
     params.forEach(x -> x.semanticErrorCheck(symbolTable, errorListener));
   }
+
+  public List<ParamAtom> getParams() {
+    return params;
+  }
 }

@@ -56,7 +56,8 @@ public class BinaryOperationAtom extends ExpressionAtom {
                   expectedTypeButExpressionIs(
                           "Index operand", new IntType(), rtype));
         }
-        if (!(ltype instanceof ListType) && !(rtype instanceof ArrayType)) {
+        if (!(ltype instanceof ListType) && !(ltype instanceof ArrayType) &&
+                !(ltype instanceof StringType)) {
           errorListener.semanticError(ErrorMessages.
                   calledAtIndexOnNonCollection());
         }

@@ -70,6 +70,7 @@ WHILE: 'while';
 TRUE: 'true';
 FALSE: 'false';
 RETURN: 'return';
+CALL: 'call';
 
 // numbers
 fragment DIGIT: '0'..'9';

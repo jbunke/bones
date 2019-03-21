@@ -22,4 +22,8 @@ public class ParamAtom extends Atom {
     type.semanticErrorCheck(symbolTable, errorListener);
     symbolTable.update(ident.toString(), new Variable(type));
   }
+
+  public BonesType getType() {
+    return type;
+  }
 }

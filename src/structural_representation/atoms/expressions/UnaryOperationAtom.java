@@ -5,10 +5,7 @@ import error.ErrorMessages;
 import structural_representation.atoms.types.BonesType;
 import structural_representation.atoms.types.collections.ArrayType;
 import structural_representation.atoms.types.collections.ListType;
-import structural_representation.atoms.types.primitives.BoolType;
-import structural_representation.atoms.types.primitives.FloatType;
-import structural_representation.atoms.types.primitives.IntType;
-import structural_representation.atoms.types.primitives.VoidType;
+import structural_representation.atoms.types.primitives.*;
 import structural_representation.symbol_table.SymbolTable;
 
 public class UnaryOperationAtom extends ExpressionAtom {
@@ -33,7 +30,8 @@ public class UnaryOperationAtom extends ExpressionAtom {
         break;
       case SIZE:
         if (!(expr.getType(symbolTable) instanceof ListType) &&
-                !(expr.getType(symbolTable) instanceof ArrayType)) {
+                !(expr.getType(symbolTable) instanceof ArrayType) &&
+                !(expr.getType(symbolTable) instanceof StringType)) {
           errorListener.semanticError(
                   ErrorMessages.calledSizeOnNonCollection());
         }
