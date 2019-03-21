@@ -1,7 +1,12 @@
 package structural_representation.atoms.expressions;
 
+import error.BonesErrorListener;
+import error.ErrorMessages;
 import structural_representation.atoms.types.BonesType;
+import structural_representation.atoms.types.collections.ArrayType;
+import structural_representation.atoms.types.collections.ListType;
 import structural_representation.atoms.types.primitives.BoolType;
+import structural_representation.atoms.types.primitives.FloatType;
 import structural_representation.atoms.types.primitives.IntType;
 import structural_representation.atoms.types.primitives.VoidType;
 import structural_representation.symbol_table.SymbolTable;
@@ -13,6 +18,36 @@ public class UnaryOperationAtom extends ExpressionAtom {
   public UnaryOperationAtom(ExpressionAtom expr, String opString) {
     this.expr = expr;
     operator = operatorFromString(opString);
+  }
+
+  @Override
+  public void semanticErrorCheck(SymbolTable symbolTable,
+                                 BonesErrorListener errorListener) {
+    switch (operator) {
+      case NOT:
+        if (!expr.getType(symbolTable).equals(new BoolType())) {
+          errorListener.semanticError(ErrorMessages.
+                  expectedTypeButExpressionIs("Not operation",
+                          new BoolType(), expr.getType(symbolTable)));
+        }
+        break;
+      case SIZE:
+        if (!(expr.getType(symbolTable) instanceof ListType) &&
+                !(expr.getType(symbolTable) instanceof ArrayType)) {
+          errorListener.semanticError(
+                  ErrorMessages.calledSizeOnNonCollection());
+        }
+        break;
+      case MINUS:
+        if (!(expr.getType(symbolTable) instanceof IntType) &&
+                !(expr.getType(symbolTable) instanceof FloatType)) {
+          errorListener.semanticError(
+                  ErrorMessages.calledMinusOnNonNumeric());
+        }
+        break;
+    }
+
+    expr.semanticErrorCheck(symbolTable, errorListener);
   }
 
   private enum Operator {

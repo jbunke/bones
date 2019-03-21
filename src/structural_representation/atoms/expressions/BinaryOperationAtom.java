@@ -1,6 +1,10 @@
 package structural_representation.atoms.expressions;
 
+import error.BonesErrorListener;
+import error.ErrorMessages;
 import structural_representation.atoms.types.BonesType;
+import structural_representation.atoms.types.collections.ArrayType;
+import structural_representation.atoms.types.collections.ListType;
 import structural_representation.atoms.types.primitives.*;
 import structural_representation.symbol_table.SymbolTable;
 
@@ -8,12 +12,76 @@ public class BinaryOperationAtom extends ExpressionAtom {
   private final ExpressionAtom LHS;
   private final ExpressionAtom RHS;
   private final Operator operator;
+  private final String opString;
 
   public BinaryOperationAtom(ExpressionAtom lhs, ExpressionAtom rhs,
                              String opString) {
     LHS = lhs;
     RHS = rhs;
+    this.opString = opString;
     operator = operatorFromString(opString);
+  }
+
+  @Override
+  public void semanticErrorCheck(SymbolTable symbolTable,
+                                 BonesErrorListener errorListener) {
+    final BonesType ltype = LHS.getType(symbolTable);
+    final BonesType rtype = RHS.getType(symbolTable);
+
+    switch (operator) {
+      case RAISE:
+      case TIMES:
+      case DIVIDE:
+      case MOD:
+      case PLUS:
+      case MINUS:
+      case GT:
+      case LT:
+      case GEQ:
+      case LEQ:
+        if (!isNumeric(ltype)) {
+          errorListener.semanticError(ErrorMessages.
+                  expectedTypeButExpressionIs("Operation \"" +
+                                  opString + "\"", new IntType(), ltype));
+        }
+        if (!isNumeric(rtype)) {
+          errorListener.semanticError(ErrorMessages.
+                  expectedTypeButExpressionIs("Operation \"" +
+                                  opString + "\"", new IntType(), rtype));
+        }
+        break;
+      case AT_INDEX:
+        if (!rtype.equals(new IntType())) {
+          errorListener.semanticError(ErrorMessages.
+                  expectedTypeButExpressionIs(
+                          "Index operand", new IntType(), rtype));
+        }
+        if (!(ltype instanceof ListType) && !(rtype instanceof ArrayType)) {
+          errorListener.semanticError(ErrorMessages.
+                  calledAtIndexOnNonCollection());
+        }
+        break;
+      case OR:
+      case AND:
+        if (!ltype.equals(new BoolType())) {
+          errorListener.semanticError(ErrorMessages.
+                  expectedTypeButExpressionIs("Operation \"" +
+                          opString + "\"", new BoolType(), ltype));
+        }
+        if (!rtype.equals(new BoolType())) {
+          errorListener.semanticError(ErrorMessages.
+                  expectedTypeButExpressionIs("Operation \"" +
+                          opString + "\"", new BoolType(), rtype));
+        }
+        break;
+    }
+
+    LHS.semanticErrorCheck(symbolTable, errorListener);
+    RHS.semanticErrorCheck(symbolTable, errorListener);
+  }
+
+  private static boolean isNumeric(BonesType type) {
+    return type.equals(new IntType()) || type.equals(new FloatType());
   }
 
   private enum Operator {

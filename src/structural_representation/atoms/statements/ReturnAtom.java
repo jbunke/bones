@@ -23,7 +23,7 @@ public class ReturnAtom extends StatementAtom {
   public void semanticErrorCheck(SymbolTable symbolTable,
                                  BonesErrorListener errorListener) {
     BonesType actualType = expression.getType(symbolTable);
-    if (expectedReturnType != actualType) {
+    if (!expectedReturnType.equals(actualType)) {
       errorListener.semanticError(
               ErrorMessages.expectedTypeButExpressionIs("Return",
                       expectedReturnType, actualType));

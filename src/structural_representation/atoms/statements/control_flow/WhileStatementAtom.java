@@ -23,9 +23,7 @@ public class WhileStatementAtom extends StatementAtom {
 
   @Override
   public void returnTypeSet(BonesType returnType) {
-    for (StatementAtom statement : body) {
-      statement.returnTypeSet(returnType);
-    }
+    body.forEach(x -> x.returnTypeSet(returnType));
   }
 
   @Override
@@ -36,8 +34,6 @@ public class WhileStatementAtom extends StatementAtom {
       errorListener.semanticError(ErrorMessages.conditionIsNotBoolean());
     }
 
-    for (StatementAtom statement : body) {
-      statement.semanticErrorCheck(localTable, errorListener);
-    }
+    body.forEach(x -> x.semanticErrorCheck(localTable, errorListener));
   }
 }

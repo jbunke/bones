@@ -1,7 +1,14 @@
 package structural_representation.atoms.expressions.assignables;
 
+import error.BonesErrorListener;
+import error.ErrorMessages;
 import structural_representation.atoms.types.BonesType;
+import structural_representation.atoms.types.collections.ArrayType;
+import structural_representation.atoms.types.collections.ListType;
+import structural_representation.atoms.types.primitives.VoidType;
+import structural_representation.symbol_table.Symbol;
 import structural_representation.symbol_table.SymbolTable;
+import structural_representation.symbol_table.Variable;
 
 import java.util.List;
 
@@ -16,6 +23,35 @@ public class ArrayElemAtom extends AssignableAtom {
 
   @Override
   public BonesType getType(SymbolTable table) {
-    return null;
+    if (indices == null || indices.size() == 0) {
+      return new VoidType();
+    }
+
+    Symbol symbol = table.get(identifier);
+    Variable variable = (Variable) symbol;
+
+    BonesType type = variable.getType();
+    for (int i = 0; i < indices.size(); i++) {
+      if (type instanceof ArrayType) {
+        type = ((ArrayType) type).getElementType();
+      } else if (type instanceof ListType) {
+        type = ((ListType) type).getElementType();
+      } else {
+        break;
+      }
+    }
+    return type;
+  }
+
+  @Override
+  public void semanticErrorCheck(SymbolTable symbolTable,
+                                 BonesErrorListener errorListener) {
+    Symbol symbol = symbolTable.get(identifier);
+    Variable variable = (Variable) symbol;
+
+    if (!(variable.getType() instanceof ArrayType)) {
+      errorListener.semanticError(ErrorMessages.
+              variableIsNotArrayInThisContext(identifier));
+    }
   }
 }

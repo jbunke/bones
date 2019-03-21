@@ -30,11 +30,10 @@ public class IfStatementAtom extends StatementAtom {
 
   @Override
   public void returnTypeSet(BonesType returnType) {
-    for (List<StatementAtom> body : bodies) {
-      for (StatementAtom statement : body) {
-        statement.returnTypeSet(returnType);
-      }
-    }
+    bodies.forEach(
+            body -> body.forEach(
+                    x -> x.returnTypeSet(returnType))
+    );
   }
 
   @Override
@@ -47,10 +46,9 @@ public class IfStatementAtom extends StatementAtom {
       }
     }
 
-    for (List<StatementAtom> body : bodies) {
-      for (StatementAtom statement : body) {
-        statement.semanticErrorCheck(localTable, errorListener);
-      }
-    }
+    bodies.forEach(
+            body -> body.forEach(
+                    x -> x.semanticErrorCheck(localTable, errorListener))
+    );
   }
 }

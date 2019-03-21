@@ -1,5 +1,6 @@
 package structural_representation.atoms.expressions.literals;
 
+import error.BonesErrorListener;
 import structural_representation.atoms.expressions.ExpressionAtom;
 import structural_representation.atoms.types.BonesType;
 import structural_representation.atoms.types.primitives.FloatType;
@@ -15,5 +16,11 @@ public class FloatLiteralAtom extends ExpressionAtom {
   @Override
   public BonesType getType(SymbolTable table) {
     return new FloatType();
+  }
+
+  @Override
+  public void semanticErrorCheck(SymbolTable symbolTable,
+                                 BonesErrorListener errorListener) {
+
   }
 }

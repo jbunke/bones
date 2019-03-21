@@ -29,9 +29,7 @@ public class ForEachStatementAtom extends StatementAtom {
 
   @Override
   public void returnTypeSet(BonesType returnType) {
-    for (StatementAtom statement : body) {
-      statement.returnTypeSet(returnType);
-    }
+    body.forEach(x -> x.returnTypeSet(returnType));
   }
 
   @Override
@@ -61,8 +59,6 @@ public class ForEachStatementAtom extends StatementAtom {
 
     // TODO: Ensure collection is not modified inside code block
 
-    for (StatementAtom statement : body) {
-      statement.semanticErrorCheck(localTable, errorListener);
-    }
+    body.forEach(x -> x.semanticErrorCheck(localTable, errorListener));
   }
 }

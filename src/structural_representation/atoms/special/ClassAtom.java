@@ -1,12 +1,16 @@
 package structural_representation.atoms.special;
 
+import error.BonesErrorListener;
 import structural_representation.atoms.Atom;
 import structural_representation.atoms.expressions.assignables.IdentifierAtom;
 import structural_representation.atoms.statements.DeclarationAtom;
+import structural_representation.atoms.types.BonesType;
+import structural_representation.symbol_table.Symbol;
+import structural_representation.symbol_table.SymbolTable;
 
 import java.util.List;
 
-public class ClassAtom extends Atom {
+public class ClassAtom extends BonesType implements Symbol {
   private final PathAtom path;
   private final List<ImportAtom> imports;
   private final IdentifierAtom className;
@@ -21,5 +25,20 @@ public class ClassAtom extends Atom {
     this.className = className;
     this.fields = fields;
     this.functions = functions;
+  }
+
+  @Override
+  public void semanticErrorCheck(SymbolTable symbolTable,
+                                 BonesErrorListener errorListener) {
+    path.semanticErrorCheck(symbolTable, errorListener);
+    imports.forEach(x -> x.semanticErrorCheck(symbolTable, errorListener));
+
+    fields.forEach(x -> x.semanticErrorCheck(symbolTable, errorListener));
+    functions.forEach(x -> x.semanticErrorCheck(symbolTable, errorListener));
+  }
+
+  @Override
+  public BonesType getType() {
+    return this;
   }
 }

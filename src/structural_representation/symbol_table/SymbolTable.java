@@ -31,4 +31,13 @@ public class SymbolTable {
   public boolean tableContainsKeyInScope(String key) {
     return contents.containsKey(key);
   }
+
+  public Symbol get(String key) {
+    if (contents.containsKey(key)) {
+      return contents.get(key);
+    } else if (parent != null) {
+      return parent.get(key);
+    }
+    return null;
+  }
 }

@@ -1,5 +1,6 @@
 package structural_representation.atoms.expressions.literals;
 
+import error.BonesErrorListener;
 import structural_representation.atoms.expressions.ExpressionAtom;
 import structural_representation.atoms.types.BonesType;
 import structural_representation.atoms.types.primitives.BoolType;
@@ -15,5 +16,11 @@ public class BoolLiteralAtom extends ExpressionAtom {
   @Override
   public BonesType getType(SymbolTable table) {
     return new BoolType();
+  }
+
+  @Override
+  public void semanticErrorCheck(SymbolTable symbolTable,
+                                 BonesErrorListener errorListener) {
+
   }
 }

@@ -25,4 +25,48 @@ public class ErrorMessages {
   public static String foreachNotUsedWithCollection() {
     return "For each code block used without a collection";
   }
+
+  public static String sideEffectOperatorAssignable(String operator,
+                                                    BonesType assignableType) {
+    return "Assignment operator " + operator +
+            " not compatible with assignable of type " + assignableType;
+  }
+
+  public static String sideEffectOperatorOperand(String operator,
+                                                    BonesType operandType) {
+    return "Assignment operator " + operator +
+            " not compatible with operand of type " + operandType;
+  }
+
+  public static String attemptedToUseVoidType() {
+    return "Attempted to use void type other than as return type placeholder";
+  }
+
+  public static String calledSizeOnNonCollection() {
+    return "Attempted to call size (#) operator on non-collection expression";
+  }
+
+  public static String calledMinusOnNonNumeric() {
+    return "Attempted to call minus operator on non-numeric expression";
+  }
+
+  public static String calledAtIndexOnNonCollection() {
+    return "Attempted to call at index (@) operator on non-collection expression";
+  }
+
+  public static String variableIsNotListInThisContext(String var) {
+    return "Variable \"" + var + "\" is not a list in this context";
+  }
+
+  public static String variableIsNotArrayInThisContext(String var) {
+    return "Variable \"" + var + "\" is not an array in this context";
+  }
+
+  public static String variableHasNotBeenDeclared(String var) {
+    return "Variable \"" + var + "\" has not been declared";
+  }
+
+  public static String identifierIsNotAVariable(String var) {
+    return "Identifier \"" + var + "\" is not a variable";
+  }
 }

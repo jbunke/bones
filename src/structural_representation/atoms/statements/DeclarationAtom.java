@@ -18,6 +18,8 @@ public class DeclarationAtom extends StatementAtom {
   @Override
   public void semanticErrorCheck(SymbolTable symbolTable,
                                  BonesErrorListener errorListener) {
+    type.semanticErrorCheck(symbolTable, errorListener);
+
     if (symbolTable.tableContainsKeyInScope(ident.toString())) {
       errorListener.semanticError(
               ErrorMessages.alreadyDeclaredInScope(ident.toString()));

@@ -5,6 +5,7 @@ import antlr.BonesParserBaseVisitor;
 import structural_representation.atoms.Atom;
 import structural_representation.atoms.expressions.BinaryOperationAtom;
 import structural_representation.atoms.expressions.UnaryOperationAtom;
+import structural_representation.atoms.expressions.assignables.ArrayElemAtom;
 import structural_representation.atoms.expressions.assignables.AssignableAtom;
 import structural_representation.atoms.expressions.assignables.ListElemAtom;
 import structural_representation.atoms.expressions.literals.*;
@@ -343,7 +344,7 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
       indices.add(index);
     }
 
-    return new ListElemAtom(identifier, indices);
+    return new ArrayElemAtom(identifier, indices);
   }
 
   @Override

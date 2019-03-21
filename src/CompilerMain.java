@@ -44,9 +44,8 @@ public class CompilerMain {
 
       SymbolTable rootTable = new SymbolTable(structure, null);
 
-      /* TODO: SEMANTIC ERROR CHECK */
-
       /* SEMANTIC ERROR CHECK */
+      structure.semanticErrorCheck(rootTable, errorListener);
       printErrorsAndExit(errorListener);
 
       System.out.println("DONE");
