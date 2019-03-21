@@ -1,7 +1,12 @@
 package structural_representation.atoms.statements.control_flow;
 
+import error.BonesErrorListener;
+import error.ErrorMessages;
 import structural_representation.atoms.expressions.ExpressionAtom;
 import structural_representation.atoms.statements.StatementAtom;
+import structural_representation.atoms.types.BonesType;
+import structural_representation.atoms.types.primitives.BoolType;
+import structural_representation.symbol_table.SymbolTable;
 
 import java.util.List;
 
@@ -21,5 +26,31 @@ public class IfStatementAtom extends StatementAtom {
     this.bodies = bodies;
 
     hasElse = conditions.size() < bodies.size();
+  }
+
+  @Override
+  public void returnTypeSet(BonesType returnType) {
+    for (List<StatementAtom> body : bodies) {
+      for (StatementAtom statement : body) {
+        statement.returnTypeSet(returnType);
+      }
+    }
+  }
+
+  @Override
+  public void semanticErrorCheck(SymbolTable symbolTable,
+                                 BonesErrorListener errorListener) {
+    SymbolTable localTable = new SymbolTable(this, symbolTable);
+    for (ExpressionAtom condition : conditions) {
+      if (!condition.getType(localTable).equals(new BoolType())) {
+        errorListener.semanticError(ErrorMessages.conditionIsNotBoolean());
+      }
+    }
+
+    for (List<StatementAtom> body : bodies) {
+      for (StatementAtom statement : body) {
+        statement.semanticErrorCheck(localTable, errorListener);
+      }
+    }
   }
 }
