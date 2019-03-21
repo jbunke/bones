@@ -555,6 +555,31 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
 
   @Override
   public Atom visitClass_rule(BonesParser.Class_ruleContext ctx) {
-    return null;
+    PathAtom path = (PathAtom) visitPath(ctx.path());
+
+    List<ImportAtom> imports = new ArrayList<>();
+
+    for (BonesParser.Import_statContext importContext : ctx.import_stat()) {
+      ImportAtom imp = (ImportAtom) visitImport_stat(importContext);
+      imports.add(imp);
+    }
+
+    IdentifierAtom className = (IdentifierAtom) visitIdent(ctx.ident());
+
+    List<DeclarationAtom> fields = new ArrayList<>();
+
+    for (BonesParser.FieldContext fieldContext : ctx.field()) {
+      DeclarationAtom field = (DeclarationAtom) visit(fieldContext);
+      fields.add(field);
+    }
+
+    List<FunctionAtom> functions = new ArrayList<>();
+
+    for (BonesParser.FunctContext functContext : ctx.funct()) {
+      FunctionAtom function = (FunctionAtom) visitFunct(functContext);
+      functions.add(function);
+    }
+
+    return new ClassAtom(path, imports, className, fields, functions);
   }
 }
