@@ -152,7 +152,7 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     String name = ctx.ident().IDENTIFIER().getSymbol().getText();
 
     ParamListAtom paramList = null;
-    if (!ctx.param_list().isEmpty())
+    if (ctx.param_list() != null)
       paramList = (ParamListAtom) visitParam_list(ctx.param_list());
 
     List<StatementAtom> statements = new ArrayList<>();
