@@ -20,10 +20,15 @@ public class StandardAssignmentAtom extends AssignmentAtom {
   public void semanticErrorCheck(SymbolTable symbolTable,
                                  BonesErrorListener errorListener) {
     BonesType rhsType = RHS.getType(symbolTable);
-    if (assignable.getType(symbolTable) != rhsType) {
+    if (!assignable.getType(symbolTable).equals(rhsType)) {
       errorListener.semanticError(ErrorMessages.
               expectedTypeButExpressionIs("Assignment",
                       assignable.getType(symbolTable), rhsType));
     }
+  }
+
+  @Override
+  public String toString() {
+    return assignable.toString() + " = " + RHS.toString() + ";";
   }
 }

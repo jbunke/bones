@@ -26,4 +26,9 @@ public class ParamAtom extends Atom {
   public BonesType getType() {
     return type;
   }
+
+  @Override
+  public String toString() {
+    return type.toString() + " " + ident.toString();
+  }
 }

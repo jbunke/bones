@@ -48,4 +48,26 @@ public class ForStatementAtom extends StatementAtom {
 
     body.forEach(x -> x.semanticErrorCheck(localTable, errorListener));
   }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+
+    sb.append("for (");
+    sb.append(initialisation.toString());
+    sb.append("; ");
+    sb.append(loopCondition.toString());
+    sb.append("; ");
+    sb.append(incrementation.toString());
+    sb.append(") {\n");
+
+    body.forEach(x -> {
+      sb.append("\t");
+      sb.append(x.toString());
+      sb.append("\n");
+    });
+    sb.append("}");
+
+    return sb.toString();
+  }
 }

@@ -51,4 +51,30 @@ public class IfStatementAtom extends StatementAtom {
                     x -> x.semanticErrorCheck(localTable, errorListener))
     );
   }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+
+    for (int i = 0; i < bodies.size(); i++) {
+      if (i > 0) sb.append("else ");
+
+      if (i < conditions.size()) {
+        sb.append("if (");
+        sb.append(conditions.get(i));
+        sb.append(") ");
+      }
+
+      sb.append("{\n");
+
+      bodies.get(i).forEach(x -> {
+        sb.append("\t");
+        sb.append(x.toString());
+        sb.append("\n");
+      });
+      sb.append("} ");
+    }
+
+    return sb.toString();
+  }
 }

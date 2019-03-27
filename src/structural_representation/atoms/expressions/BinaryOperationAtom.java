@@ -181,4 +181,9 @@ public class BinaryOperationAtom extends ExpressionAtom {
         return new VoidType();
     }
   }
+
+  @Override
+  public String toString() {
+    return LHS.toString() + " " + opString + " " + RHS.toString();
+  }
 }

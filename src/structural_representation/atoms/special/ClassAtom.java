@@ -1,7 +1,6 @@
 package structural_representation.atoms.special;
 
 import error.BonesErrorListener;
-import structural_representation.atoms.Atom;
 import structural_representation.atoms.expressions.assignables.IdentifierAtom;
 import structural_representation.atoms.statements.DeclarationAtom;
 import structural_representation.atoms.types.BonesType;
@@ -40,5 +39,40 @@ public class ClassAtom extends BonesType implements Symbol {
   @Override
   public BonesType getType() {
     return this;
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+
+    sb.append(path);
+    sb.append("\n\n");
+
+    imports.forEach(x -> {
+      sb.append(x.toString());
+      sb.append("\n");
+    });
+
+    sb.append("\nclass ");
+    sb.append(className.toString());
+    sb.append(" {\n");
+
+    fields.forEach(x -> {
+      sb.append("\t");
+      sb.append(x.toString());
+      sb.append("\n");
+    });
+
+    sb.append("\n");
+
+    functions.forEach(x -> {
+      sb.append("\t");
+      sb.append(x.toString());
+      sb.append("\n");
+    });
+
+    sb.append("}");
+
+    return sb.toString();
   }
 }

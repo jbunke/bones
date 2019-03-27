@@ -52,6 +52,19 @@ public class UnaryOperationAtom extends ExpressionAtom {
     NOT, SIZE, MINUS
   }
 
+  private String operatorToString() {
+    switch (operator) {
+      case NOT:
+        return "!";
+      case MINUS:
+        return "-";
+      case SIZE:
+        return "#";
+      default:
+        return "";
+    }
+  }
+
   private Operator operatorFromString(String opString) {
     switch (opString) {
       case "!":
@@ -77,5 +90,10 @@ public class UnaryOperationAtom extends ExpressionAtom {
       default:
         return new VoidType();
     }
+  }
+
+  @Override
+  public String toString() {
+    return operatorToString() + expr.toString();
   }
 }

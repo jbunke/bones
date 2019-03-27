@@ -29,4 +29,10 @@ public class InitialisationAtom extends DeclarationAtom {
                       type, rhsType));
     }
   }
+
+  @Override
+  public String toString() {
+    return type.toString() + " " + ident.toString() +
+            " = " + RHS.toString() + ";";
+  }
 }

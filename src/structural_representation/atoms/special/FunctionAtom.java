@@ -46,4 +46,26 @@ public class FunctionAtom extends Atom implements Symbol {
   public ParamListAtom getParamList() {
     return paramList;
   }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+
+    sb.append(returnType);
+    sb.append(" ");
+    sb.append(name);
+    sb.append("(");
+    sb.append(paramList.toString());
+    sb.append(") {\n");
+
+    statements.forEach(x -> {
+      sb.append("\t");
+      sb.append(x.toString());
+      sb.append("\n");
+    });
+
+    sb.append("}");
+
+    return sb.toString();
+  }
 }

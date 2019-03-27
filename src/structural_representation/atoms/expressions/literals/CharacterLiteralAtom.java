@@ -23,4 +23,9 @@ public class CharacterLiteralAtom extends ExpressionAtom {
                                  BonesErrorListener errorListener) {
 
   }
+
+  @Override
+  public String toString() {
+    return "'" + String.valueOf(value) + "'";
+  }
 }

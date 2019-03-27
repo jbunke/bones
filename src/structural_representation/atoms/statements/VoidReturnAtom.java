@@ -24,4 +24,9 @@ public class VoidReturnAtom extends StatementAtom {
       errorListener.semanticError(ErrorMessages.voidReturnUsedInNonVoid());
     }
   }
+
+  @Override
+  public String toString() {
+    return "return;";
+  }
 }

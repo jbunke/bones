@@ -55,4 +55,18 @@ public class ListElemAtom extends AssignableAtom {
               variableIsNotListInThisContext(identifier));
     }
   }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+
+    sb.append(identifier);
+    indices.forEach(x -> {
+      sb.append("(");
+      sb.append(x);
+      sb.append(")");
+    });
+
+    return sb.toString();
+  }
 }

@@ -62,19 +62,19 @@ public class OperandSEAtom extends AssignmentAtom {
   private String operatorToString() {
     switch (operator) {
       case ADD_ASSIGN:
-        return "+";
+        return "+=";
       case SUB_ASSIGN:
-        return "-";
+        return "-=";
       case MUL_ASSIGN:
-        return "*";
+        return "*=";
       case DIV_ASSIGN:
-        return "/";
+        return "/=";
       case MOD_ASSIGN:
-        return "%";
+        return "%=";
       case AND_ASSIGN:
-        return "&&";
+        return "&=";
       case OR_ASSIGN:
-        return "||";
+        return "|=";
       default:
         return "";
     }
@@ -94,5 +94,11 @@ public class OperandSEAtom extends AssignmentAtom {
       return operands == OperatorOperands.INT_FLOAT;
     }
     return false;
+  }
+
+  @Override
+  public String toString() {
+    return assignable.toString() + " " + operatorToString() +
+            " " + expression.toString() + ";";
   }
 }

@@ -23,4 +23,9 @@ public class BoolLiteralAtom extends ExpressionAtom {
                                  BonesErrorListener errorListener) {
 
   }
+
+  @Override
+  public String toString() {
+    return String.valueOf(value);
+  }
 }

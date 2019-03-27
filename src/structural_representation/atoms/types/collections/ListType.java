@@ -24,6 +24,6 @@ public class ListType extends BonesType {
 
   @Override
   public String toString() {
-    return "(" + elementType.toString() + ")";
+    return elementType.toString() + "()";
   }
 }

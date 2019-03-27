@@ -36,4 +36,22 @@ public class WhileStatementAtom extends StatementAtom {
 
     body.forEach(x -> x.semanticErrorCheck(localTable, errorListener));
   }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+
+    sb.append("while (");
+    sb.append(loopCondition.toString());
+    sb.append(") {\n");
+
+    body.forEach(x -> {
+      sb.append("\t");
+      sb.append(x.toString());
+      sb.append("\n");
+    });
+    sb.append("}");
+
+    return sb.toString();
+  }
 }

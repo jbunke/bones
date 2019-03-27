@@ -55,4 +55,9 @@ public class NoOperandSEAtom extends AssignmentAtom {
   public enum Operator {
     NEGATE, INCREMENT, DECREMENT
   }
+
+  @Override
+  public String toString() {
+    return assignable.toString() + operatorToString() + ";";
+  }
 }

@@ -29,4 +29,9 @@ public class ReturnAtom extends StatementAtom {
                       expectedReturnType, actualType));
     }
   }
+
+  @Override
+  public String toString() {
+    return "return " + expression.toString() + ";";
+  }
 }
