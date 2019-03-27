@@ -2,6 +2,9 @@ package structural_representation.atoms.expressions.assignables;
 
 import error.BonesErrorListener;
 import error.ErrorMessages;
+import execution.BonesArray;
+import execution.BonesList;
+import execution.RuntimeErrorExit;
 import structural_representation.atoms.types.BonesType;
 import structural_representation.atoms.types.collections.ArrayType;
 import structural_representation.atoms.types.collections.ListType;
@@ -42,6 +45,25 @@ public class ListElemAtom extends AssignableAtom {
       }
     }
     return type;
+  }
+
+  @Override
+  public Object evaluate(SymbolTable table, BonesErrorListener errorListener) {
+    Variable variable = (Variable) table.get(identifier);
+    Object value =  variable.getValue();
+
+    if (value == null) errorListener.runtimeError(ErrorMessages.nullPointer(),
+            true, RuntimeErrorExit.RUNTIME_ERROR_EXIT);
+
+    for (int i : indices) {
+      if (value instanceof BonesList) {
+        value = ((BonesList) value).at(i);
+      } else if (value instanceof BonesArray) {
+        value = ((BonesArray) value).at(i);
+      }
+    }
+
+    return value;
   }
 
   @Override

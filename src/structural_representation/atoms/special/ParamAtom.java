@@ -20,11 +20,15 @@ public class ParamAtom extends Atom {
   public void semanticErrorCheck(SymbolTable symbolTable,
                                  BonesErrorListener errorListener) {
     type.semanticErrorCheck(symbolTable, errorListener);
-    symbolTable.update(ident.toString(), new Variable(type));
+    symbolTable.put("param_" + ident.toString(), new Variable(type));
   }
 
   public BonesType getType() {
     return type;
+  }
+
+  public IdentifierAtom getIdent() {
+    return ident;
   }
 
   @Override

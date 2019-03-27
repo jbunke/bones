@@ -19,6 +19,11 @@ public class IntLiteralAtom extends ExpressionAtom {
   }
 
   @Override
+  public Object evaluate(SymbolTable table, BonesErrorListener errorListener) {
+    return value;
+  }
+
+  @Override
   public void semanticErrorCheck(SymbolTable symbolTable,
                                  BonesErrorListener errorListener) {
 

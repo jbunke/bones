@@ -2,6 +2,9 @@ package structural_representation.atoms.expressions;
 
 import error.BonesErrorListener;
 import error.ErrorMessages;
+import execution.BonesArray;
+import execution.BonesList;
+import execution.RuntimeErrorExit;
 import structural_representation.atoms.types.BonesType;
 import structural_representation.atoms.types.collections.ArrayType;
 import structural_representation.atoms.types.collections.ListType;
@@ -180,6 +183,110 @@ public class BinaryOperationAtom extends ExpressionAtom {
       default:
         return new VoidType();
     }
+  }
+
+  @Override
+  public Object evaluate(SymbolTable table, BonesErrorListener errorListener) {
+    Object left = LHS.evaluate(table, errorListener);
+    Object right = RHS.evaluate(table, errorListener);
+
+    if (left == null || right == null) return null;
+
+    switch (operator) {
+      case AT_INDEX:
+        if (!(right instanceof Integer)) break;
+        if (left instanceof BonesList) {
+          return ((BonesList) left).at((Integer) right);
+        } else if (left instanceof BonesArray) {
+          return ((BonesArray) left).at((Integer) right);
+        }
+        break;
+      case RAISE:
+        if (left instanceof Number && right instanceof Number) {
+          return Math.pow((Double) left, (Double) right);
+        }
+        break;
+      case PLUS:
+      case MINUS:
+      case TIMES:
+      case DIVIDE:
+      case MOD:
+      case GT:
+      case LT:
+      case GEQ:
+      case LEQ:
+        if (left instanceof Integer && right instanceof Integer) {
+          Integer lefti = ((Number) left).intValue();
+          Integer righti = ((Number) right).intValue();
+
+          switch (operator) {
+            case GT:
+              return lefti > righti;
+            case LT:
+              return lefti < righti;
+            case GEQ:
+              return lefti >= righti;
+            case LEQ:
+              return lefti <= righti;
+            case PLUS:
+              return lefti + righti;
+            case MINUS:
+              return lefti - righti;
+            case TIMES:
+              return lefti * righti;
+            case DIVIDE:
+              if (right.equals(0)) errorListener.runtimeError(
+                      ErrorMessages.divideByZero(),
+                      true, RuntimeErrorExit.RUNTIME_ERROR_EXIT);
+              return lefti / righti;
+            case MOD:
+              if (right.equals(0)) errorListener.runtimeError(
+                      ErrorMessages.divideByZero(),
+                      true, RuntimeErrorExit.RUNTIME_ERROR_EXIT);
+              return lefti % righti;
+          }
+        } else if (left instanceof Float || right instanceof Float) {
+          Float leftf = ((Number) left).floatValue();
+          Float rightf = ((Number) right).floatValue();
+
+          switch (operator) {
+            case GT:
+              return leftf > rightf;
+            case LT:
+              return leftf < rightf;
+            case GEQ:
+              return leftf >= rightf;
+            case LEQ:
+              return leftf <= rightf;
+            case PLUS:
+              return leftf + rightf;
+            case MINUS:
+              return leftf - rightf;
+            case TIMES:
+              return leftf * rightf;
+            case DIVIDE:
+              if (right.equals(0f)) errorListener.runtimeError(
+                      ErrorMessages.divideByZero(),
+                      true, RuntimeErrorExit.RUNTIME_ERROR_EXIT);
+              return leftf / rightf;
+            case MOD:
+              if (right.equals(0f)) errorListener.runtimeError(
+                      ErrorMessages.divideByZero(),
+                      true, RuntimeErrorExit.RUNTIME_ERROR_EXIT);
+              return leftf % rightf;
+          }
+        }
+        break;
+      case EQUAL:
+        return left.equals(right);
+      case NOT_EQUAL:
+        return !left.equals(right);
+      case AND:
+        return (Boolean) left && (Boolean) right;
+      case OR:
+        return (Boolean) left || (Boolean) right;
+    }
+    return null;
   }
 
   @Override

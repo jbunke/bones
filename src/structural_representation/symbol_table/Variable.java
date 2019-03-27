@@ -11,6 +11,12 @@ public class Variable implements Symbol {
     this.value = null;
   }
 
+  public void update(Object value) { this.value = value; }
+
+  public Object getValue() {
+    return value;
+  }
+
   @Override
   public BonesType getType() {
     return type;

@@ -1,5 +1,6 @@
 package error;
 
+import execution.RuntimeErrorExit;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
@@ -24,6 +25,12 @@ public class BonesErrorListener extends BaseErrorListener {
 
   public void semanticError(String msg) {
     errors.add(new BonesError(BonesError.Category.SEMANTIC, msg));
+  }
+
+  public void runtimeError(String msg, boolean fatal, int exitCode) {
+    errors.add(new BonesError(BonesError.Category.RUNTIME, msg));
+
+    if (fatal) RuntimeErrorExit.exit(this, exitCode);
   }
 
   public boolean hasError() {

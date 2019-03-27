@@ -14,7 +14,7 @@ import java.io.IOException;
 
 public class CompilerMain {
   private static final int EXPECTED_NUM_ARGS = 1;
-  private static final int BAD_EXIT_CODE = 1;
+  private static final int BAD_EXIT_CODE = 100;
 
   public static void main(String[] args) {
     if (args.length != EXPECTED_NUM_ARGS) {

@@ -2,6 +2,7 @@ package structural_representation.atoms.expressions.assignables;
 
 import error.BonesErrorListener;
 import error.ErrorMessages;
+import execution.RuntimeErrorExit;
 import structural_representation.symbol_table.Symbol;
 import structural_representation.symbol_table.SymbolTable;
 import structural_representation.atoms.types.BonesType;
@@ -20,6 +21,17 @@ public class IdentifierAtom extends AssignableAtom {
     Variable variable = (Variable) symbol;
 
     return variable.getType();
+  }
+
+  @Override
+  public Object evaluate(SymbolTable table, BonesErrorListener errorListener) {
+    Variable variable = (Variable) table.get(token);
+    Object value =  variable.getValue();
+
+    if (value == null) errorListener.runtimeError(ErrorMessages.nullPointer(),
+            true, RuntimeErrorExit.RUNTIME_ERROR_EXIT);
+
+    return value;
   }
 
   @Override

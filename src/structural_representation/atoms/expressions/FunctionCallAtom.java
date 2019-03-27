@@ -7,6 +7,7 @@ import structural_representation.atoms.special.ParamAtom;
 import structural_representation.atoms.types.BonesType;
 import structural_representation.symbol_table.SymbolTable;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class FunctionCallAtom extends ExpressionAtom {
@@ -27,8 +28,34 @@ public class FunctionCallAtom extends ExpressionAtom {
   }
 
   @Override
+  public Object evaluate(SymbolTable table, BonesErrorListener errorListener) {
+    SymbolTable functionTable = table.tableForFunction(function);
+    List<String> params = new ArrayList<>();
+    function.getParamList().getParams().forEach(x ->
+            params.add("param_" + x.getIdent().toString()));
+    List<Object> argValues = new ArrayList<>();
+    arguments.forEach(x -> argValues.add(x.evaluate(table, errorListener)));
+
+    if (params.size() != argValues.size()) return null;
+
+    for (int i = 0; i < params.size(); i++) {
+      functionTable.update(params.get(i), argValues.get(i));
+    }
+
+    return function.evaluate(functionTable, errorListener);
+  }
+
+  @Override
   public void semanticErrorCheck(SymbolTable symbolTable,
                                  BonesErrorListener errorListener) {
+    /* Semantic check the function if it hasn't been done */
+    if (!function.hasBeenChecked()) {
+      SymbolTable functionTable = symbolTable.tableForFunction(function);
+
+      if (functionTable != null)
+        function.semanticErrorCheck(functionTable, errorListener);
+    }
+
     if (symbolTable.get(name) == null) {
       errorListener.semanticError(ErrorMessages.
               identifierIsNotAFunction(name));

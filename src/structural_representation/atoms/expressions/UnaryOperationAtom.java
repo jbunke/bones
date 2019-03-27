@@ -2,6 +2,8 @@ package structural_representation.atoms.expressions;
 
 import error.BonesErrorListener;
 import error.ErrorMessages;
+import execution.BonesArray;
+import execution.BonesList;
 import structural_representation.atoms.types.BonesType;
 import structural_representation.atoms.types.collections.ArrayType;
 import structural_representation.atoms.types.collections.ListType;
@@ -90,6 +92,33 @@ public class UnaryOperationAtom extends ExpressionAtom {
       default:
         return new VoidType();
     }
+  }
+
+  @Override
+  public Object evaluate(SymbolTable table, BonesErrorListener errorListener) {
+    Object value = expr.evaluate(table, errorListener);
+
+    switch (operator) {
+      case SIZE:
+        if (value instanceof String) {
+          return ((String) value).length();
+        } else if (value instanceof BonesList) {
+          return ((BonesList) value).size();
+        } else if (value instanceof BonesArray) {
+          return ((BonesArray) value).size();
+        }
+        break;
+      case MINUS:
+        if (value instanceof Integer) {
+          return -((Integer) value);
+        } else if (value instanceof Float) {
+          return -((Float) value);
+        }
+        break;
+      case NOT:
+        return !(Boolean) value;
+    }
+    return null;
   }
 
   @Override

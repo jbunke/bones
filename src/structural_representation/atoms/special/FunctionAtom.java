@@ -15,6 +15,8 @@ public class FunctionAtom extends Atom implements Symbol {
   private final ParamListAtom paramList;
   private final List<StatementAtom> statements;
 
+  private boolean beenChecked;
+
   public FunctionAtom(BonesType returnType, String name,
                       ParamListAtom paramList,
                       List<StatementAtom> statements) {
@@ -24,10 +26,20 @@ public class FunctionAtom extends Atom implements Symbol {
     this.statements = statements;
   }
 
+  public boolean hasBeenChecked() {
+    return beenChecked;
+  }
+
+  public Object evaluate(SymbolTable table, BonesErrorListener errorListener) {
+    // TODO
+
+    return null;
+  }
+
   @Override
   public void semanticErrorCheck(SymbolTable symbolTable,
                                  BonesErrorListener errorListener) {
-    symbolTable.update(name, this);
+    symbolTable.put(name, this);
 
     SymbolTable functionTable = new SymbolTable(this, symbolTable);
 
@@ -36,6 +48,8 @@ public class FunctionAtom extends Atom implements Symbol {
       paramList.semanticErrorCheck(functionTable, errorListener);
     statements.forEach(x ->
             x.semanticErrorCheck(functionTable, errorListener));
+
+    beenChecked = true;
   }
 
   @Override

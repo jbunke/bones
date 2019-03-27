@@ -10,7 +10,20 @@ public class BonesError {
   }
 
   public enum Category {
-    SYNTAX, SEMANTIC, RUNTIME
+    SYNTAX, SEMANTIC, RUNTIME;
+
+    @Override
+    public String toString() {
+      switch (this) {
+        case SYNTAX:
+          return "Syntax ";
+        case SEMANTIC:
+          return "Semantic ";
+        case RUNTIME:
+          return "Runtime ";
+      }
+      return "";
+    }
   }
 
   @Override
@@ -24,6 +37,6 @@ public class BonesError {
 
   @Override
   public String toString() {
-    return "Bones " + category.toString() + " Error: " + message;
+    return "Bones " + category.toString() + "Error: " + message;
   }
 }

@@ -3,6 +3,9 @@ package error;
 import structural_representation.atoms.types.BonesType;
 
 public class ErrorMessages {
+
+  /* SEMANTIC */
+
   public static String expectedTypeButExpressionIs(String statementType,
                                                    BonesType expected,
                                                    BonesType got) {
@@ -77,5 +80,15 @@ public class ErrorMessages {
   public static String parameterArgumentAmount() {
     return "Number of function call arguments does not match " +
             "function parameters for this function";
+  }
+
+  /* RUNTIME */
+
+  public static String divideByZero() {
+    return "Attempted to divide by zero";
+  }
+
+  public static String nullPointer() {
+    return "Null pointer";
   }
 }

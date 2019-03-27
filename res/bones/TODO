@@ -1,0 +1,7 @@
+Grammar:
+  - Standard IO
+    - read() statement
+    - print(expr) statement
+    - println(expr) statement
+  - Distinguished void main(string[] prog_args) function as program entry point
+  ? terminate(int) statement

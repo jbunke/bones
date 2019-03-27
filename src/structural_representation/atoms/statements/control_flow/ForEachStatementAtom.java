@@ -48,12 +48,12 @@ public class ForEachStatementAtom extends StatementAtom {
     } else if (collection.getType(localTable) instanceof ArrayType) {
       ArrayType arrayType = (ArrayType) collection.getType(localTable);
 
-      localTable.update(token.toString(),
+      localTable.put(token.toString(),
               new Variable(arrayType.getElementType()));
     } else if (collection.getType(localTable) instanceof ListType) {
       ListType listType = (ListType) collection.getType(localTable);
 
-      localTable.update(token.toString(),
+      localTable.put(token.toString(),
               new Variable(listType.getElementType()));
     }
 

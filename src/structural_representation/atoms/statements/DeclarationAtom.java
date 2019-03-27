@@ -26,7 +26,7 @@ public class DeclarationAtom extends StatementAtom {
               ErrorMessages.alreadyDeclaredInScope(ident.toString()));
     }
 
-    symbolTable.update(ident.toString(), new Variable(type));
+    symbolTable.put(ident.toString(), new Variable(type));
   }
 
   @Override
