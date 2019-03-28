@@ -1,6 +1,7 @@
 package structural_representation.atoms.special;
 
 import error.BonesErrorListener;
+import error.Position;
 import structural_representation.atoms.Atom;
 import structural_representation.symbol_table.SymbolTable;
 
@@ -9,8 +10,9 @@ import java.util.List;
 public class ParamListAtom extends Atom {
   private final List<ParamAtom> params;
 
-  public ParamListAtom(List<ParamAtom> params) {
+  public ParamListAtom(List<ParamAtom> params, Position position) {
     this.params = params;
+    this.position = position;
   }
 
   @Override

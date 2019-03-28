@@ -50,11 +50,13 @@ public class FunctionCallAtom extends ExpressionAtom {
                                  BonesErrorListener errorListener) {
     if (symbolTable.root().get(name) == null) {
       errorListener.semanticError(ErrorMessages.
-              identifierIsNotAFunction(name));
+              identifierIsNotAFunction(name),
+              getPosition().getLine(), getPosition().getPositionInLine());
       return;
     } else if (!(symbolTable.root().get(name) instanceof FunctionAtom)) {
       errorListener.semanticError(ErrorMessages.
-              identifierIsNotAFunction(name));
+              identifierIsNotAFunction(name),
+              getPosition().getLine(), getPosition().getPositionInLine());
       return;
     } else if (function == null) {
       function = (FunctionAtom) symbolTable.root().get(name);
@@ -69,7 +71,8 @@ public class FunctionCallAtom extends ExpressionAtom {
     }
 
     if (function.getParamList().getParams().size() != arguments.size()) {
-      errorListener.semanticError(ErrorMessages.parameterArgumentAmount());
+      errorListener.semanticError(ErrorMessages.parameterArgumentAmount(),
+              getPosition().getLine(), getPosition().getPositionInLine());
     } else {
       List<ParamAtom> params = function.getParamList().getParams();
       for (int i = 0; i < params.size(); i++) {
@@ -78,7 +81,8 @@ public class FunctionCallAtom extends ExpressionAtom {
           errorListener.semanticError(ErrorMessages.
                   expectedTypeButExpressionIs("Parameter",
                           params.get(i).getType(),
-                          arguments.get(i).getType(symbolTable)));
+                          arguments.get(i).getType(symbolTable)),
+                  getPosition().getLine(), getPosition().getPositionInLine());
         }
       }
     }

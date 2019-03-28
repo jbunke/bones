@@ -2,6 +2,7 @@ package structural_representation.atoms.expressions.assignables;
 
 import error.BonesErrorListener;
 import error.ErrorMessages;
+import error.Position;
 import execution.RuntimeErrorExit;
 import structural_representation.symbol_table.Symbol;
 import structural_representation.symbol_table.SymbolTable;
@@ -11,8 +12,9 @@ import structural_representation.symbol_table.Variable;
 public class IdentifierAtom extends AssignableAtom {
   private final String token;
 
-  public IdentifierAtom(String token) {
+  public IdentifierAtom(String token, Position position) {
     this.token = token;
+    this.position = position;
   }
 
   @Override
@@ -29,7 +31,8 @@ public class IdentifierAtom extends AssignableAtom {
     Object value =  variable.getValue();
 
     if (value == null) errorListener.runtimeError(ErrorMessages.nullPointer(),
-            true, RuntimeErrorExit.RUNTIME_ERROR_EXIT);
+            true, RuntimeErrorExit.RUNTIME_ERROR_EXIT,
+            getPosition().getLine(), getPosition().getPositionInLine());
 
     return value;
   }
@@ -45,10 +48,12 @@ public class IdentifierAtom extends AssignableAtom {
     Symbol symbol = symbolTable.get(token);
     if (symbol == null) {
       errorListener.semanticError(ErrorMessages.
-              variableHasNotBeenDeclared(token));
+              variableHasNotBeenDeclared(token),
+              getPosition().getLine(), getPosition().getPositionInLine());
     } else if (!(symbol instanceof Variable)) {
       errorListener.semanticError(ErrorMessages.
-              identifierIsNotAVariable(token));
+              identifierIsNotAVariable(token),
+              getPosition().getLine(), getPosition().getPositionInLine());
     }
   }
 }

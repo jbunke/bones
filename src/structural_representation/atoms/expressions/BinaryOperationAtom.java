@@ -2,6 +2,7 @@ package structural_representation.atoms.expressions;
 
 import error.BonesErrorListener;
 import error.ErrorMessages;
+import error.Position;
 import execution.BonesArray;
 import execution.BonesList;
 import execution.RuntimeErrorExit;
@@ -18,11 +19,12 @@ public class BinaryOperationAtom extends ExpressionAtom {
   private final String opString;
 
   public BinaryOperationAtom(ExpressionAtom lhs, ExpressionAtom rhs,
-                             String opString) {
+                             String opString, Position position) {
     LHS = lhs;
     RHS = rhs;
     this.opString = opString;
     operator = operatorFromString(opString);
+    this.position = position;
   }
 
   @Override
@@ -45,24 +47,28 @@ public class BinaryOperationAtom extends ExpressionAtom {
         if (!isNumeric(ltype)) {
           errorListener.semanticError(ErrorMessages.
                   expectedTypeButExpressionIs("Operation \"" +
-                                  opString + "\"", new IntType(), ltype));
+                                  opString + "\"", new IntType(), ltype),
+                  getPosition().getLine(), getPosition().getPositionInLine());
         }
         if (!isNumeric(rtype)) {
           errorListener.semanticError(ErrorMessages.
                   expectedTypeButExpressionIs("Operation \"" +
-                                  opString + "\"", new IntType(), rtype));
+                                  opString + "\"", new IntType(), rtype),
+                  getPosition().getLine(), getPosition().getPositionInLine());
         }
         break;
       case AT_INDEX:
         if (!rtype.equals(new IntType())) {
           errorListener.semanticError(ErrorMessages.
                   expectedTypeButExpressionIs(
-                          "Index operand", new IntType(), rtype));
+                          "Index operand", new IntType(), rtype),
+                  getPosition().getLine(), getPosition().getPositionInLine());
         }
         if (!(ltype instanceof ListType) && !(ltype instanceof ArrayType) &&
                 !(ltype instanceof StringType)) {
           errorListener.semanticError(ErrorMessages.
-                  calledAtIndexOnNonCollection());
+                  calledAtIndexOnNonCollection(),
+                  getPosition().getLine(), getPosition().getPositionInLine());
         }
         break;
       case OR:
@@ -70,12 +76,14 @@ public class BinaryOperationAtom extends ExpressionAtom {
         if (!ltype.equals(new BoolType())) {
           errorListener.semanticError(ErrorMessages.
                   expectedTypeButExpressionIs("Operation \"" +
-                          opString + "\"", new BoolType(), ltype));
+                          opString + "\"", new BoolType(), ltype),
+                  getPosition().getLine(), getPosition().getPositionInLine());
         }
         if (!rtype.equals(new BoolType())) {
           errorListener.semanticError(ErrorMessages.
                   expectedTypeButExpressionIs("Operation \"" +
-                          opString + "\"", new BoolType(), rtype));
+                          opString + "\"", new BoolType(), rtype),
+                  getPosition().getLine(), getPosition().getPositionInLine());
         }
         break;
     }
@@ -237,12 +245,14 @@ public class BinaryOperationAtom extends ExpressionAtom {
             case DIVIDE:
               if (right.equals(0)) errorListener.runtimeError(
                       ErrorMessages.divideByZero(),
-                      true, RuntimeErrorExit.RUNTIME_ERROR_EXIT);
+                      true, RuntimeErrorExit.RUNTIME_ERROR_EXIT,
+                      getPosition().getLine(), getPosition().getPositionInLine());
               return lefti / righti;
             case MOD:
               if (right.equals(0)) errorListener.runtimeError(
                       ErrorMessages.divideByZero(),
-                      true, RuntimeErrorExit.RUNTIME_ERROR_EXIT);
+                      true, RuntimeErrorExit.RUNTIME_ERROR_EXIT,
+                      getPosition().getLine(), getPosition().getPositionInLine());
               return lefti % righti;
           }
         } else if (left instanceof Float || right instanceof Float) {
@@ -267,12 +277,14 @@ public class BinaryOperationAtom extends ExpressionAtom {
             case DIVIDE:
               if (right.equals(0f)) errorListener.runtimeError(
                       ErrorMessages.divideByZero(),
-                      true, RuntimeErrorExit.RUNTIME_ERROR_EXIT);
+                      true, RuntimeErrorExit.RUNTIME_ERROR_EXIT,
+                      getPosition().getLine(), getPosition().getPositionInLine());
               return leftf / rightf;
             case MOD:
               if (right.equals(0f)) errorListener.runtimeError(
                       ErrorMessages.divideByZero(),
-                      true, RuntimeErrorExit.RUNTIME_ERROR_EXIT);
+                      true, RuntimeErrorExit.RUNTIME_ERROR_EXIT,
+                      getPosition().getLine(), getPosition().getPositionInLine());
               return leftf % rightf;
           }
         }

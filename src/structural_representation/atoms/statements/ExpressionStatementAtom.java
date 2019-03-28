@@ -1,6 +1,7 @@
 package structural_representation.atoms.statements;
 
 import error.BonesErrorListener;
+import error.Position;
 import execution.StatementControl;
 import structural_representation.atoms.expressions.ExpressionAtom;
 import structural_representation.symbol_table.SymbolTable;
@@ -8,8 +9,10 @@ import structural_representation.symbol_table.SymbolTable;
 public class ExpressionStatementAtom extends StatementAtom {
   private final ExpressionAtom expression;
 
-  public ExpressionStatementAtom(ExpressionAtom expression) {
+  public ExpressionStatementAtom(ExpressionAtom expression,
+                                 Position position) {
     this.expression = expression;
+    this.position = position;
   }
 
   @Override

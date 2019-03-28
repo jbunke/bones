@@ -2,6 +2,7 @@ package structural_representation.atoms.statements;
 
 import error.BonesErrorListener;
 import error.ErrorMessages;
+import error.Position;
 import execution.StatementControl;
 import structural_representation.atoms.expressions.ExpressionAtom;
 import structural_representation.atoms.types.BonesType;
@@ -11,8 +12,9 @@ public class ReturnAtom extends StatementAtom {
   private final ExpressionAtom expression;
   private BonesType expectedReturnType;
 
-  public ReturnAtom(ExpressionAtom expression) {
+  public ReturnAtom(ExpressionAtom expression, Position position) {
     this.expression = expression;
+    this.position = position;
   }
 
   @Override
@@ -35,7 +37,8 @@ public class ReturnAtom extends StatementAtom {
     if (!expectedReturnType.equals(actualType)) {
       errorListener.semanticError(
               ErrorMessages.expectedTypeButExpressionIs("Return",
-                      expectedReturnType, actualType));
+                      expectedReturnType, actualType),
+              getPosition().getLine(), getPosition().getPositionInLine());
     }
   }
 

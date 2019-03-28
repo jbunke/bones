@@ -1,6 +1,7 @@
 package structural_representation.atoms.special;
 
 import error.BonesErrorListener;
+import error.Position;
 import structural_representation.atoms.expressions.assignables.IdentifierAtom;
 import structural_representation.atoms.statements.DeclarationAtom;
 import structural_representation.atoms.types.BonesType;
@@ -18,12 +19,13 @@ public class ClassAtom extends BonesType implements Symbol {
 
   public ClassAtom(PathAtom path, List<ImportAtom> imports,
                    IdentifierAtom className, List<DeclarationAtom> fields,
-                   List<FunctionAtom> functions) {
+                   List<FunctionAtom> functions, Position position) {
     this.path = path;
     this.imports = imports;
     this.className = className;
     this.fields = fields;
     this.functions = functions;
+    this.position = position;
   }
 
   public void execute(SymbolTable table, BonesErrorListener errorListener) {

@@ -2,6 +2,8 @@ package structural_representation;
 
 import antlr.BonesParser;
 import antlr.BonesParserBaseVisitor;
+import error.Position;
+import org.antlr.v4.runtime.Token;
 import structural_representation.atoms.Atom;
 import structural_representation.atoms.expressions.BinaryOperationAtom;
 import structural_representation.atoms.expressions.FunctionCallAtom;
@@ -34,7 +36,8 @@ import java.util.List;
 public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
   @Override
   public Atom visitIdent(BonesParser.IdentContext ctx) {
-    return new IdentifierAtom(ctx.IDENTIFIER().getSymbol().getText());
+    Token tok = ctx.IDENTIFIER().getSymbol();
+    return new IdentifierAtom(tok.getText(), Position.fromToken(tok));
   }
 
   @Override
@@ -46,19 +49,21 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
       pathSteps.add(step);
     }
 
-    return new PathAtom(pathSteps);
+    return new PathAtom(pathSteps, Position.fromToken(ctx.PATH().getSymbol()));
   }
 
   @Override
   public Atom visitPRINTLN_STAT(BonesParser.PRINTLN_STATContext ctx) {
     ExpressionAtom toPrint = (ExpressionAtom) visit(ctx.expr());
-    return new PrintStatementAtom(toPrint, true);
+    return new PrintStatementAtom(toPrint, true,
+            Position.fromToken(ctx.PRINTLN().getSymbol()));
   }
 
   @Override
   public Atom visitPRINT_STAT(BonesParser.PRINT_STATContext ctx) {
     ExpressionAtom toPrint = (ExpressionAtom) visit(ctx.expr());
-    return new PrintStatementAtom(toPrint, false);
+    return new PrintStatementAtom(toPrint, false,
+            Position.fromToken(ctx.PRINT().getSymbol()));
   }
 
   @Override
@@ -70,7 +75,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
       importSteps.add(step);
     }
 
-    return new ImportAtom(importSteps);
+    return new ImportAtom(importSteps,
+            Position.fromToken(ctx.IMPORT().getSymbol()));
   }
 
   @Override
@@ -120,7 +126,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     BonesType type = (BonesType) visit(ctx.type());
     IdentifierAtom ident = (IdentifierAtom) visitIdent(ctx.ident());
 
-    return new DeclarationAtom(type, ident);
+    return new DeclarationAtom(type, ident,
+            Position.fromToken(ctx.type().getStart()));
   }
 
   @Override
@@ -129,7 +136,9 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     List<ParamAtom> paramAtoms = new ArrayList<>();
 
     paramAtoms.add(new ParamAtom(new ArrayType(new StringType()),
-            new IdentifierAtom(ctx.ident().IDENTIFIER().getSymbol().getText())));
+            new IdentifierAtom(ctx.ident().IDENTIFIER().getSymbol().getText(),
+                    Position.fromToken(ctx.ident().IDENTIFIER().getSymbol())),
+            Position.fromToken(ctx.VOID().getSymbol())));
 
     List<StatementAtom> statements = new ArrayList<>();
 
@@ -138,7 +147,9 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     }
 
     return new FunctionAtom(new VoidType(), "main",
-            new ParamListAtom(paramAtoms), statements);
+            new ParamListAtom(paramAtoms,
+                    Position.fromToken(ctx.VOID().getSymbol())), statements,
+            Position.fromToken(ctx.VOID().getSymbol()));
   }
 
   @Override
@@ -147,7 +158,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     IdentifierAtom ident = (IdentifierAtom) visitIdent(ctx.ident());
     ExpressionAtom expr = (ExpressionAtom) visit(ctx.expr());
 
-    return new InitialisationAtom(type, ident, expr);
+    return new InitialisationAtom(type, ident, expr,
+            Position.fromToken(ctx.type().getStart()));
   }
 
   @Override
@@ -165,7 +177,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     BonesType type = (BonesType) visit(ctx.type());
     IdentifierAtom ident = (IdentifierAtom) visitIdent(ctx.ident());
 
-    return new ParamAtom(type, ident);
+    return new ParamAtom(type, ident,
+            Position.fromToken(ctx.type().getStart()));
   }
 
   @Override
@@ -176,7 +189,7 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
       params.add((ParamAtom) visitParam(paramContext));
     }
 
-    return new ParamListAtom(params);
+    return new ParamListAtom(params, Position.fromToken(ctx.start));
   }
 
   @Override
@@ -194,23 +207,27 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
       statements.add((StatementAtom) visit(statContext));
     }
 
-    return new FunctionAtom(returnType, name, paramList, statements);
+    return new FunctionAtom(returnType, name, paramList, statements,
+            Position.fromToken(ctx.type().getStart()));
   }
 
   @Override
   public Atom visitTRUE_LITERAL(BonesParser.TRUE_LITERALContext ctx) {
-    return new BoolLiteralAtom(true);
+    return new BoolLiteralAtom(true,
+            Position.fromToken(ctx.TRUE().getSymbol()));
   }
 
   @Override
   public Atom visitFALSE_LITERAL(BonesParser.FALSE_LITERALContext ctx) {
-    return new BoolLiteralAtom(false);
+    return new BoolLiteralAtom(false,
+            Position.fromToken(ctx.FALSE().getSymbol()));
   }
 
   @Override
   public Atom visitChar_literal(BonesParser.Char_literalContext ctx) {
     String text = ctx.CHAR_LIT().getSymbol().getText();
-    return new CharacterLiteralAtom(text.charAt(1));
+    return new CharacterLiteralAtom(text.charAt(1),
+            Position.fromToken(ctx.CHAR_LIT().getSymbol()));
   }
 
   @Override
@@ -219,7 +236,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     String text = ctx.STRING_LITERAL().getSymbol().getText();
     text = text.substring(1, text.length() - 1);
 
-    return new StringLiteralAtom(text);
+    return new StringLiteralAtom(text,
+            Position.fromToken(ctx.STRING_LITERAL().getSymbol()));
   }
 
   @Override
@@ -227,7 +245,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     String text = ctx.INT_LIT().getSymbol().getText();
     Integer value = Integer.parseInt(text);
 
-    return new IntLiteralAtom(value);
+    return new IntLiteralAtom(value,
+            Position.fromToken(ctx.INT_LIT().getSymbol()));
   }
 
   @Override
@@ -235,7 +254,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     String text = ctx.FLOAT_LIT().getSymbol().getText();
     Float value = Float.parseFloat(text);
 
-    return new FloatLiteralAtom(value);
+    return new FloatLiteralAtom(value,
+            Position.fromToken(ctx.FLOAT_LIT().getSymbol()));
   }
 
   @Override
@@ -244,7 +264,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     ExpressionAtom RHS = (ExpressionAtom) visit(ctx.expr(1));
     String opString = ctx.op.getText();
 
-    return new BinaryOperationAtom(LHS, RHS, opString);
+    return new BinaryOperationAtom(LHS, RHS, opString,
+            Position.fromToken(ctx.expr(0).getStart()));
   }
 
   @Override
@@ -253,7 +274,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     ExpressionAtom RHS = (ExpressionAtom) visit(ctx.expr(1));
     String opString = ctx.op.getText();
 
-    return new BinaryOperationAtom(LHS, RHS, opString);
+    return new BinaryOperationAtom(LHS, RHS, opString,
+            Position.fromToken(ctx.expr(0).getStart()));
   }
 
   @Override
@@ -261,7 +283,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     ExpressionAtom LHS = (ExpressionAtom) visit(ctx.expr(0));
     ExpressionAtom RHS = (ExpressionAtom) visit(ctx.expr(1));
 
-    return new BinaryOperationAtom(LHS, RHS, "||");
+    return new BinaryOperationAtom(LHS, RHS, "||",
+            Position.fromToken(ctx.expr(0).getStart()));
   }
 
   @Override
@@ -284,7 +307,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     ExpressionAtom LHS = (ExpressionAtom) visit(ctx.expr(0));
     ExpressionAtom RHS = (ExpressionAtom) visit(ctx.expr(1));
 
-    return new BinaryOperationAtom(LHS, RHS, "&&");
+    return new BinaryOperationAtom(LHS, RHS, "&&",
+            Position.fromToken(ctx.expr(0).getStart()));
   }
 
   @Override
@@ -316,7 +340,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     ExpressionAtom RHS = (ExpressionAtom) visit(ctx.expr(1));
     String opString = ctx.op.getText();
 
-    return new BinaryOperationAtom(LHS, RHS, opString);
+    return new BinaryOperationAtom(LHS, RHS, opString,
+            Position.fromToken(ctx.expr(0).getStart()));
   }
 
   @Override
@@ -329,7 +354,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     ExpressionAtom LHS = (ExpressionAtom) visit(ctx.expr(0));
     ExpressionAtom RHS = (ExpressionAtom) visit(ctx.expr(1));
 
-    return new BinaryOperationAtom(LHS, RHS, "^");
+    return new BinaryOperationAtom(LHS, RHS, "^",
+            Position.fromToken(ctx.expr(0).getStart()));
   }
 
   @Override
@@ -337,7 +363,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     ExpressionAtom LHS = (ExpressionAtom) visit(ctx.expr(0));
     ExpressionAtom RHS = (ExpressionAtom) visit(ctx.expr(1));
 
-    return new BinaryOperationAtom(LHS, RHS, "@");
+    return new BinaryOperationAtom(LHS, RHS, "@",
+            Position.fromToken(ctx.expr(0).getStart()));
   }
 
   @Override
@@ -346,7 +373,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     ExpressionAtom RHS = (ExpressionAtom) visit(ctx.expr(1));
     String opString = ctx.op.getText();
 
-    return new BinaryOperationAtom(LHS, RHS, opString);
+    return new BinaryOperationAtom(LHS, RHS, opString,
+            Position.fromToken(ctx.expr(0).getStart()));
   }
 
   @Override
@@ -359,7 +387,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     ExpressionAtom expr = (ExpressionAtom) visit(ctx.expr());
     String opString = ctx.op.getText();
 
-    return new UnaryOperationAtom(expr, opString);
+    return new UnaryOperationAtom(expr, opString,
+            Position.fromToken(ctx.op));
   }
 
   @Override
@@ -374,7 +403,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
       indices.add(index);
     }
 
-    return new ListElemAtom(identifier, indices);
+    return new ListElemAtom(identifier, indices,
+            Position.fromToken(ctx.ident().IDENTIFIER().getSymbol()));
   }
 
   @Override
@@ -389,7 +419,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
       indices.add(index);
     }
 
-    return new ArrayElemAtom(identifier, indices);
+    return new ArrayElemAtom(identifier, indices,
+            Position.fromToken(ctx.ident().IDENTIFIER().getSymbol()));
   }
 
   @Override
@@ -412,28 +443,32 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     AssignableAtom lhs = (AssignableAtom) visit(ctx.assignable());
     ExpressionAtom rhs = (ExpressionAtom) visit(ctx.expr());
 
-    return new StandardAssignmentAtom(lhs, rhs);
+    return new StandardAssignmentAtom(lhs, rhs,
+            Position.fromToken(ctx.assignable().getStart()));
   }
 
   @Override
   public Atom visitNEGATE_ASSIGNMENT(BonesParser.NEGATE_ASSIGNMENTContext ctx) {
     AssignableAtom assignable = (AssignableAtom) visit(ctx.assignable());
 
-    return new NoOperandSEAtom(assignable, NoOperandSEAtom.Operator.NEGATE);
+    return new NoOperandSEAtom(assignable, NoOperandSEAtom.Operator.NEGATE,
+            Position.fromToken(ctx.assignable().getStart()));
   }
 
   @Override
   public Atom visitINCREMENT_ASSIGNMENT(BonesParser.INCREMENT_ASSIGNMENTContext ctx) {
     AssignableAtom assignable = (AssignableAtom) visit(ctx.assignable());
 
-    return new NoOperandSEAtom(assignable, NoOperandSEAtom.Operator.INCREMENT);
+    return new NoOperandSEAtom(assignable, NoOperandSEAtom.Operator.INCREMENT,
+            Position.fromToken(ctx.assignable().getStart()));
   }
 
   @Override
   public Atom visitDECREMENT_ASSIGNMENT(BonesParser.DECREMENT_ASSIGNMENTContext ctx) {
     AssignableAtom assignable = (AssignableAtom) visit(ctx.assignable());
 
-    return new NoOperandSEAtom(assignable, NoOperandSEAtom.Operator.DECREMENT);
+    return new NoOperandSEAtom(assignable, NoOperandSEAtom.Operator.DECREMENT,
+            Position.fromToken(ctx.assignable().getStart()));
   }
 
   @Override
@@ -442,7 +477,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     ExpressionAtom expression = (ExpressionAtom) visit(ctx.expr());
 
     return new OperandSEAtom(assignable,
-            OperandSEAtom.Operator.ADD_ASSIGN, expression);
+            OperandSEAtom.Operator.ADD_ASSIGN, expression,
+            Position.fromToken(ctx.assignable().getStart()));
   }
 
   @Override
@@ -451,7 +487,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     ExpressionAtom expression = (ExpressionAtom) visit(ctx.expr());
 
     return new OperandSEAtom(assignable,
-            OperandSEAtom.Operator.SUB_ASSIGN, expression);
+            OperandSEAtom.Operator.SUB_ASSIGN, expression,
+            Position.fromToken(ctx.assignable().getStart()));
   }
 
   @Override
@@ -460,7 +497,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     ExpressionAtom expression = (ExpressionAtom) visit(ctx.expr());
 
     return new OperandSEAtom(assignable,
-            OperandSEAtom.Operator.MUL_ASSIGN, expression);
+            OperandSEAtom.Operator.MUL_ASSIGN, expression,
+            Position.fromToken(ctx.assignable().getStart()));
   }
 
   @Override
@@ -469,7 +507,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     ExpressionAtom expression = (ExpressionAtom) visit(ctx.expr());
 
     return new OperandSEAtom(assignable,
-            OperandSEAtom.Operator.DIV_ASSIGN, expression);
+            OperandSEAtom.Operator.DIV_ASSIGN, expression,
+            Position.fromToken(ctx.assignable().getStart()));
   }
 
   @Override
@@ -478,7 +517,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     ExpressionAtom expression = (ExpressionAtom) visit(ctx.expr());
 
     return new OperandSEAtom(assignable,
-            OperandSEAtom.Operator.MOD_ASSIGN, expression);
+            OperandSEAtom.Operator.MOD_ASSIGN, expression,
+            Position.fromToken(ctx.assignable().getStart()));
   }
 
   @Override
@@ -487,7 +527,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     ExpressionAtom expression = (ExpressionAtom) visit(ctx.expr());
 
     return new OperandSEAtom(assignable,
-            OperandSEAtom.Operator.AND_ASSIGN, expression);
+            OperandSEAtom.Operator.AND_ASSIGN, expression,
+            Position.fromToken(ctx.assignable().getStart()));
   }
 
   @Override
@@ -496,7 +537,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     ExpressionAtom expression = (ExpressionAtom) visit(ctx.expr());
 
     return new OperandSEAtom(assignable,
-            OperandSEAtom.Operator.OR_ASSIGN, expression);
+            OperandSEAtom.Operator.OR_ASSIGN, expression,
+            Position.fromToken(ctx.assignable().getStart()));
   }
 
   @Override
@@ -514,7 +556,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     }
 
     return new ForStatementAtom(initialisation,
-            loopCondition, incrementation, body);
+            loopCondition, incrementation, body,
+            Position.fromToken(ctx.FOR().getSymbol()));
   }
 
   @Override
@@ -529,7 +572,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
       body.add(stat);
     }
 
-    return new ForEachStatementAtom(token, collection, body);
+    return new ForEachStatementAtom(token, collection, body,
+            Position.fromToken(ctx.FOREACH().getSymbol()));
   }
 
   @Override
@@ -550,7 +594,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
       bodies.add(body);
     }
 
-    return new IfStatementAtom(conditions, bodies);
+    return new IfStatementAtom(conditions, bodies,
+            Position.fromToken(ctx.IF(0).getSymbol()));
   }
 
   @Override
@@ -564,19 +609,21 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
       body.add(stat);
     }
 
-    return new WhileStatementAtom(loopCondition, body);
+    return new WhileStatementAtom(loopCondition, body,
+            Position.fromToken(ctx.WHILE().getSymbol()));
   }
 
   @Override
   public Atom visitVOID_RETURN_STAT(BonesParser.VOID_RETURN_STATContext ctx) {
-    return new VoidReturnAtom();
+    return new VoidReturnAtom(Position.fromToken(ctx.RETURN().getSymbol()));
   }
 
   @Override
   public Atom visitRETURN_STAT(BonesParser.RETURN_STATContext ctx) {
     ExpressionAtom expression = (ExpressionAtom) visit(ctx.expr());
 
-    return new ReturnAtom(expression);
+    return new ReturnAtom(expression,
+            Position.fromToken(ctx.RETURN().getSymbol()));
   }
 
   @Override
@@ -597,7 +644,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
   @Override
   public Atom visitEXPRESSION_STAT(BonesParser.EXPRESSION_STATContext ctx) {
     ExpressionAtom expression = (ExpressionAtom) visit(ctx.expr());
-    return new ExpressionStatementAtom(expression);
+    return new ExpressionStatementAtom(expression,
+            Position.fromToken(ctx.expr().getStart()));
   }
 
   @Override
@@ -632,6 +680,7 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
       functions.add(function);
     }
 
-    return new ClassAtom(path, imports, className, fields, functions);
+    return new ClassAtom(path, imports, className, fields, functions,
+            Position.fromToken(ctx.CLASS().getSymbol()));
   }
 }

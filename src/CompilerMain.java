@@ -11,19 +11,27 @@ import structural_representation.atoms.special.ClassAtom;
 import structural_representation.symbol_table.SymbolTable;
 
 import java.io.IOException;
+import java.util.Scanner;
 
 public class CompilerMain {
+  private static final Scanner in = new Scanner(System.in);
   private static final int EXPECTED_NUM_ARGS = 1;
   private static final int BAD_EXIT_CODE = 100;
 
   public static void main(String[] args) {
+    String filepath;
+
     if (args.length != EXPECTED_NUM_ARGS) {
       System.out.println("Expecting one argument: FILEPATH.b");
-      System.exit(BAD_EXIT_CODE);
+      System.out.println("Provide a Bones source code filepath: ");
+
+      filepath = in.nextLine();
+    } else {
+      filepath = args[0];
     }
 
     try {
-      CharStream stream = CharStreams.fromFileName(args[0]);
+      CharStream stream = CharStreams.fromFileName(filepath);
       BonesLexer lexer = new BonesLexer(stream);
       lexer.removeErrorListeners();
 

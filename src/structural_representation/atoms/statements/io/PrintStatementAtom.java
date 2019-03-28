@@ -1,6 +1,7 @@
 package structural_representation.atoms.statements.io;
 
 import error.BonesErrorListener;
+import error.Position;
 import execution.StatementControl;
 import structural_representation.atoms.expressions.ExpressionAtom;
 import structural_representation.atoms.statements.StatementAtom;
@@ -10,9 +11,11 @@ public class PrintStatementAtom extends StatementAtom {
   private final ExpressionAtom toPrint;
   private final boolean ln;
 
-  public PrintStatementAtom(ExpressionAtom toPrint, boolean ln) {
+  public PrintStatementAtom(ExpressionAtom toPrint,
+                            boolean ln, Position position) {
     this.toPrint = toPrint;
     this.ln = ln;
+    this.position = position;
   }
 
   @Override

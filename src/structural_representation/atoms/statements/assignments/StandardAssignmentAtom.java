@@ -2,6 +2,7 @@ package structural_representation.atoms.statements.assignments;
 
 import error.BonesErrorListener;
 import error.ErrorMessages;
+import error.Position;
 import execution.StatementControl;
 import structural_representation.atoms.expressions.ExpressionAtom;
 import structural_representation.atoms.expressions.assignables.AssignableAtom;
@@ -13,9 +14,10 @@ public class StandardAssignmentAtom extends AssignmentAtom {
   private final ExpressionAtom RHS;
 
   public StandardAssignmentAtom(AssignableAtom assignable,
-                                ExpressionAtom RHS) {
+                                ExpressionAtom RHS, Position position) {
     this.assignable = assignable;
     this.RHS = RHS;
+    this.position = position;
   }
 
   @Override
@@ -37,7 +39,8 @@ public class StandardAssignmentAtom extends AssignmentAtom {
     if (!assignable.getType(symbolTable).equals(rhsType)) {
       errorListener.semanticError(ErrorMessages.
               expectedTypeButExpressionIs("Assignment",
-                      assignable.getType(symbolTable), rhsType));
+                      assignable.getType(symbolTable), rhsType),
+              getPosition().getLine(), getPosition().getPositionInLine());
     }
   }
 

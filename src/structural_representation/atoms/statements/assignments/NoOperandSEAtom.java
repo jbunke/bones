@@ -2,6 +2,7 @@ package structural_representation.atoms.statements.assignments;
 
 import error.BonesErrorListener;
 import error.ErrorMessages;
+import error.Position;
 import execution.StatementControl;
 import structural_representation.atoms.expressions.assignables.AssignableAtom;
 import structural_representation.atoms.expressions.assignables.IdentifierAtom;
@@ -15,9 +16,10 @@ public class NoOperandSEAtom extends AssignmentAtom {
   private final Operator operator;
 
   public NoOperandSEAtom(AssignableAtom assignable,
-                         Operator operator) {
+                         Operator operator, Position position) {
     this.assignable = assignable;
     this.operator = operator;
+    this.position = position;
   }
 
   @Override
@@ -38,7 +40,8 @@ public class NoOperandSEAtom extends AssignmentAtom {
     if (!assignable.getType(symbolTable).equals(operatorType)) {
       errorListener.semanticError(ErrorMessages.
               sideEffectOperatorAssignable(operatorToString(),
-                      assignable.getType(symbolTable)));
+                      assignable.getType(symbolTable)),
+              getPosition().getLine(), getPosition().getPositionInLine());
     }
   }
 

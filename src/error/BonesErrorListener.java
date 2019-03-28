@@ -17,18 +17,21 @@ public class BonesErrorListener extends BaseErrorListener {
 
   @Override
   public void syntaxError(Recognizer<?, ?> recognizer, Object offendingSymbol,
-                          int line, int charPositionInLine, String msg,
+                          int line, int positionInLine, String msg,
                           RecognitionException e) {
     errors.add(new BonesError(BonesError.Category.SYNTAX,
-            "(" + line + ":" + charPositionInLine + ") " + msg));
+            "(" + line + ":" + positionInLine + ") " + msg));
   }
 
-  public void semanticError(String msg) {
-    errors.add(new BonesError(BonesError.Category.SEMANTIC, msg));
+  public void semanticError(String msg, int line, int positionInLine) {
+    errors.add(new BonesError(BonesError.Category.SEMANTIC,
+            "(" + line + ":" + positionInLine + ") " + msg));
   }
 
-  public void runtimeError(String msg, boolean fatal, int exitCode) {
-    errors.add(new BonesError(BonesError.Category.RUNTIME, msg));
+  public void runtimeError(String msg, boolean fatal, int exitCode,
+                           int line, int positionInLine) {
+    errors.add(new BonesError(BonesError.Category.RUNTIME,
+            "(" + line + ":" + positionInLine + ") " + msg));
 
     if (fatal) RuntimeErrorExit.exit(this, exitCode);
   }

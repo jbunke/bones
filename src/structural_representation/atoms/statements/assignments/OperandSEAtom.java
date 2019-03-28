@@ -2,6 +2,7 @@ package structural_representation.atoms.statements.assignments;
 
 import error.BonesErrorListener;
 import error.ErrorMessages;
+import error.Position;
 import execution.RuntimeErrorExit;
 import execution.StatementControl;
 import structural_representation.atoms.expressions.ExpressionAtom;
@@ -19,10 +20,11 @@ public class OperandSEAtom extends AssignmentAtom {
   private final ExpressionAtom expression;
 
   public OperandSEAtom(AssignableAtom assignable, Operator operator,
-                       ExpressionAtom expression) {
+                       ExpressionAtom expression, Position position) {
     this.assignable = assignable;
     this.operator = operator;
     this.expression = expression;
+    this.position = position;
   }
 
   @Override
@@ -69,12 +71,14 @@ public class OperandSEAtom extends AssignmentAtom {
         if (value instanceof Integer && increment instanceof Integer) {
           if (increment.equals(0)) errorListener.runtimeError(
                   ErrorMessages.divideByZero(), true,
-                  RuntimeErrorExit.RUNTIME_ERROR_EXIT);
+                  RuntimeErrorExit.RUNTIME_ERROR_EXIT,
+                  getPosition().getLine(), getPosition().getPositionInLine());
           value = (Integer) value / (Integer) increment;
         } else {
           if (increment.equals(0f)) errorListener.runtimeError(
                   ErrorMessages.divideByZero(), true,
-                  RuntimeErrorExit.RUNTIME_ERROR_EXIT);
+                  RuntimeErrorExit.RUNTIME_ERROR_EXIT,
+                  getPosition().getLine(), getPosition().getPositionInLine());
           value = (Float) value / (Float) increment;
         }
         break;
@@ -82,12 +86,14 @@ public class OperandSEAtom extends AssignmentAtom {
         if (value instanceof Integer && increment instanceof Integer) {
           if (increment.equals(0)) errorListener.runtimeError(
                   ErrorMessages.divideByZero(), true,
-                  RuntimeErrorExit.RUNTIME_ERROR_EXIT);
+                  RuntimeErrorExit.RUNTIME_ERROR_EXIT,
+                  getPosition().getLine(), getPosition().getPositionInLine());
           value = (Integer) value % (Integer) increment;
         } else {
           if (increment.equals(0f)) errorListener.runtimeError(
                   ErrorMessages.divideByZero(), true,
-                  RuntimeErrorExit.RUNTIME_ERROR_EXIT);
+                  RuntimeErrorExit.RUNTIME_ERROR_EXIT,
+                  getPosition().getLine(), getPosition().getPositionInLine());
           value = (Float) value % (Float) increment;
         }
         break;
@@ -125,13 +131,15 @@ public class OperandSEAtom extends AssignmentAtom {
     if (!compliant(assignable.getType(symbolTable), operands)) {
       errorListener.semanticError(ErrorMessages.
               sideEffectOperatorAssignable(operatorToString(),
-                      assignable.getType(symbolTable)));
+                      assignable.getType(symbolTable)),
+              getPosition().getLine(), getPosition().getPositionInLine());
     }
 
     if (!compliant(expression.getType(symbolTable), operands)) {
       errorListener.semanticError(ErrorMessages.
               sideEffectOperatorOperand(operatorToString(),
-                      expression.getType(symbolTable)));
+                      expression.getType(symbolTable)),
+              getPosition().getLine(), getPosition().getPositionInLine());
     }
   }
 
