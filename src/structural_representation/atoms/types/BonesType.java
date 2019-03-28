@@ -10,7 +10,8 @@ public abstract class BonesType extends Atom {
   public void semanticErrorCheck(SymbolTable symbolTable,
                                  BonesErrorListener errorListener) {
     if (this instanceof VoidType) {
-      errorListener.semanticError(ErrorMessages.attemptedToUseVoidType());
+      errorListener.semanticError(ErrorMessages.attemptedToUseVoidType(),
+              getPosition().getLine(), getPosition().getPositionInLine());
     }
   }
 }

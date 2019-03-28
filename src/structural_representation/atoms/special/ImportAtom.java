@@ -1,6 +1,7 @@
 package structural_representation.atoms.special;
 
 import error.BonesErrorListener;
+import error.Position;
 import structural_representation.atoms.Atom;
 import structural_representation.symbol_table.SymbolTable;
 
@@ -9,8 +10,9 @@ import java.util.List;
 public class ImportAtom extends Atom {
   private final List<String> path;
 
-  public ImportAtom(List<String> path) {
+  public ImportAtom(List<String> path, Position position) {
     this.path = path;
+    this.position = position;
   }
 
   @Override

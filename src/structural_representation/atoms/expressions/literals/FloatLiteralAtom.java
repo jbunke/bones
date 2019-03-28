@@ -1,6 +1,7 @@
 package structural_representation.atoms.expressions.literals;
 
 import error.BonesErrorListener;
+import error.Position;
 import structural_representation.atoms.expressions.ExpressionAtom;
 import structural_representation.atoms.types.BonesType;
 import structural_representation.atoms.types.primitives.FloatType;
@@ -9,8 +10,9 @@ import structural_representation.symbol_table.SymbolTable;
 public class FloatLiteralAtom extends ExpressionAtom {
   private final float value;
 
-  public FloatLiteralAtom(float value) {
+  public FloatLiteralAtom(float value, Position position) {
     this.value = value;
+    this.position = position;
   }
 
   @Override

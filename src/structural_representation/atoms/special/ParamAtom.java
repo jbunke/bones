@@ -1,6 +1,7 @@
 package structural_representation.atoms.special;
 
 import error.BonesErrorListener;
+import error.Position;
 import structural_representation.atoms.Atom;
 import structural_representation.atoms.expressions.assignables.IdentifierAtom;
 import structural_representation.atoms.types.BonesType;
@@ -11,9 +12,10 @@ public class ParamAtom extends Atom {
   private final BonesType type;
   private final IdentifierAtom ident;
 
-  public ParamAtom(BonesType type, IdentifierAtom ident) {
+  public ParamAtom(BonesType type, IdentifierAtom ident, Position position) {
     this.type = type;
     this.ident = ident;
+    this.position = position;
   }
 
   @Override

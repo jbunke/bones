@@ -1,5 +1,6 @@
 package structural_representation.atoms.types.collections;
 
+import error.Position;
 import structural_representation.atoms.types.BonesType;
 
 public class ArrayType extends BonesType {
@@ -7,6 +8,11 @@ public class ArrayType extends BonesType {
 
   public ArrayType(BonesType elementType) {
     this.elementType = elementType;
+  }
+
+  public ArrayType(BonesType elementType, Position position) {
+    this.elementType = elementType;
+    this.position = position;
   }
 
   @Override

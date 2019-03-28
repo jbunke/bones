@@ -2,6 +2,7 @@ package structural_representation.atoms.statements;
 
 import error.BonesErrorListener;
 import error.ErrorMessages;
+import error.Position;
 import execution.StatementControl;
 import structural_representation.atoms.expressions.ExpressionAtom;
 import structural_representation.atoms.expressions.assignables.IdentifierAtom;
@@ -13,8 +14,8 @@ public class InitialisationAtom extends DeclarationAtom {
   private final ExpressionAtom RHS;
 
   public InitialisationAtom(BonesType type, IdentifierAtom ident,
-                            ExpressionAtom RHS) {
-    super(type, ident);
+                            ExpressionAtom RHS, Position position) {
+    super(type, ident, position);
     this.RHS = RHS;
   }
 
@@ -37,7 +38,8 @@ public class InitialisationAtom extends DeclarationAtom {
     if (!type.equals(rhsType)) {
       errorListener.semanticError(ErrorMessages.
               expectedTypeButExpressionIs("Initialisation",
-                      type, rhsType));
+                      type, rhsType),
+              getPosition().getLine(), getPosition().getPositionInLine());
     }
   }
 

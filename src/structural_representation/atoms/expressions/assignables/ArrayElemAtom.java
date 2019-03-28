@@ -2,6 +2,7 @@ package structural_representation.atoms.expressions.assignables;
 
 import error.BonesErrorListener;
 import error.ErrorMessages;
+import error.Position;
 import execution.BonesArray;
 import execution.BonesList;
 import execution.RuntimeErrorExit;
@@ -19,9 +20,11 @@ public class ArrayElemAtom extends AssignableAtom {
   private final String identifier;
   private final List<Integer> indices;
 
-  public ArrayElemAtom(String identifier, List<Integer> indices) {
+  public ArrayElemAtom(String identifier, List<Integer> indices,
+                       Position position) {
     this.identifier = identifier;
     this.indices = indices;
+    this.position = position;
   }
 
   @Override
@@ -52,7 +55,8 @@ public class ArrayElemAtom extends AssignableAtom {
     Object value =  variable.getValue();
 
     if (value == null) errorListener.runtimeError(ErrorMessages.nullPointer(),
-            true, RuntimeErrorExit.RUNTIME_ERROR_EXIT);
+            true, RuntimeErrorExit.RUNTIME_ERROR_EXIT,
+            getPosition().getLine(), getPosition().getPositionInLine());
 
     for (int i : indices) {
       if (value instanceof BonesArray) {
@@ -73,7 +77,8 @@ public class ArrayElemAtom extends AssignableAtom {
 
     if (!(variable.getType() instanceof ArrayType)) {
       errorListener.semanticError(ErrorMessages.
-              variableIsNotArrayInThisContext(identifier));
+              variableIsNotArrayInThisContext(identifier),
+              getPosition().getLine(), getPosition().getPositionInLine());
     }
   }
 

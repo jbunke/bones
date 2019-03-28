@@ -1,6 +1,7 @@
 package structural_representation.atoms.special;
 
 import error.BonesErrorListener;
+import error.Position;
 import execution.StatementControl;
 import structural_representation.atoms.Atom;
 import structural_representation.atoms.statements.StatementAtom;
@@ -23,11 +24,12 @@ public class FunctionAtom extends Atom implements Symbol {
 
   public FunctionAtom(BonesType returnType, String name,
                       ParamListAtom paramList,
-                      List<StatementAtom> statements) {
+                      List<StatementAtom> statements, Position position) {
     this.returnType = returnType;
     this.name = name;
     this.paramList = paramList;
     this.statements = statements;
+    this.position = position;
   }
 
   public boolean hasBeenChecked() {
@@ -53,7 +55,7 @@ public class FunctionAtom extends Atom implements Symbol {
     return status.getValue();
   }
 
-  public String getName() {
+  String getName() {
     return name;
   }
 

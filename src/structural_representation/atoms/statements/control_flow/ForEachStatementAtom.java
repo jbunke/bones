@@ -2,6 +2,7 @@ package structural_representation.atoms.statements.control_flow;
 
 import error.BonesErrorListener;
 import error.ErrorMessages;
+import error.Position;
 import execution.BonesArray;
 import execution.BonesList;
 import execution.StatementControl;
@@ -26,10 +27,11 @@ public class ForEachStatementAtom extends StatementAtom {
 
   public ForEachStatementAtom(IdentifierAtom token,
                               ExpressionAtom collection,
-                              List<StatementAtom> body) {
+                              List<StatementAtom> body, Position position) {
     this.token = token;
     this.collection = collection;
     this.body = body;
+    this.position = position;
   }
 
   @Override
@@ -92,12 +94,14 @@ public class ForEachStatementAtom extends StatementAtom {
             !(collection.getType(localTable) instanceof ListType) &&
             !(collection.getType(localTable) instanceof StringType)) {
       errorListener.semanticError(
-              ErrorMessages.foreachNotUsedWithCollection());
+              ErrorMessages.foreachNotUsedWithCollection(),
+              getPosition().getLine(), getPosition().getPositionInLine());
     }
 
     if (localTable.tableContainsKeyInScope(token.toString())) {
       errorListener.semanticError(
-              ErrorMessages.alreadyDeclaredInScope(token.toString()));
+              ErrorMessages.alreadyDeclaredInScope(token.toString()),
+              getPosition().getLine(), getPosition().getPositionInLine());
     } else if (collection.getType(localTable) instanceof ArrayType) {
       ArrayType arrayType = (ArrayType) collection.getType(localTable);
 

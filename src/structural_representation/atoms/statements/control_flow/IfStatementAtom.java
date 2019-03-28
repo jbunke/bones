@@ -2,6 +2,7 @@ package structural_representation.atoms.statements.control_flow;
 
 import error.BonesErrorListener;
 import error.ErrorMessages;
+import error.Position;
 import execution.StatementControl;
 import structural_representation.atoms.expressions.ExpressionAtom;
 import structural_representation.atoms.statements.StatementAtom;
@@ -17,7 +18,7 @@ public class IfStatementAtom extends StatementAtom {
   private final boolean hasElse;
 
   public IfStatementAtom(List<ExpressionAtom> conditions,
-                         List<List<StatementAtom>> bodies) {
+                         List<List<StatementAtom>> bodies, Position position) {
     if (conditions.size() > bodies.size() ||
             conditions.size() + 1 < bodies.size() ) {
       throw new IllegalArgumentException();
@@ -25,6 +26,7 @@ public class IfStatementAtom extends StatementAtom {
 
     this.conditions = conditions;
     this.bodies = bodies;
+    this.position = position;
 
     hasElse = conditions.size() < bodies.size();
   }
@@ -72,7 +74,8 @@ public class IfStatementAtom extends StatementAtom {
     SymbolTable localTable = new SymbolTable(this, symbolTable);
     for (ExpressionAtom condition : conditions) {
       if (!condition.getType(localTable).equals(new BoolType())) {
-        errorListener.semanticError(ErrorMessages.conditionIsNotBoolean());
+        errorListener.semanticError(ErrorMessages.conditionIsNotBoolean(),
+                getPosition().getLine(), getPosition().getPositionInLine());
       }
     }
 

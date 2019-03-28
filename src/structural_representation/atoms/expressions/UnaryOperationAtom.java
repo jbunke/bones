@@ -2,6 +2,7 @@ package structural_representation.atoms.expressions;
 
 import error.BonesErrorListener;
 import error.ErrorMessages;
+import error.Position;
 import execution.BonesArray;
 import execution.BonesList;
 import structural_representation.atoms.types.BonesType;
@@ -14,9 +15,11 @@ public class UnaryOperationAtom extends ExpressionAtom {
   private final ExpressionAtom expr;
   private final UnaryOperationAtom.Operator operator;
 
-  public UnaryOperationAtom(ExpressionAtom expr, String opString) {
+  public UnaryOperationAtom(ExpressionAtom expr, String opString,
+                            Position position) {
     this.expr = expr;
     operator = operatorFromString(opString);
+    this.position = position;
   }
 
   @Override
@@ -27,7 +30,8 @@ public class UnaryOperationAtom extends ExpressionAtom {
         if (!expr.getType(symbolTable).equals(new BoolType())) {
           errorListener.semanticError(ErrorMessages.
                   expectedTypeButExpressionIs("Not operation",
-                          new BoolType(), expr.getType(symbolTable)));
+                          new BoolType(), expr.getType(symbolTable)),
+                  getPosition().getLine(), getPosition().getPositionInLine());
         }
         break;
       case SIZE:
@@ -35,14 +39,16 @@ public class UnaryOperationAtom extends ExpressionAtom {
                 !(expr.getType(symbolTable) instanceof ArrayType) &&
                 !(expr.getType(symbolTable) instanceof StringType)) {
           errorListener.semanticError(
-                  ErrorMessages.calledSizeOnNonCollection());
+                  ErrorMessages.calledSizeOnNonCollection(),
+                  getPosition().getLine(), getPosition().getPositionInLine());
         }
         break;
       case MINUS:
         if (!(expr.getType(symbolTable) instanceof IntType) &&
                 !(expr.getType(symbolTable) instanceof FloatType)) {
           errorListener.semanticError(
-                  ErrorMessages.calledMinusOnNonNumeric());
+                  ErrorMessages.calledMinusOnNonNumeric(),
+                  getPosition().getLine(), getPosition().getPositionInLine());
         }
         break;
     }

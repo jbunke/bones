@@ -2,6 +2,7 @@ package structural_representation.atoms.statements;
 
 import error.BonesErrorListener;
 import error.ErrorMessages;
+import error.Position;
 import execution.StatementControl;
 import structural_representation.atoms.expressions.assignables.IdentifierAtom;
 import structural_representation.atoms.types.BonesType;
@@ -12,9 +13,11 @@ public class DeclarationAtom extends StatementAtom {
   final BonesType type;
   final IdentifierAtom ident;
 
-  public DeclarationAtom(BonesType type, IdentifierAtom ident) {
+  public DeclarationAtom(BonesType type, IdentifierAtom ident,
+                         Position position) {
     this.type = type;
     this.ident = ident;
+    this.position = position;
   }
 
   @Override
@@ -24,7 +27,8 @@ public class DeclarationAtom extends StatementAtom {
 
     if (symbolTable.tableContainsKeyInScope(ident.toString())) {
       errorListener.semanticError(
-              ErrorMessages.alreadyDeclaredInScope(ident.toString()));
+              ErrorMessages.alreadyDeclaredInScope(ident.toString()),
+              getPosition().getLine(), getPosition().getPositionInLine());
     }
 
     symbolTable.put(ident.toString(), new Variable(type));

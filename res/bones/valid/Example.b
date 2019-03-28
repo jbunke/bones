@@ -1,4 +1,4 @@
-path root;
+path bones.valid;
 
 class Example {
   int a;
@@ -15,7 +15,10 @@ class Example {
   }
 
   int sumOfThree(int x, int y, int z) {
-    return x + y + z;
+    int b = -46;
+    bool c = true;
+    // comment in front: should resolve b + c;
+    return x + y + z; // comment behind - should still work
   }
 
   void printLongerLetterByLetter(string first, string second) {

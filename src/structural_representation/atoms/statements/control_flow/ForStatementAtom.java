@@ -2,6 +2,7 @@ package structural_representation.atoms.statements.control_flow;
 
 import error.BonesErrorListener;
 import error.ErrorMessages;
+import error.Position;
 import execution.StatementControl;
 import structural_representation.atoms.expressions.ExpressionAtom;
 import structural_representation.atoms.statements.InitialisationAtom;
@@ -23,11 +24,12 @@ public class ForStatementAtom extends StatementAtom {
   public ForStatementAtom(InitialisationAtom initialisation,
                           ExpressionAtom loopCondition,
                           AssignmentAtom incrementation,
-                          List<StatementAtom> body) {
+                          List<StatementAtom> body, Position position) {
     this.initialisation = initialisation;
     this.loopCondition = loopCondition;
     this.incrementation = incrementation;
     this.body = body;
+    this.position = position;
   }
 
   @Override
@@ -63,7 +65,8 @@ public class ForStatementAtom extends StatementAtom {
     initialisation.semanticErrorCheck(localTable, errorListener);
 
     if (!loopCondition.getType(localTable).equals(new BoolType())) {
-      errorListener.semanticError(ErrorMessages.conditionIsNotBoolean());
+      errorListener.semanticError(ErrorMessages.conditionIsNotBoolean(),
+              getPosition().getLine(), getPosition().getPositionInLine());
     }
 
     incrementation.semanticErrorCheck(localTable, errorListener);
