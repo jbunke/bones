@@ -18,8 +18,12 @@ public class ArrayType extends BonesType {
     return false;
   }
 
+  public BonesType getElementType() {
+    return elementType;
+  }
+
   @Override
   public String toString() {
-    return "[" + elementType.toString() + "]";
+    return elementType.toString() + "[]";
   }
 }

@@ -33,6 +33,9 @@ param: type ident ;
 
 param_list: param (COMMA param)* ;
 
+main: VOID MAIN LPAREN STRING LBRACKET
+RBRACKET ident RPAREN LCURLY stat* RCURLY ;
+
 funct: type ident LPAREN param_list?
 RPAREN LCURLY stat* RCURLY ;
 
@@ -50,6 +53,8 @@ expr: int_literal                             #INT_EXPR
 | char_literal                                #CHAR_EXPR
 | string_literal                              #STRING_EXPR
 | assignable                                  #ASSIGNABLE_EXPR
+| CALL (ident PERIOD)* ident
+  LPAREN (expr (COMMA expr)* )? RPAREN        #FUNCTION_CALL_EXPR
 | op=(NOT | SIZE | MINUS) expr                #UNARY_OP_EXPR
 | expr RAISE expr                             #EXPONENTIATION_EXPR
 | expr op=(TIMES | DIVIDE | MOD) expr         #MUL_DIV_MOD_EXPR
@@ -90,13 +95,15 @@ assignable ASSIGN expr SEMICOLON              #STANDARD_ASSIGNMENT
 body: LCURLY stat* RCURLY ;
 
 stat: FOR LPAREN init SEMICOLON expr
-SEMICOLON assignment RPAREN body              #FOR_STAT
+  SEMICOLON assignment RPAREN body            #FOR_STAT
 | FOREACH LPAREN ident COLON expr
-RPAREN body                                   #FOREACH_STAT
+  RPAREN body                                 #FOREACH_STAT
 | IF LPAREN expr RPAREN body
-(ELSE IF LPAREN expr RPAREN body)*
-(ELSE body)?                                  #IF_STAT
+  (ELSE IF LPAREN expr RPAREN body)*
+  (ELSE body)?                                #IF_STAT
 | WHILE LPAREN expr RPAREN body               #WHILE_STAT
+| PRINTLN LPAREN expr RPAREN SEMICOLON        #PRINTLN_STAT
+| PRINT LPAREN expr RPAREN SEMICOLON          #PRINT_STAT
 | RETURN SEMICOLON                            #VOID_RETURN_STAT
 | RETURN expr SEMICOLON                       #RETURN_STAT
 | decl                                        #DECLARATION_STAT
@@ -107,4 +114,4 @@ RPAREN body                                   #FOREACH_STAT
 
 // root-level program rule
 class_rule: path? import_stat* CLASS
-ident LCURLY field* funct* RCURLY EOF ;
+ident LCURLY field* main? funct* RCURLY EOF ;

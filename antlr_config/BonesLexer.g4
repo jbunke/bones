@@ -70,6 +70,10 @@ WHILE: 'while';
 TRUE: 'true';
 FALSE: 'false';
 RETURN: 'return';
+CALL: 'call';
+MAIN: 'main';
+PRINTLN: 'println';
+PRINT: 'print';
 
 // numbers
 fragment DIGIT: '0'..'9';
