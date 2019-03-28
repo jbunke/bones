@@ -33,6 +33,9 @@ param: type ident ;
 
 param_list: param (COMMA param)* ;
 
+main: VOID MAIN LPAREN STRING LBRACKET
+RBRACKET ident RPAREN LCURLY stat* RCURLY ;
+
 funct: type ident LPAREN param_list?
 RPAREN LCURLY stat* RCURLY ;
 
@@ -50,6 +53,8 @@ expr: int_literal                             #INT_EXPR
 | char_literal                                #CHAR_EXPR
 | string_literal                              #STRING_EXPR
 | assignable                                  #ASSIGNABLE_EXPR
+| PRINTLN LPAREN expr RPAREN                  #PRINTLN_EXPR
+| PRINT LPAREN expr RPAREN                    #PRINT_EXPR
 | CALL (ident PERIOD)* ident
   LPAREN (expr (COMMA expr)* )? RPAREN        #FUNCTION_CALL_EXPR
 | op=(NOT | SIZE | MINUS) expr                #UNARY_OP_EXPR
@@ -109,4 +114,4 @@ stat: FOR LPAREN init SEMICOLON expr
 
 // root-level program rule
 class_rule: path? import_stat* CLASS
-ident LCURLY field* funct* RCURLY EOF ;
+ident LCURLY field* main? funct* RCURLY EOF ;

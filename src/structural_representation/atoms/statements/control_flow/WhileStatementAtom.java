@@ -2,6 +2,7 @@ package structural_representation.atoms.statements.control_flow;
 
 import error.BonesErrorListener;
 import error.ErrorMessages;
+import execution.StatementControl;
 import structural_representation.atoms.expressions.ExpressionAtom;
 import structural_representation.atoms.statements.StatementAtom;
 import structural_representation.atoms.types.BonesType;
@@ -19,6 +20,23 @@ public class WhileStatementAtom extends StatementAtom {
                             List<StatementAtom> body) {
     this.loopCondition = loopCondition;
     this.body = body;
+  }
+
+  @Override
+  public StatementControl execute(SymbolTable table,
+                                  BonesErrorListener errorListener) {
+    SymbolTable localTable = table.findChild(this);
+
+    StatementControl status = StatementControl.cont();
+
+    while ((Boolean) loopCondition.evaluate(localTable, errorListener)) {
+      for (StatementAtom statement : body) {
+        if (!status.shouldContinue()) return status;
+        status = statement.execute(localTable, errorListener);
+      }
+    }
+
+    return status;
   }
 
   @Override

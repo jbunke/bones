@@ -2,6 +2,7 @@ package structural_representation.atoms.statements.control_flow;
 
 import error.BonesErrorListener;
 import error.ErrorMessages;
+import execution.StatementControl;
 import structural_representation.atoms.expressions.ExpressionAtom;
 import structural_representation.atoms.statements.StatementAtom;
 import structural_representation.atoms.types.BonesType;
@@ -26,6 +27,35 @@ public class IfStatementAtom extends StatementAtom {
     this.bodies = bodies;
 
     hasElse = conditions.size() < bodies.size();
+  }
+
+  @Override
+  public StatementControl execute(SymbolTable table,
+                                  BonesErrorListener errorListener) {
+    SymbolTable localTable = table.findChild(this);
+
+    StatementControl status = StatementControl.cont();
+    boolean triggeredCondition = false;
+
+    for (int i = 0; !triggeredCondition && i < conditions.size(); i++) {
+      triggeredCondition = (Boolean) conditions.get(i).evaluate(
+              localTable, errorListener);
+      if (triggeredCondition) {
+        for (StatementAtom statement : bodies.get(i)) {
+          if (!status.shouldContinue()) return status;
+          status = statement.execute(localTable, errorListener);
+        }
+      }
+    }
+
+    if (!triggeredCondition && hasElse) {
+      for (StatementAtom statement : bodies.get(bodies.size() - 1)) {
+        if (!status.shouldContinue()) return status;
+        status = statement.execute(localTable, errorListener);
+      }
+    }
+
+    return status;
   }
 
   @Override

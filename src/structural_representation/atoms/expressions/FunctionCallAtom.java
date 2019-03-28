@@ -22,7 +22,7 @@ public class FunctionCallAtom extends ExpressionAtom {
 
   @Override
   public BonesType getType(SymbolTable table) {
-    if (function == null) function = (FunctionAtom) table.get(name);
+    if (function == null) function = (FunctionAtom) table.root().get(name);
 
     return function.getType();
   }
@@ -48,24 +48,24 @@ public class FunctionCallAtom extends ExpressionAtom {
   @Override
   public void semanticErrorCheck(SymbolTable symbolTable,
                                  BonesErrorListener errorListener) {
+    if (symbolTable.root().get(name) == null) {
+      errorListener.semanticError(ErrorMessages.
+              identifierIsNotAFunction(name));
+      return;
+    } else if (!(symbolTable.root().get(name) instanceof FunctionAtom)) {
+      errorListener.semanticError(ErrorMessages.
+              identifierIsNotAFunction(name));
+      return;
+    } else if (function == null) {
+      function = (FunctionAtom) symbolTable.root().get(name);
+    }
+
     /* Semantic check the function if it hasn't been done */
     if (!function.hasBeenChecked()) {
       SymbolTable functionTable = symbolTable.tableForFunction(function);
 
       if (functionTable != null)
         function.semanticErrorCheck(functionTable, errorListener);
-    }
-
-    if (symbolTable.get(name) == null) {
-      errorListener.semanticError(ErrorMessages.
-              identifierIsNotAFunction(name));
-      return;
-    } else if (!(symbolTable.get(name) instanceof FunctionAtom)) {
-      errorListener.semanticError(ErrorMessages.
-              identifierIsNotAFunction(name));
-      return;
-    } else if (function == null) {
-      function = (FunctionAtom) symbolTable.get(name);
     }
 
     if (function.getParamList().getParams().size() != arguments.size()) {

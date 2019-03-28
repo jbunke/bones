@@ -2,6 +2,7 @@ package structural_representation.atoms.statements;
 
 import error.BonesErrorListener;
 import error.ErrorMessages;
+import execution.StatementControl;
 import structural_representation.atoms.expressions.ExpressionAtom;
 import structural_representation.atoms.types.BonesType;
 import structural_representation.symbol_table.SymbolTable;
@@ -20,8 +21,16 @@ public class ReturnAtom extends StatementAtom {
   }
 
   @Override
+  public StatementControl execute(SymbolTable table,
+                                  BonesErrorListener errorListener) {
+    return StatementControl.returnWith(
+            expression.evaluate(table, errorListener));
+  }
+
+  @Override
   public void semanticErrorCheck(SymbolTable symbolTable,
                                  BonesErrorListener errorListener) {
+    expression.semanticErrorCheck(symbolTable, errorListener);
     BonesType actualType = expression.getType(symbolTable);
     if (!expectedReturnType.equals(actualType)) {
       errorListener.semanticError(

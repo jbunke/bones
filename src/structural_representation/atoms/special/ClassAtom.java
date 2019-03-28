@@ -26,6 +26,18 @@ public class ClassAtom extends BonesType implements Symbol {
     this.functions = functions;
   }
 
+  public void execute(SymbolTable table, BonesErrorListener errorListener) {
+    FunctionAtom main = null;
+
+    for (int i = 0; i < functions.size() && main == null; i++) {
+      main = functions.get(i).isMain() ? functions.get(i) : null;
+    }
+
+    if (main != null) {
+      main.evaluate(table.findChild(main), errorListener);
+    }
+  }
+
   @Override
   public void semanticErrorCheck(SymbolTable symbolTable,
                                  BonesErrorListener errorListener) {
@@ -33,6 +45,7 @@ public class ClassAtom extends BonesType implements Symbol {
     imports.forEach(x -> x.semanticErrorCheck(symbolTable, errorListener));
 
     fields.forEach(x -> x.semanticErrorCheck(symbolTable, errorListener));
+    functions.forEach(x -> symbolTable.put(x.getName(), x));
     functions.forEach(x -> x.semanticErrorCheck(symbolTable, errorListener));
   }
 

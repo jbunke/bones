@@ -2,13 +2,17 @@ package structural_representation.atoms.statements.assignments;
 
 import error.BonesErrorListener;
 import error.ErrorMessages;
+import execution.RuntimeErrorExit;
+import execution.StatementControl;
 import structural_representation.atoms.expressions.ExpressionAtom;
 import structural_representation.atoms.expressions.assignables.AssignableAtom;
+import structural_representation.atoms.expressions.assignables.IdentifierAtom;
 import structural_representation.atoms.types.BonesType;
 import structural_representation.atoms.types.primitives.BoolType;
 import structural_representation.atoms.types.primitives.FloatType;
 import structural_representation.atoms.types.primitives.IntType;
 import structural_representation.symbol_table.SymbolTable;
+import structural_representation.symbol_table.Variable;
 
 public class OperandSEAtom extends AssignmentAtom {
   private final Operator operator;
@@ -22,8 +26,86 @@ public class OperandSEAtom extends AssignmentAtom {
   }
 
   @Override
+  public StatementControl execute(SymbolTable table, BonesErrorListener errorListener) {
+    Object increment = expression.evaluate(table, errorListener);
+    Object value;
+
+    if (assignable instanceof IdentifierAtom) {
+      value = ((Variable) table.get(assignable.toString())).getValue();
+    } else {
+      // TODO else if is list elem or array elem
+      value = ((Variable) table.get(assignable.toString())).getValue();
+    }
+
+    switch (operator) {
+      case OR_ASSIGN:
+        value = (Boolean) value || (Boolean) increment;
+        break;
+      case AND_ASSIGN:
+        value = (Boolean) value && (Boolean) increment;
+        break;
+      case ADD_ASSIGN:
+        if (value instanceof Integer && increment instanceof Integer) {
+          value = (Integer) value + (Integer) increment;
+        } else {
+          value = (Float) value + (Float) increment;
+        }
+        break;
+      case SUB_ASSIGN:
+        if (value instanceof Integer && increment instanceof Integer) {
+          value = (Integer) value - (Integer) increment;
+        } else {
+          value = (Float) value - (Float) increment;
+        }
+        break;
+      case MUL_ASSIGN:
+        if (value instanceof Integer && increment instanceof Integer) {
+          value = (Integer) value * (Integer) increment;
+        } else {
+          value = (Float) value * (Float) increment;
+        }
+        break;
+      case DIV_ASSIGN:
+        if (value instanceof Integer && increment instanceof Integer) {
+          if (increment.equals(0)) errorListener.runtimeError(
+                  ErrorMessages.divideByZero(), true,
+                  RuntimeErrorExit.RUNTIME_ERROR_EXIT);
+          value = (Integer) value / (Integer) increment;
+        } else {
+          if (increment.equals(0f)) errorListener.runtimeError(
+                  ErrorMessages.divideByZero(), true,
+                  RuntimeErrorExit.RUNTIME_ERROR_EXIT);
+          value = (Float) value / (Float) increment;
+        }
+        break;
+      case MOD_ASSIGN:
+        if (value instanceof Integer && increment instanceof Integer) {
+          if (increment.equals(0)) errorListener.runtimeError(
+                  ErrorMessages.divideByZero(), true,
+                  RuntimeErrorExit.RUNTIME_ERROR_EXIT);
+          value = (Integer) value % (Integer) increment;
+        } else {
+          if (increment.equals(0f)) errorListener.runtimeError(
+                  ErrorMessages.divideByZero(), true,
+                  RuntimeErrorExit.RUNTIME_ERROR_EXIT);
+          value = (Float) value % (Float) increment;
+        }
+        break;
+    }
+
+    if (assignable instanceof IdentifierAtom) {
+      table.update(assignable.toString(), value);
+    }
+    // TODO: else if is list elem or array elem
+
+    return StatementControl.cont();
+  }
+
+  @Override
   public void semanticErrorCheck(SymbolTable symbolTable,
                                  BonesErrorListener errorListener) {
+    expression.semanticErrorCheck(symbolTable, errorListener);
+
     OperatorOperands operands = OperatorOperands.ALL;
 
     switch (operator) {

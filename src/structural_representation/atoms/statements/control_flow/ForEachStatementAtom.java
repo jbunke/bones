@@ -2,12 +2,17 @@ package structural_representation.atoms.statements.control_flow;
 
 import error.BonesErrorListener;
 import error.ErrorMessages;
+import execution.BonesArray;
+import execution.BonesList;
+import execution.StatementControl;
 import structural_representation.atoms.expressions.ExpressionAtom;
 import structural_representation.atoms.expressions.assignables.IdentifierAtom;
 import structural_representation.atoms.statements.StatementAtom;
 import structural_representation.atoms.types.BonesType;
 import structural_representation.atoms.types.collections.ArrayType;
 import structural_representation.atoms.types.collections.ListType;
+import structural_representation.atoms.types.primitives.CharType;
+import structural_representation.atoms.types.primitives.StringType;
 import structural_representation.symbol_table.SymbolTable;
 import structural_representation.symbol_table.Variable;
 
@@ -25,6 +30,53 @@ public class ForEachStatementAtom extends StatementAtom {
     this.token = token;
     this.collection = collection;
     this.body = body;
+  }
+
+  @Override
+  public StatementControl execute(SymbolTable table,
+                                  BonesErrorListener errorListener) {
+    SymbolTable localTable = table.findChild(this);
+
+    StatementControl status = StatementControl.cont();
+
+    Object collection = this.collection.evaluate(table, errorListener);
+
+    if (collection instanceof BonesList) {
+      BonesList list = (BonesList) collection;
+
+      for (int i = 0; i < list.size(); i++) {
+        localTable.update(token.toString(), list.at(i));
+
+        for (StatementAtom statement : body) {
+          if (!status.shouldContinue()) return status;
+          status = statement.execute(localTable, errorListener);
+        }
+      }
+    } else if (collection instanceof BonesArray) {
+      BonesArray array = (BonesArray) collection;
+
+      for (int i = 0; i < array.size(); i++) {
+        localTable.update(token.toString(), array.at(i));
+
+        for (StatementAtom statement : body) {
+          if (!status.shouldContinue()) return status;
+          status = statement.execute(localTable, errorListener);
+        }
+      }
+    } else if (collection instanceof String) {
+      String string = (String) collection;
+
+      for (int i = 0; i < string.length(); i++) {
+        localTable.update(token.toString(), string.charAt(i));
+
+        for (StatementAtom statement : body) {
+          if (!status.shouldContinue()) return status;
+          status = statement.execute(localTable, errorListener);
+        }
+      }
+    }
+
+    return status;
   }
 
   @Override
@@ -55,6 +107,8 @@ public class ForEachStatementAtom extends StatementAtom {
 
       localTable.put(token.toString(),
               new Variable(listType.getElementType()));
+    } else if (collection.getType(localTable) instanceof StringType) {
+      localTable.put(token.toString(), new Variable(new CharType()));
     }
 
     // TODO: Ensure collection is not modified inside code block

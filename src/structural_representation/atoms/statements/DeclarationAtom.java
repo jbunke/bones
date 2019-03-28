@@ -2,6 +2,7 @@ package structural_representation.atoms.statements;
 
 import error.BonesErrorListener;
 import error.ErrorMessages;
+import execution.StatementControl;
 import structural_representation.atoms.expressions.assignables.IdentifierAtom;
 import structural_representation.atoms.types.BonesType;
 import structural_representation.symbol_table.SymbolTable;
@@ -32,5 +33,13 @@ public class DeclarationAtom extends StatementAtom {
   @Override
   public String toString() {
     return type.toString() + " " + ident.toString() + ";";
+  }
+
+  @Override
+  public StatementControl execute(SymbolTable table,
+                                  BonesErrorListener errorListener) {
+    table.put(ident.toString(), new Variable(type));
+
+    return StatementControl.cont();
   }
 }

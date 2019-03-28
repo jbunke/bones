@@ -1,9 +1,13 @@
 package structural_representation.atoms.special;
 
 import error.BonesErrorListener;
+import execution.StatementControl;
 import structural_representation.atoms.Atom;
 import structural_representation.atoms.statements.StatementAtom;
 import structural_representation.atoms.types.BonesType;
+import structural_representation.atoms.types.collections.ArrayType;
+import structural_representation.atoms.types.primitives.StringType;
+import structural_representation.atoms.types.primitives.VoidType;
 import structural_representation.symbol_table.Symbol;
 import structural_representation.symbol_table.SymbolTable;
 
@@ -30,10 +34,27 @@ public class FunctionAtom extends Atom implements Symbol {
     return beenChecked;
   }
 
-  public Object evaluate(SymbolTable table, BonesErrorListener errorListener) {
-    // TODO
+  public boolean isMain() {
+    return name.equals("main") && returnType instanceof VoidType &&
+            paramList != null && paramList.getParams().size() == 1 &&
+            paramList.getParams().get(0).getType().equals(
+                    new ArrayType(new StringType()));
+  }
 
-    return null;
+  public Object evaluate(SymbolTable table, BonesErrorListener errorListener) {
+
+    StatementControl status = StatementControl.cont();
+
+    for (StatementAtom statement : statements) {
+      status = statement.execute(table, errorListener);
+      if (!status.shouldContinue()) break;
+    }
+
+    return status.getValue();
+  }
+
+  public String getName() {
+    return name;
   }
 
   @Override

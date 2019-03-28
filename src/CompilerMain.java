@@ -48,7 +48,7 @@ public class CompilerMain {
       structure.semanticErrorCheck(rootTable, errorListener);
       printErrorsAndExit(errorListener);
 
-      System.out.println("DONE");
+      structure.execute(rootTable, errorListener);
     } catch (IOException e) {
       e.printStackTrace();
     }

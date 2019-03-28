@@ -3,19 +3,16 @@ path root;
 class Example {
   int a;
 
-  int recFib(int n) {
-    if (n < 0) {
-      return -1;
-    }
-
-    if (n == 0 || n == 1) {
-      return n;
-    }
-
-    return call recFib(n - 1) + call recFib(n - 2);
+  void main(string[] p_args) {
+    int answer = call sumOfThree(6, 7, 8);
+    println(10 / 3);
+    println(10 / 3.0);
+    println(10 / 0);
+    print("Answer: ");
+    println(answer);
   }
 
-  void main(string[] p_args) {
-    a = call recFib(20);
+  int sumOfThree(int x, int y, int z) {
+    return x + y + z;
   }
 }

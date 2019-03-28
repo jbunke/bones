@@ -25,12 +25,21 @@ public class SymbolTable {
     children.put(scope, symbolTable);
   }
 
+  public SymbolTable findChild(Atom scope) {
+    if (children.containsKey(scope)) return children.get(scope);
+
+    return null;
+  }
+
   public void put(String key, Symbol symbol) {
     contents.put(key, symbol);
   }
 
   public void update(String key, Object value) {
-    if (!contents.containsKey(key)) return;
+    if (!contents.containsKey(key)) {
+      if (parent != null) parent.update(key, value);
+      return;
+    }
     Symbol symbol = contents.get(key);
     if (!(symbol instanceof Variable)) return;
     Variable variable = (Variable) symbol;
@@ -44,6 +53,8 @@ public class SymbolTable {
   public Symbol get(String key) {
     if (contents.containsKey(key)) {
       return contents.get(key);
+    } else if (contents.containsKey("param_" + key)) {
+      return contents.get("param_" + key);
     } else if (parent != null) {
       return parent.get(key);
     }
@@ -59,6 +70,11 @@ public class SymbolTable {
     }
 
     return null;
+  }
+
+  public SymbolTable root() {
+    if (parent == null) return this;
+    return parent.root();
   }
 
   public SymbolTable tableForFunction(FunctionAtom function) {

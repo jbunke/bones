@@ -22,6 +22,7 @@ import structural_representation.atoms.statements.control_flow.ForEachStatementA
 import structural_representation.atoms.statements.control_flow.ForStatementAtom;
 import structural_representation.atoms.statements.control_flow.IfStatementAtom;
 import structural_representation.atoms.statements.control_flow.WhileStatementAtom;
+import structural_representation.atoms.statements.io.PrintStatementAtom;
 import structural_representation.atoms.types.BonesType;
 import structural_representation.atoms.types.collections.ArrayType;
 import structural_representation.atoms.types.collections.ListType;
@@ -46,6 +47,18 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     }
 
     return new PathAtom(pathSteps);
+  }
+
+  @Override
+  public Atom visitPRINTLN_EXPR(BonesParser.PRINTLN_EXPRContext ctx) {
+    ExpressionAtom toPrint = (ExpressionAtom) visit(ctx.expr());
+    return new PrintStatementAtom(toPrint, true);
+  }
+
+  @Override
+  public Atom visitPRINT_EXPR(BonesParser.PRINT_EXPRContext ctx) {
+    ExpressionAtom toPrint = (ExpressionAtom) visit(ctx.expr());
+    return new PrintStatementAtom(toPrint, false);
   }
 
   @Override
@@ -108,6 +121,24 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     IdentifierAtom ident = (IdentifierAtom) visitIdent(ctx.ident());
 
     return new DeclarationAtom(type, ident);
+  }
+
+  @Override
+  public Atom visitMain(BonesParser.MainContext ctx) {
+
+    List<ParamAtom> paramAtoms = new ArrayList<>();
+
+    paramAtoms.add(new ParamAtom(new ArrayType(new StringType()),
+            new IdentifierAtom(ctx.ident().IDENTIFIER().getSymbol().getText())));
+
+    List<StatementAtom> statements = new ArrayList<>();
+
+    for (BonesParser.StatContext statContext : ctx.stat()) {
+      statements.add((StatementAtom) visit(statContext));
+    }
+
+    return new FunctionAtom(new VoidType(), "main",
+            new ParamListAtom(paramAtoms), statements);
   }
 
   @Override
@@ -186,7 +217,7 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
   public Atom visitString_literal(BonesParser.String_literalContext ctx) {
     /* QUOTATION MARK REMOVAL */
     String text = ctx.STRING_LITERAL().getSymbol().getText();
-    text = text.substring(1, text.length() - 2);
+    text = text.substring(1, text.length() - 1);
 
     return new StringLiteralAtom(text);
   }
@@ -589,6 +620,11 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     }
 
     List<FunctionAtom> functions = new ArrayList<>();
+
+    if (ctx.main() != null) {
+      FunctionAtom main = (FunctionAtom) visitMain(ctx.main());
+      functions.add(main);
+    }
 
     for (BonesParser.FunctContext functContext : ctx.funct()) {
       FunctionAtom function = (FunctionAtom) visitFunct(functContext);
