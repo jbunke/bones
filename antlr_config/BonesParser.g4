@@ -53,8 +53,6 @@ expr: int_literal                             #INT_EXPR
 | char_literal                                #CHAR_EXPR
 | string_literal                              #STRING_EXPR
 | assignable                                  #ASSIGNABLE_EXPR
-| PRINTLN LPAREN expr RPAREN                  #PRINTLN_EXPR
-| PRINT LPAREN expr RPAREN                    #PRINT_EXPR
 | CALL (ident PERIOD)* ident
   LPAREN (expr (COMMA expr)* )? RPAREN        #FUNCTION_CALL_EXPR
 | op=(NOT | SIZE | MINUS) expr                #UNARY_OP_EXPR
@@ -104,6 +102,8 @@ stat: FOR LPAREN init SEMICOLON expr
   (ELSE IF LPAREN expr RPAREN body)*
   (ELSE body)?                                #IF_STAT
 | WHILE LPAREN expr RPAREN body               #WHILE_STAT
+| PRINTLN LPAREN expr RPAREN SEMICOLON        #PRINTLN_STAT
+| PRINT LPAREN expr RPAREN SEMICOLON          #PRINT_STAT
 | RETURN SEMICOLON                            #VOID_RETURN_STAT
 | RETURN expr SEMICOLON                       #RETURN_STAT
 | decl                                        #DECLARATION_STAT

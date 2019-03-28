@@ -50,13 +50,13 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
   }
 
   @Override
-  public Atom visitPRINTLN_EXPR(BonesParser.PRINTLN_EXPRContext ctx) {
+  public Atom visitPRINTLN_STAT(BonesParser.PRINTLN_STATContext ctx) {
     ExpressionAtom toPrint = (ExpressionAtom) visit(ctx.expr());
     return new PrintStatementAtom(toPrint, true);
   }
 
   @Override
-  public Atom visitPRINT_EXPR(BonesParser.PRINT_EXPRContext ctx) {
+  public Atom visitPRINT_STAT(BonesParser.PRINT_STATContext ctx) {
     ExpressionAtom toPrint = (ExpressionAtom) visit(ctx.expr());
     return new PrintStatementAtom(toPrint, false);
   }
@@ -596,7 +596,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
 
   @Override
   public Atom visitEXPRESSION_STAT(BonesParser.EXPRESSION_STATContext ctx) {
-    return visit(ctx.expr());
+    ExpressionAtom expression = (ExpressionAtom) visit(ctx.expr());
+    return new ExpressionStatementAtom(expression);
   }
 
   @Override

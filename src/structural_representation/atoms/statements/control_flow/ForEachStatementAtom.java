@@ -89,7 +89,8 @@ public class ForEachStatementAtom extends StatementAtom {
                                  BonesErrorListener errorListener) {
     SymbolTable localTable = new SymbolTable(this, symbolTable);
     if (!(collection.getType(localTable) instanceof ArrayType) &&
-            !(collection.getType(localTable) instanceof ListType)) {
+            !(collection.getType(localTable) instanceof ListType) &&
+            !(collection.getType(localTable) instanceof StringType)) {
       errorListener.semanticError(
               ErrorMessages.foreachNotUsedWithCollection());
     }
