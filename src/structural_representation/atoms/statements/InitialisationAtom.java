@@ -33,12 +33,16 @@ public class InitialisationAtom extends DeclarationAtom {
                                  BonesErrorListener errorListener) {
     super.semanticErrorCheck(symbolTable, errorListener);
 
+    RHS.semanticErrorCheck(symbolTable, errorListener);
+
+    if (errorListener.hasError()) return;
+
     BonesType rhsType = RHS.getType(symbolTable);
 
     if (!type.equals(rhsType)) {
       errorListener.semanticError(ErrorMessages.
-              expectedTypeButExpressionIs("Initialisation",
-                      type, rhsType),
+                      expectedTypeButExpressionIs("Initialisation",
+                              type, rhsType),
               getPosition().getLine(), getPosition().getPositionInLine());
     }
   }

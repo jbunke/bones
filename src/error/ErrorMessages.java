@@ -89,6 +89,6 @@ public class ErrorMessages {
   }
 
   public static String nullPointer() {
-    return "Null pointer";
+    return "Null pointer: Value is queried before it is assigned a value";
   }
 }

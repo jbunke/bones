@@ -30,6 +30,11 @@ public class BinaryOperationAtom extends ExpressionAtom {
   @Override
   public void semanticErrorCheck(SymbolTable symbolTable,
                                  BonesErrorListener errorListener) {
+    LHS.semanticErrorCheck(symbolTable, errorListener);
+    RHS.semanticErrorCheck(symbolTable, errorListener);
+
+    if (errorListener.hasError()) return;
+
     final BonesType ltype = LHS.getType(symbolTable);
     final BonesType rtype = RHS.getType(symbolTable);
 
@@ -87,9 +92,6 @@ public class BinaryOperationAtom extends ExpressionAtom {
         }
         break;
     }
-
-    LHS.semanticErrorCheck(symbolTable, errorListener);
-    RHS.semanticErrorCheck(symbolTable, errorListener);
   }
 
   private static boolean isNumeric(BonesType type) {
