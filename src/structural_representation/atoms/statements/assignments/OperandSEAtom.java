@@ -7,13 +7,11 @@ import execution.RuntimeErrorExit;
 import execution.StatementControl;
 import structural_representation.atoms.expressions.ExpressionAtom;
 import structural_representation.atoms.expressions.assignables.AssignableAtom;
-import structural_representation.atoms.expressions.assignables.IdentifierAtom;
 import structural_representation.atoms.types.BonesType;
 import structural_representation.atoms.types.primitives.BoolType;
 import structural_representation.atoms.types.primitives.FloatType;
 import structural_representation.atoms.types.primitives.IntType;
 import structural_representation.symbol_table.SymbolTable;
-import structural_representation.symbol_table.Variable;
 
 public class OperandSEAtom extends AssignmentAtom {
   private final Operator operator;
@@ -30,14 +28,7 @@ public class OperandSEAtom extends AssignmentAtom {
   @Override
   public StatementControl execute(SymbolTable table, BonesErrorListener errorListener) {
     Object increment = expression.evaluate(table, errorListener);
-    Object value;
-
-    if (assignable instanceof IdentifierAtom) {
-      value = ((Variable) table.get(assignable.toString())).getValue();
-    } else {
-      // TODO else if is list elem or array elem
-      value = ((Variable) table.get(assignable.toString())).getValue();
-    }
+    Object value = assignable.getInitialCollectionValue(table);
 
     switch (operator) {
       case OR_ASSIGN:
@@ -99,10 +90,7 @@ public class OperandSEAtom extends AssignmentAtom {
         break;
     }
 
-    if (assignable instanceof IdentifierAtom) {
-      table.update(assignable.toString(), value);
-    }
-    // TODO: else if is list elem or array elem
+    assignable.assignmentSymbolTableUpdate(table, value);
 
     return StatementControl.cont();
   }

@@ -28,26 +28,17 @@ public class ListElemAtom extends AssignableAtom {
     this.position = position;
   }
 
+  public String getIdentifier() {
+    return identifier;
+  }
+
+  public List<Integer> getIndices() {
+    return indices;
+  }
+
   @Override
   public BonesType getType(SymbolTable table) {
-    if (indices == null || indices.size() == 0) {
-      return new VoidType();
-    }
-
-    Symbol symbol = table.get(identifier);
-    Variable variable = (Variable) symbol;
-
-    BonesType type = variable.getType();
-    for (int i = 0; i < indices.size(); i++) {
-      if (type instanceof ListType) {
-        type = ((ListType) type).getElementType();
-      } else if (type instanceof ArrayType) {
-        type = ((ArrayType) type).getElementType();
-      } else {
-        break;
-      }
-    }
-    return type;
+    return super.getCollectionType(table, identifier, indices);
   }
 
   @Override

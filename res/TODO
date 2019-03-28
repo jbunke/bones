@@ -1,7 +1,13 @@
 Grammar:
+
   - Standard IO
     - read() statement
     x print(expr) statement
     x println(expr) statement
+
   x Distinguished void main(string[] prog_args) function as program entry point
+
   ? terminate(int) statement
+
+  - array literals !BUT THERE AREN'T EXPRESSIONS!
+

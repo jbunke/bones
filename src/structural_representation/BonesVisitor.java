@@ -318,7 +318,7 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
 
   @Override
   public Atom visitFUNCTION_CALL_EXPR(BonesParser.FUNCTION_CALL_EXPRContext ctx) {
-    // TODO: temp fix - last part of method path
+    // TODO: temp fix - currently only looking at last part of method path
     String name = ctx.ident(ctx.ident().size() - 1).
             IDENTIFIER().getSymbol().getText();
 

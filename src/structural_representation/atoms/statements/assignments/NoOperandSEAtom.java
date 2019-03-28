@@ -5,12 +5,14 @@ import error.ErrorMessages;
 import error.Position;
 import execution.StatementControl;
 import structural_representation.atoms.expressions.assignables.AssignableAtom;
-import structural_representation.atoms.expressions.assignables.IdentifierAtom;
 import structural_representation.atoms.types.BonesType;
 import structural_representation.atoms.types.primitives.BoolType;
+import structural_representation.atoms.types.primitives.FloatType;
 import structural_representation.atoms.types.primitives.IntType;
 import structural_representation.symbol_table.SymbolTable;
-import structural_representation.symbol_table.Variable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class NoOperandSEAtom extends AssignmentAtom {
   private final Operator operator;
@@ -25,19 +27,23 @@ public class NoOperandSEAtom extends AssignmentAtom {
   @Override
   public void semanticErrorCheck(SymbolTable symbolTable,
                                  BonesErrorListener errorListener) {
-    BonesType operatorType = null;
+    List<BonesType> acceptable = new ArrayList<>();
 
     switch (operator) {
       case NEGATE:
-        operatorType = new BoolType();
+        acceptable.add(new BoolType());
         break;
       case INCREMENT:
       case DECREMENT:
-        operatorType = new IntType();
+        acceptable.add(new IntType());
+        acceptable.add(new FloatType());
+        /* TODO: acceptable.add ListType
+        BUT be aware that contains will no
+        longer work as it checks with equality */
         break;
     }
 
-    if (!assignable.getType(symbolTable).equals(operatorType)) {
+    if (!acceptable.contains(assignable.getType(symbolTable))) {
       errorListener.semanticError(ErrorMessages.
               sideEffectOperatorAssignable(operatorToString(),
                       assignable.getType(symbolTable)),
@@ -65,15 +71,7 @@ public class NoOperandSEAtom extends AssignmentAtom {
   @Override
   public StatementControl execute(SymbolTable table,
                                   BonesErrorListener errorListener) {
-    Object value;
-
-    if (assignable instanceof IdentifierAtom) {
-      value = ((Variable) table.get(assignable.toString())).getValue();
-    } else {
-      // TODO: else if is list elem or array elem
-      // temp
-      value = ((Variable) table.get(assignable.toString())).getValue();
-    }
+    Object value = assignable.getInitialCollectionValue(table);
 
     switch (operator) {
       case NEGATE:
@@ -95,10 +93,7 @@ public class NoOperandSEAtom extends AssignmentAtom {
         break;
     }
 
-    if (assignable instanceof IdentifierAtom) {
-      table.update(assignable.toString(), value);
-    }
-    // TODO: else if is list elem or array elem
+    assignable.assignmentSymbolTableUpdate(table, value);
 
     return StatementControl.cont();
   }

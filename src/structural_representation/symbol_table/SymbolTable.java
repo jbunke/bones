@@ -1,9 +1,12 @@
 package structural_representation.symbol_table;
 
+import execution.BonesArray;
+import execution.BonesList;
 import structural_representation.atoms.Atom;
 import structural_representation.atoms.special.FunctionAtom;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class SymbolTable {
@@ -44,6 +47,35 @@ public class SymbolTable {
     if (!(symbol instanceof Variable)) return;
     Variable variable = (Variable) symbol;
     variable.update(value);
+  }
+
+  public void updateCollection(String identifier,
+                               List<Integer> indices, Object value) {
+    if (!contents.containsKey(identifier)) {
+      if (parent != null) parent.update(identifier, value);
+      return;
+    }
+    Symbol symbol = contents.get(identifier);
+    if (!(symbol instanceof Variable)) return;
+    Variable variable = (Variable) symbol;
+
+    Object reference = variable.getValue();
+
+    for (int i = 0; i < indices.size() - 1; i++) {
+      if (reference instanceof BonesArray) {
+        reference = ((BonesArray) reference).at(indices.get(i));
+      } else if (reference instanceof BonesList) {
+        reference = ((BonesList) reference).at(indices.get(i));
+      }
+    }
+
+    if (reference instanceof BonesArray) {
+      BonesArray array = (BonesArray) reference;
+      array.set(indices.get(indices.size() - 1), value);
+    } else if (reference instanceof BonesList) {
+      BonesList list = (BonesList) reference;
+      list.set(indices.get(indices.size() - 1), value);
+    }
   }
 
   public boolean tableContainsKeyInScope(String key) {

@@ -1,4 +1,4 @@
-path bones.valid;
+path bones.examples;
 
 class Example {
   int a;
