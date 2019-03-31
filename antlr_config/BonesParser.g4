@@ -23,7 +23,7 @@ type: BOOL                                    #BOOL_TYPE
 
 decl: type ident SEMICOLON ;
 
-init: type ident ASSIGN expr SEMICOLON ;
+init: type ident ASSIGN rhs SEMICOLON ;
 
 field: decl                                   #DECLARED_FIELD
 | init                                        #INITIALISED_FIELD
@@ -73,13 +73,32 @@ list_elem: ident
 array_elem: ident
 (LBRACKET int_literal RBRACKET)+ ;
 
+list_literal: LISTINIT
+LCURLY (rhs (COMMA rhs)*)? RCURLY ;
+
+array_literal: ARRAYINIT
+LCURLY (rhs (COMMA rhs)*)? RCURLY ;
+
+list_init:
+type LPAREN int_literal RPAREN ;
+
+array_init:
+type LBRACKET int_literal RBRACKET ;
+
+rhs: expr                                     #EXPR_RHS
+| list_literal                                #LIST_LIT_RHS
+| array_literal                               #ARRAY_LIT_RHS
+| list_init                                   #LIST_INIT_RHS
+| array_init                                  #ARRAY_INIT_RHS
+;
+
 assignable: ident                             #IDENT_ASSIGNABLE
 | list_elem                                   #LIST_ELEM_ASSIGNABLE
 | array_elem                                  #ARRAY_ELEM_ASSIGNABLE
 ;
 
 assignment:
-assignable ASSIGN expr SEMICOLON              #STANDARD_ASSIGNMENT
+assignable ASSIGN rhs SEMICOLON              #STANDARD_ASSIGNMENT
 | assignable NEGATE SEMICOLON                 #NEGATE_ASSIGNMENT
 | assignable INCREMENT SEMICOLON              #INCREMENT_ASSIGNMENT
 | assignable DECREMENT SEMICOLON              #DECREMENT_ASSIGNMENT

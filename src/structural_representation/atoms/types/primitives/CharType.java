@@ -21,4 +21,9 @@ public class CharType extends BonesType {
   public String toString() {
     return "char";
   }
+
+  @Override
+  public Object defaultValue() {
+    return '\0';
+  }
 }

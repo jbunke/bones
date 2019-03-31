@@ -21,4 +21,9 @@ public class VoidType extends BonesType {
   public String toString() {
     return "void";
   }
+
+  @Override
+  public Object defaultValue() {
+    return null;
+  }
 }

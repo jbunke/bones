@@ -74,6 +74,8 @@ CALL: 'call';
 MAIN: 'main';
 PRINTLN: 'println';
 PRINT: 'print';
+LISTINIT: 'listinit';
+ARRAYINIT: 'arrayinit';
 
 // numbers
 fragment DIGIT: '0'..'9';

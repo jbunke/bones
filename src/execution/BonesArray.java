@@ -1,8 +1,15 @@
 package execution;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class BonesArray<T> extends ArrayList<T> {
+  public static <T> BonesArray<T> fromList(List<T> from) {
+    BonesArray<T> bonesArray = new BonesArray<>();
+    bonesArray.addAll(from);
+    return bonesArray;
+  }
+
   public T at(int index) {
     return get(index);
   }

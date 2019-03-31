@@ -29,6 +29,10 @@ public class ClassAtom extends BonesType implements Symbol {
   }
 
   public void execute(SymbolTable table, BonesErrorListener errorListener) {
+    /* Execute field declarations / initialisations */
+    fields.forEach(x -> x.execute(table, errorListener));
+
+    /* Find "main" entry point and run it */
     FunctionAtom main = null;
 
     for (int i = 0; i < functions.size() && main == null; i++) {
@@ -49,6 +53,11 @@ public class ClassAtom extends BonesType implements Symbol {
     fields.forEach(x -> x.semanticErrorCheck(symbolTable, errorListener));
     functions.forEach(x -> symbolTable.put(x.getName(), x));
     functions.forEach(x -> x.semanticErrorCheck(symbolTable, errorListener));
+  }
+
+  @Override
+  public Object defaultValue() {
+    return null;
   }
 
   @Override

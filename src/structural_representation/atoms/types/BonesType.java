@@ -14,4 +14,6 @@ public abstract class BonesType extends Atom {
               getPosition().getLine(), getPosition().getPositionInLine());
     }
   }
+
+  public abstract Object defaultValue();
 }

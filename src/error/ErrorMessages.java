@@ -82,6 +82,11 @@ public class ErrorMessages {
             "function parameters for this function";
   }
 
+  public static String typesOfCollectionLiteralElementsDontMatch(
+          String collectionType) {
+    return "The types of " + collectionType + " literal elements don't match";
+  }
+
   /* RUNTIME */
 
   public static String divideByZero() {

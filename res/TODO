@@ -7,7 +7,5 @@ Grammar:
 
   x Distinguished void main(string[] prog_args) function as program entry point
 
-  ? terminate(int) statement
-
-  - array literals !BUT THERE AREN'T EXPRESSIONS!
+  x array literals !BUT THEY AREN'T EXPRESSIONS!
 

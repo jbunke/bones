@@ -52,7 +52,7 @@ public class SymbolTable {
   public void updateCollection(String identifier,
                                List<Integer> indices, Object value) {
     if (!contents.containsKey(identifier)) {
-      if (parent != null) parent.update(identifier, value);
+      if (parent != null) parent.updateCollection(identifier, indices, value);
       return;
     }
     Symbol symbol = contents.get(identifier);

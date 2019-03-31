@@ -15,6 +15,9 @@ import structural_representation.atoms.expressions.literals.*;
 import structural_representation.atoms.expressions.ExpressionAtom;
 import structural_representation.atoms.expressions.assignables.IdentifierAtom;
 import structural_representation.atoms.special.*;
+import structural_representation.atoms.special.rhs.CollectionInitRHS;
+import structural_representation.atoms.special.rhs.CollectionLiteralRHS;
+import structural_representation.atoms.special.rhs.RHSAtom;
 import structural_representation.atoms.statements.*;
 import structural_representation.atoms.statements.assignments.AssignmentAtom;
 import structural_representation.atoms.statements.assignments.NoOperandSEAtom;
@@ -156,7 +159,7 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
   public Atom visitInit(BonesParser.InitContext ctx) {
     BonesType type = (BonesType) visit(ctx.type());
     IdentifierAtom ident = (IdentifierAtom) visitIdent(ctx.ident());
-    ExpressionAtom expr = (ExpressionAtom) visit(ctx.expr());
+    RHSAtom expr = (RHSAtom) visit(ctx.rhs());
 
     return new InitialisationAtom(type, ident, expr,
             Position.fromToken(ctx.type().getStart()));
@@ -170,6 +173,69 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
   @Override
   public Atom visitINITIALISED_FIELD(BonesParser.INITIALISED_FIELDContext ctx) {
     return visitInit(ctx.init());
+  }
+
+  @Override
+  public Atom visitList_literal(BonesParser.List_literalContext ctx) {
+    List<RHSAtom> elements = new ArrayList<>();
+    ctx.rhs().forEach(x -> elements.add((RHSAtom) visit(x)));
+
+    return new CollectionLiteralRHS(elements,
+            CollectionLiteralRHS.CollectionType.LIST,
+            Position.fromToken(ctx.LCURLY().getSymbol()));
+  }
+
+  @Override
+  public Atom visitArray_literal(BonesParser.Array_literalContext ctx) {
+    List<RHSAtom> elements = new ArrayList<>();
+    ctx.rhs().forEach(x -> elements.add((RHSAtom) visit(x)));
+
+    return new CollectionLiteralRHS(elements,
+            CollectionLiteralRHS.CollectionType.ARRAY,
+            Position.fromToken(ctx.LCURLY().getSymbol()));
+  }
+
+  @Override
+  public Atom visitList_init(BonesParser.List_initContext ctx) {
+    BonesType elementType = (BonesType) visit(ctx.type());
+    int size = Integer.parseInt(ctx.int_literal().getText());
+    return new CollectionInitRHS(elementType, size,
+            CollectionInitRHS.CollectionType.LIST,
+            Position.fromToken(ctx.type().getStart()));
+  }
+
+  @Override
+  public Atom visitArray_init(BonesParser.Array_initContext ctx) {
+    BonesType elementType = (BonesType) visit(ctx.type());
+    int size = Integer.parseInt(ctx.int_literal().getText());
+    return new CollectionInitRHS(elementType, size,
+            CollectionInitRHS.CollectionType.ARRAY,
+            Position.fromToken(ctx.type().getStart()));
+  }
+
+  @Override
+  public Atom visitEXPR_RHS(BonesParser.EXPR_RHSContext ctx) {
+    return visit(ctx.expr());
+  }
+
+  @Override
+  public Atom visitLIST_LIT_RHS(BonesParser.LIST_LIT_RHSContext ctx) {
+    return visitList_literal(ctx.list_literal());
+  }
+
+  @Override
+  public Atom visitARRAY_LIT_RHS(BonesParser.ARRAY_LIT_RHSContext ctx) {
+    return visitArray_literal(ctx.array_literal());
+  }
+
+  @Override
+  public Atom visitLIST_INIT_RHS(BonesParser.LIST_INIT_RHSContext ctx) {
+    return visitList_init(ctx.list_init());
+  }
+
+  @Override
+  public Atom visitARRAY_INIT_RHS(BonesParser.ARRAY_INIT_RHSContext ctx) {
+    return visitArray_init(ctx.array_init());
   }
 
   @Override
@@ -441,7 +507,7 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
   @Override
   public Atom visitSTANDARD_ASSIGNMENT(BonesParser.STANDARD_ASSIGNMENTContext ctx) {
     AssignableAtom lhs = (AssignableAtom) visit(ctx.assignable());
-    ExpressionAtom rhs = (ExpressionAtom) visit(ctx.expr());
+    RHSAtom rhs = (RHSAtom) visit(ctx.rhs());
 
     return new StandardAssignmentAtom(lhs, rhs,
             Position.fromToken(ctx.assignable().getStart()));

@@ -4,17 +4,17 @@ import error.BonesErrorListener;
 import error.ErrorMessages;
 import error.Position;
 import execution.StatementControl;
-import structural_representation.atoms.expressions.ExpressionAtom;
 import structural_representation.atoms.expressions.assignables.IdentifierAtom;
+import structural_representation.atoms.special.rhs.RHSAtom;
 import structural_representation.atoms.types.BonesType;
 import structural_representation.symbol_table.SymbolTable;
 import structural_representation.symbol_table.Variable;
 
 public class InitialisationAtom extends DeclarationAtom {
-  private final ExpressionAtom RHS;
+  private final RHSAtom RHS;
 
   public InitialisationAtom(BonesType type, IdentifierAtom ident,
-                            ExpressionAtom RHS, Position position) {
+                            RHSAtom RHS, Position position) {
     super(type, ident, position);
     this.RHS = RHS;
   }

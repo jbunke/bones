@@ -21,4 +21,9 @@ public class StringType extends BonesType {
   public String toString() {
     return "string";
   }
+
+  @Override
+  public Object defaultValue() {
+    return "";
+  }
 }

@@ -1,6 +1,7 @@
 package structural_representation.atoms.types.collections;
 
 import error.Position;
+import execution.BonesList;
 import structural_representation.atoms.types.BonesType;
 
 public class ListType extends BonesType {
@@ -31,5 +32,10 @@ public class ListType extends BonesType {
   @Override
   public String toString() {
     return elementType.toString() + "()";
+  }
+
+  @Override
+  public Object defaultValue() {
+    return new BonesList<>();
   }
 }

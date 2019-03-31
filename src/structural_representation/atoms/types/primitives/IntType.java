@@ -21,4 +21,9 @@ public class IntType extends BonesType {
   public String toString() {
     return "int";
   }
+
+  @Override
+  public Object defaultValue() {
+    return 0;
+  }
 }

@@ -56,6 +56,9 @@ public class CompilerMain {
       structure.semanticErrorCheck(rootTable, errorListener);
       printErrorsAndExit(errorListener);
 
+      /* TODO: Compilation modes besides execution */
+
+      /* PROGRAM EXECUTION */
       structure.execute(rootTable, errorListener);
     } catch (IOException e) {
       e.printStackTrace();

@@ -4,16 +4,16 @@ import error.BonesErrorListener;
 import error.ErrorMessages;
 import error.Position;
 import execution.StatementControl;
-import structural_representation.atoms.expressions.ExpressionAtom;
 import structural_representation.atoms.expressions.assignables.AssignableAtom;
+import structural_representation.atoms.special.rhs.RHSAtom;
 import structural_representation.atoms.types.BonesType;
 import structural_representation.symbol_table.SymbolTable;
 
 public class StandardAssignmentAtom extends AssignmentAtom {
-  private final ExpressionAtom RHS;
+  private final RHSAtom RHS;
 
   public StandardAssignmentAtom(AssignableAtom assignable,
-                                ExpressionAtom RHS, Position position) {
+                                RHSAtom RHS, Position position) {
     this.assignable = assignable;
     this.RHS = RHS;
     this.position = position;

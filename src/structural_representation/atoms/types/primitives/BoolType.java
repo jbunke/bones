@@ -21,4 +21,9 @@ public class BoolType extends BonesType {
   public String toString() {
     return "bool";
   }
+
+  @Override
+  public Object defaultValue() {
+    return false;
+  }
 }

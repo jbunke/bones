@@ -31,8 +31,9 @@ public class FunctionCallAtom extends ExpressionAtom {
   public Object evaluate(SymbolTable table, BonesErrorListener errorListener) {
     SymbolTable functionTable = table.tableForFunction(function);
     List<String> params = new ArrayList<>();
-    function.getParamList().getParams().forEach(x ->
-            params.add("param_" + x.getIdent().toString()));
+    if (function.getParamList() != null)
+      function.getParamList().getParams().forEach(x ->
+              params.add("param_" + x.getIdent().toString()));
     List<Object> argValues = new ArrayList<>();
     arguments.forEach(x -> argValues.add(x.evaluate(table, errorListener)));
 
@@ -69,6 +70,9 @@ public class FunctionCallAtom extends ExpressionAtom {
       if (functionTable != null)
         function.semanticErrorCheck(functionTable, errorListener);
     }
+
+    if (arguments.isEmpty() && (function.getParamList() == null ||
+            function.getParamList().getParams().isEmpty())) return;
 
     if (function.getParamList().getParams().size() != arguments.size()) {
       errorListener.semanticError(ErrorMessages.parameterArgumentAmount(),
