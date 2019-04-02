@@ -31,7 +31,7 @@ public class DeclarationAtom extends StatementAtom {
               getPosition().getLine(), getPosition().getPositionInLine());
     }
 
-    symbolTable.put(ident.toString(), new Variable(type));
+    symbolTable.put(ident.toString(), new Variable(type, ident.toString()));
   }
 
   @Override
@@ -42,7 +42,7 @@ public class DeclarationAtom extends StatementAtom {
   @Override
   public StatementControl execute(SymbolTable table,
                                   BonesErrorListener errorListener) {
-    table.put(ident.toString(), new Variable(type));
+    table.put(ident.toString(), new Variable(type, ident.toString()));
 
     return StatementControl.cont();
   }

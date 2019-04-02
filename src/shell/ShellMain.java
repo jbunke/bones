@@ -21,7 +21,7 @@ public class ShellMain {
 
   /* GLOBAL STATIC ACCESS */
   private static final Scanner in = new Scanner(System.in);
-  private static final SymbolTable shellTable =
+  public static final SymbolTable shellTable =
           new SymbolTable(null, null);
 
   public static String username = "user";
@@ -90,6 +90,14 @@ public class ShellMain {
 
   private static void quitSequence() {
     saveUsername();
+    quitText();
+  }
+
+  private static void quitText() {
+    ANSIFormatting.setBold();
+    ANSIFormatting.setBlue();
+    System.out.println("\n\nSettings saved, exiting shell...");
+    ANSIFormatting.resetANSI();
   }
 
   public static void saveUsername() {

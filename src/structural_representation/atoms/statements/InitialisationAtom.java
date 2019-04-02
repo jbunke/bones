@@ -23,7 +23,8 @@ public class InitialisationAtom extends DeclarationAtom {
   public StatementControl execute(SymbolTable table,
                                   BonesErrorListener errorListener) {
     table.put(ident.toString(),
-            new Variable(type, RHS.evaluate(table, errorListener)));
+            new Variable(type, ident.toString(),
+                    RHS.evaluate(table, errorListener)));
 
     return StatementControl.cont();
   }

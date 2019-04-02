@@ -2,8 +2,12 @@ package shell.processing;
 
 import formatting.ANSIFormatting;
 import shell.ShellMain;
+import structural_representation.symbol_table.Symbol;
+import structural_representation.symbol_table.SymbolTable;
+import structural_representation.symbol_table.Variable;
 
 import java.io.File;
+import java.util.List;
 
 public class Commands {
   private static final String commandPrefix = ":";
@@ -14,6 +18,8 @@ public class Commands {
   private static final String[] listFiles =
           new String[] { "ls", "dir", "list" };
   private static final String[] changeDir = new String[] { "cd" };
+  private static final String[] variables = new String[] { "v", "variables" };
+  // private static final String[] functions = new String[] { "f", "functions" };
 
   public enum Status {
     QUIT,
@@ -77,7 +83,24 @@ public class Commands {
       String[] path = commandParts[1].split("/");
 
       for (String stage : path) ShellMain.changeDirectory(stage);
+    } else if (matchesCommand(input, variables)) {
+      /* :v | :variables */
+      showVariables();
     }
+    ANSIFormatting.resetANSI();
+  }
+
+  private static void showVariables() {
+    ANSIFormatting.setYellow();
+
+    List<Symbol> symbols =
+            ShellMain.shellTable.getAll(SymbolTable.Filter.VARIABLES);
+
+    for (Symbol symbol : symbols) {
+      Variable variable = (Variable) symbol;
+      System.out.println(variable.toString());
+    }
+
     ANSIFormatting.resetANSI();
   }
 

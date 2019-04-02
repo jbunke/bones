@@ -5,9 +5,7 @@ import execution.BonesList;
 import structural_representation.atoms.Atom;
 import structural_representation.atoms.special.FunctionAtom;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class SymbolTable {
   private final Atom scope;
@@ -22,6 +20,12 @@ public class SymbolTable {
     this.contents = new HashMap<>();
 
     if (parent != null) parent.addChild(scope, this);
+  }
+
+  public enum Filter {
+    ALL,
+    VARIABLES,
+    FUNCTIONS
   }
 
   private void addChild(Atom scope, SymbolTable symbolTable) {
@@ -91,6 +95,28 @@ public class SymbolTable {
       return parent.get(key);
     }
     return null;
+  }
+
+  public List<Symbol> getAll(Filter filter) {
+    List<Symbol> res = new ArrayList<>();
+    Set<String> keys = contents.keySet();
+
+    keys.forEach(x -> {
+      Symbol symbol = contents.get(x);
+      switch (filter) {
+        case FUNCTIONS:
+          if (symbol instanceof FunctionAtom) res.add(symbol);
+          break;
+        case VARIABLES:
+          if (symbol instanceof Variable) res.add(symbol);
+          break;
+        case ALL: default:
+          res.add(symbol);
+          break;
+      }
+    });
+
+    return res;
   }
 
   public Object evaluate(String key) {

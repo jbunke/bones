@@ -22,7 +22,8 @@ public class ParamAtom extends Atom {
   public void semanticErrorCheck(SymbolTable symbolTable,
                                  BonesErrorListener errorListener) {
     type.semanticErrorCheck(symbolTable, errorListener);
-    symbolTable.put("param_" + ident.toString(), new Variable(type));
+    symbolTable.put("param_" + ident.toString(),
+            new Variable(type, "param_" + ident.toString()));
   }
 
   public BonesType getType() {

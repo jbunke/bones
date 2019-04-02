@@ -106,14 +106,15 @@ public class ForEachStatementAtom extends StatementAtom {
       ArrayType arrayType = (ArrayType) collection.getType(localTable);
 
       localTable.put(token.toString(),
-              new Variable(arrayType.getElementType()));
+              new Variable(arrayType.getElementType(), token.toString()));
     } else if (collection.getType(localTable) instanceof ListType) {
       ListType listType = (ListType) collection.getType(localTable);
 
       localTable.put(token.toString(),
-              new Variable(listType.getElementType()));
+              new Variable(listType.getElementType(), token.toString()));
     } else if (collection.getType(localTable) instanceof StringType) {
-      localTable.put(token.toString(), new Variable(new CharType()));
+      localTable.put(token.toString(),
+              new Variable(new CharType(), token.toString()));
     }
 
     // TODO: Ensure collection is not modified inside code block
