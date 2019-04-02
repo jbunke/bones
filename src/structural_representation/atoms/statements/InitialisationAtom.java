@@ -39,7 +39,7 @@ public class InitialisationAtom extends DeclarationAtom {
 
     BonesType rhsType = RHS.getType(symbolTable);
 
-    if (!type.equals(rhsType)) {
+    if (!rhsType.equals(type)) {
       errorListener.semanticError(ErrorMessages.
                       expectedTypeButExpressionIs("Initialisation",
                               type, rhsType),

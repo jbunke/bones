@@ -53,6 +53,7 @@ expr: int_literal                             #INT_EXPR
 | char_literal                                #CHAR_EXPR
 | string_literal                              #STRING_EXPR
 | assignable                                  #ASSIGNABLE_EXPR
+| READ LPAREN RPAREN                          #READ_EXPR
 | CALL (ident PERIOD)* ident
   LPAREN (expr (COMMA expr)* )? RPAREN        #FUNCTION_CALL_EXPR
 | op=(NOT | SIZE | MINUS) expr                #UNARY_OP_EXPR

@@ -33,7 +33,7 @@ public class StandardAssignmentAtom extends AssignmentAtom {
                                  BonesErrorListener errorListener) {
     RHS.semanticErrorCheck(symbolTable, errorListener);
     BonesType rhsType = RHS.getType(symbolTable);
-    if (!assignable.getType(symbolTable).equals(rhsType)) {
+    if (!rhsType.equals(assignable.getType(symbolTable))) {
       errorListener.semanticError(ErrorMessages.
               expectedTypeButExpressionIs("Assignment",
                       assignable.getType(symbolTable), rhsType),

@@ -5,14 +5,11 @@ import antlr.BonesParserBaseVisitor;
 import error.Position;
 import org.antlr.v4.runtime.Token;
 import structural_representation.atoms.Atom;
-import structural_representation.atoms.expressions.BinaryOperationAtom;
-import structural_representation.atoms.expressions.FunctionCallAtom;
-import structural_representation.atoms.expressions.UnaryOperationAtom;
+import structural_representation.atoms.expressions.*;
 import structural_representation.atoms.expressions.assignables.ArrayElemAtom;
 import structural_representation.atoms.expressions.assignables.AssignableAtom;
 import structural_representation.atoms.expressions.assignables.ListElemAtom;
 import structural_representation.atoms.expressions.literals.*;
-import structural_representation.atoms.expressions.ExpressionAtom;
 import structural_representation.atoms.expressions.assignables.IdentifierAtom;
 import structural_representation.atoms.special.*;
 import structural_representation.atoms.special.rhs.CollectionInitRHS;
@@ -53,6 +50,11 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     }
 
     return new PathAtom(pathSteps, Position.fromToken(ctx.PATH().getSymbol()));
+  }
+
+  @Override
+  public Atom visitREAD_EXPR(BonesParser.READ_EXPRContext ctx) {
+    return new ReadExpressionAtom(Position.fromToken(ctx.READ().getSymbol()));
   }
 
   @Override

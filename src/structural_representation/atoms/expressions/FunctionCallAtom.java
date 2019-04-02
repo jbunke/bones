@@ -80,8 +80,8 @@ public class FunctionCallAtom extends ExpressionAtom {
     } else {
       List<ParamAtom> params = function.getParamList().getParams();
       for (int i = 0; i < params.size(); i++) {
-        if (!params.get(i).getType().equals(
-                arguments.get(i).getType(symbolTable))) {
+        if (!arguments.get(i).getType(symbolTable).equals(
+                params.get(i).getType())) {
           errorListener.semanticError(ErrorMessages.
                   expectedTypeButExpressionIs("Parameter",
                           params.get(i).getType(),

@@ -74,6 +74,7 @@ CALL: 'call';
 MAIN: 'main';
 PRINTLN: 'println';
 PRINT: 'print';
+READ: 'read';
 LISTINIT: 'listinit';
 ARRAYINIT: 'arrayinit';
 

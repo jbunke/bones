@@ -1,18 +1,14 @@
 path bones.examples;
 
 class MaxTest {
-  void main(string[] args) {
-    call maxTest(0, 1);
-    call maxTest(12, 6);
-    call maxTest(2532, 33252);
-    call maxTest(657, 456);
-  }
+  int[] arr1 = arrayinit { 17, 214, -56, 56, 127 } ;
+  int[] arr2 = int[8];
+  int[] arr3 = arrayinit { 6, 5, 7, 4, 2, 8, 9, 0, 1, 6 } ;
 
-  int min(int a, int b) {
-    if (a < b) {
-      return a;
-    }
-    return b;
+  void main(string[] args) {
+    println(call maximum(arr1));
+    println(call maximum(arr2));
+    println(call maximum(arr3));
   }
 
   int max(int a, int b) {
@@ -22,12 +18,13 @@ class MaxTest {
     return b;
   }
 
-  void maxTest(int a, int b) {
-    print("Largest of ");
-    print(a);
-    print(" and ");
-    print(b);
-    print(" is: ");
-    println(call max(a, b));
+  int maximum(int[] array) {
+    int largest = -10000;
+
+    foreach (entry : array) {
+      largest = call max(largest, entry);
+    }
+
+    return largest;
   }
 }
