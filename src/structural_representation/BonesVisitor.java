@@ -751,4 +751,25 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     return new ClassAtom(path, imports, className, fields, functions,
             Position.fromToken(ctx.CLASS().getSymbol()));
   }
+
+  /* Shell functions */
+  @Override
+  public Atom visitEXPR_COMMAND(BonesParser.EXPR_COMMANDContext ctx) {
+    return visit(ctx.expr());
+  }
+
+  @Override
+  public Atom visitSTAT_COMMAND(BonesParser.STAT_COMMANDContext ctx) {
+    return visit(ctx.stat());
+  }
+
+  @Override
+  public Atom visitFUNCT_COMMAND(BonesParser.FUNCT_COMMANDContext ctx) {
+    return visit(ctx.funct());
+  }
+
+  @Override
+  public Atom visitShell_rule(BonesParser.Shell_ruleContext ctx) {
+    return visit(ctx.command());
+  }
 }

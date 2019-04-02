@@ -110,7 +110,7 @@ public class SymbolTable {
   }
 
   public SymbolTable tableForFunction(FunctionAtom function) {
-    if (scope.equals(function)) return this;
+    if (scope != null && scope.equals(function)) return this;
 
     SymbolTable table = this;
     while (table.parent != null) table = table.parent;

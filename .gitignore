@@ -4,6 +4,9 @@ src/antlr
 out
 .idea/
 
+#ignore shell settings
+res/shell_settings
+
 #ignore Java class files
 *.class
 .classpath
