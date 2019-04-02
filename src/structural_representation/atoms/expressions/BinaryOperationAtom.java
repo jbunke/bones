@@ -213,6 +213,7 @@ public class BinaryOperationAtom extends ExpressionAtom {
         break;
       case RAISE:
         if (left instanceof Number && right instanceof Number) {
+          // TODO: breaks on ints
           return Math.pow((Double) left, (Double) right);
         }
         break;

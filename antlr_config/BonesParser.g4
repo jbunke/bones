@@ -99,7 +99,7 @@ assignable: ident                             #IDENT_ASSIGNABLE
 ;
 
 assignment:
-assignable ASSIGN rhs SEMICOLON              #STANDARD_ASSIGNMENT
+assignable ASSIGN rhs SEMICOLON               #STANDARD_ASSIGNMENT
 | assignable NEGATE SEMICOLON                 #NEGATE_ASSIGNMENT
 | assignable INCREMENT SEMICOLON              #INCREMENT_ASSIGNMENT
 | assignable DECREMENT SEMICOLON              #DECREMENT_ASSIGNMENT
@@ -131,6 +131,14 @@ stat: FOR LPAREN init SEMICOLON expr
 | assignment                                  #ASSIGNMENT_STAT
 | expr SEMICOLON                              #EXPRESSION_STAT
 ;
+
+command: expr                                 #EXPR_COMMAND
+| stat                                        #STAT_COMMAND
+| funct                                       #FUNCT_COMMAND
+;
+
+// root-level command rule
+shell_rule: command EOF ;
 
 // root-level program rule
 class_rule: path? import_stat* CLASS
