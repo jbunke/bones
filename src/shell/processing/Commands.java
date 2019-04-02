@@ -50,7 +50,7 @@ public class Commands {
       String[] commandParts = commandParts(input);
       if (commandParts.length > 1) {
         // SET
-        ShellMain.username = commandParts[1];
+        ShellMain.username = input.substring(":me ".length());
         ShellMain.saveUsername();
       } else {
         // VIEW

@@ -1,0 +1,2 @@
+make clean && make
+java -cp bin:lib/antlr-4.7-complete.jar shell.ShellMain

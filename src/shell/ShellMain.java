@@ -25,7 +25,7 @@ public class ShellMain {
           new SymbolTable(null, null);
 
   public static String username = "user";
-  public static List<String> directoryPath = new ArrayList<>();
+  private static List<String> directoryPath = new ArrayList<>();
   public static File directory = null;
 
   public static void main(String[] args) {
@@ -37,7 +37,7 @@ public class ShellMain {
   private static void commandCycle(Scanner scanner) {
     do {
       prompt();
-      String input = scanner.nextLine();
+      String input = scanner.nextLine().trim();
 
       Status status = Commands.checkIfMatched(input);
 
