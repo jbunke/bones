@@ -40,6 +40,9 @@ public class ShellMain {
     do {
       prompt();
       String input = scanner.nextLine().trim();
+
+      if (input.equals("")) continue;
+
       input = MultilineInput.checkMultiline(input, scanner);
 
       Status status = Commands.checkIfMatched(input);

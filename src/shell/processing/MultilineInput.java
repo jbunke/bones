@@ -37,6 +37,7 @@ public class MultilineInput {
     length += " ".length();
 
     /* Format and print multiline prompt */
+    ANSIFormatting.setBold();
     ANSIFormatting.setGreen();
 
     for (int i = 0; i < length; i++) {
