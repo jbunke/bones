@@ -2,6 +2,7 @@ package shell.processing;
 
 import formatting.ANSIFormatting;
 import shell.ShellMain;
+import structural_representation.atoms.special.FunctionAtom;
 import structural_representation.symbol_table.Symbol;
 import structural_representation.symbol_table.SymbolTable;
 import structural_representation.symbol_table.Variable;
@@ -19,7 +20,7 @@ public class Commands {
           new String[] { "ls", "dir", "list" };
   private static final String[] changeDir = new String[] { "cd" };
   private static final String[] variables = new String[] { "v", "variables" };
-  // private static final String[] functions = new String[] { "f", "functions" };
+  private static final String[] functions = new String[] { "f", "functions" };
 
   public enum Status {
     QUIT,
@@ -91,7 +92,25 @@ public class Commands {
     } else if (matchesCommand(input, variables)) {
       /* :v | :variables */
       showVariables();
+    } else if (matchesCommand(input, functions)) {
+      showFunctions();
     }
+    ANSIFormatting.resetANSI();
+  }
+
+  private static void showFunctions() {
+    ANSIFormatting.setYellow();
+
+    List<Symbol> symbols =
+            ShellMain.shellTable.getAll(SymbolTable.Filter.FUNCTIONS);
+
+    System.out.println();
+
+    for (Symbol symbol : symbols) {
+      FunctionAtom function = (FunctionAtom) symbol;
+      System.out.println(function.toString() + "\n--------------------");
+    }
+
     ANSIFormatting.resetANSI();
   }
 

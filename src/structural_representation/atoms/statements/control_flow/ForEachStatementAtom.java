@@ -6,6 +6,7 @@ import error.Position;
 import execution.BonesArray;
 import execution.BonesList;
 import execution.StatementControl;
+import formatting.Tabs;
 import structural_representation.atoms.expressions.ExpressionAtom;
 import structural_representation.atoms.expressions.assignables.IdentifierAtom;
 import structural_representation.atoms.statements.StatementAtom;
@@ -132,11 +133,7 @@ public class ForEachStatementAtom extends StatementAtom {
     sb.append(collection.toString());
     sb.append(") {\n");
 
-    body.forEach(x -> {
-      sb.append("\t");
-      sb.append(x.toString());
-      sb.append("\n");
-    });
+    body.forEach(x -> sb.append(Tabs.tabLines(x.toString())));
     sb.append("}");
 
     return sb.toString();

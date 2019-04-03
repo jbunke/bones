@@ -114,7 +114,7 @@ assignable ASSIGN rhs SEMICOLON               #STANDARD_ASSIGNMENT
 
 body: LCURLY stat* RCURLY ;
 
-stat: FOR LPAREN init SEMICOLON expr
+stat: FOR LPAREN init expr
   SEMICOLON assignment RPAREN body            #FOR_STAT
 | FOREACH LPAREN ident COLON expr
   RPAREN body                                 #FOREACH_STAT

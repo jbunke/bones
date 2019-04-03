@@ -4,6 +4,7 @@ import error.BonesErrorListener;
 import error.ErrorMessages;
 import error.Position;
 import execution.StatementControl;
+import formatting.Tabs;
 import structural_representation.atoms.expressions.ExpressionAtom;
 import structural_representation.atoms.statements.StatementAtom;
 import structural_representation.atoms.types.BonesType;
@@ -100,11 +101,7 @@ public class IfStatementAtom extends StatementAtom {
 
       sb.append("{\n");
 
-      bodies.get(i).forEach(x -> {
-        sb.append("\t");
-        sb.append(x.toString());
-        sb.append("\n");
-      });
+      bodies.get(i).forEach(x -> sb.append(Tabs.tabLines(x.toString())));
       sb.append("} ");
     }
 

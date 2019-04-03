@@ -2,6 +2,7 @@ package structural_representation.atoms.special;
 
 import error.BonesErrorListener;
 import error.Position;
+import formatting.Tabs;
 import structural_representation.atoms.expressions.assignables.IdentifierAtom;
 import structural_representation.atoms.statements.DeclarationAtom;
 import structural_representation.atoms.types.BonesType;
@@ -81,19 +82,11 @@ public class ClassAtom extends BonesType implements Symbol {
     sb.append(className.toString());
     sb.append(" {\n");
 
-    fields.forEach(x -> {
-      sb.append("\t");
-      sb.append(x.toString());
-      sb.append("\n");
-    });
+    fields.forEach(x -> sb.append(Tabs.tabLines(x.toString())));
 
     sb.append("\n");
 
-    functions.forEach(x -> {
-      sb.append("\t");
-      sb.append(x.toString());
-      sb.append("\n");
-    });
+    functions.forEach(x -> sb.append(Tabs.tabLines(x.toString())));
 
     sb.append("}");
 

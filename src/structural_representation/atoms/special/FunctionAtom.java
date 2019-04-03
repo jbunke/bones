@@ -3,6 +3,7 @@ package structural_representation.atoms.special;
 import error.BonesErrorListener;
 import error.Position;
 import execution.StatementControl;
+import formatting.Tabs;
 import structural_representation.atoms.Atom;
 import structural_representation.atoms.statements.StatementAtom;
 import structural_representation.atoms.types.BonesType;
@@ -92,14 +93,10 @@ public class FunctionAtom extends Atom implements Symbol {
     sb.append(" ");
     sb.append(name);
     sb.append("(");
-    sb.append(paramList.toString());
+    if (paramList != null) sb.append(paramList.toString());
     sb.append(") {\n");
 
-    statements.forEach(x -> {
-      sb.append("\t");
-      sb.append(x.toString());
-      sb.append("\n");
-    });
+    statements.forEach(x -> sb.append(Tabs.tabLines(x.toString())));
 
     sb.append("}");
 
