@@ -19,7 +19,13 @@ class MaxTest {
   }
 
   int maximum(int[] array) {
-    int largest = -10000;
+    int largest;
+
+    if (#array > 0) {
+      largest = array[0];
+    } else {
+      largest = 0;
+    }
 
     foreach (entry : array) {
       largest = call max(largest, entry);

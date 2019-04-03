@@ -1,9 +1,9 @@
 package error;
 
-import execution.RuntimeErrorExit;
 import org.antlr.v4.runtime.BaseErrorListener;
 import org.antlr.v4.runtime.RecognitionException;
 import org.antlr.v4.runtime.Recognizer;
+import structural_representation.Compile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ public class BonesErrorListener extends BaseErrorListener {
     errors.add(new BonesError(BonesError.Category.RUNTIME,
             "(" + line + ":" + positionInLine + ") " + msg));
 
-    if (fatal) RuntimeErrorExit.exit(this, exitCode);
+    Compile.printErrorsAndExit(this, fatal, exitCode);
   }
 
   public boolean hasError() {

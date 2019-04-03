@@ -2,7 +2,6 @@ package structural_representation;
 
 import antlr.BonesLexer;
 import antlr.BonesParser;
-import error.BonesError;
 import error.BonesErrorListener;
 import formatting.ANSIFormatting;
 import org.antlr.v4.runtime.CharStream;
@@ -16,7 +15,8 @@ import structural_representation.symbol_table.SymbolTable;
 import java.io.IOException;
 
 public class Compile {
-  private static final int BAD_EXIT_CODE = 100;
+  private static final int SEMANTIC_ERROR_EXIT = 100;
+  public static final int RUNTIME_ERROR_EXIT = 1;
 
   public enum SourceType {
     FILE, STRING
@@ -68,7 +68,7 @@ public class Compile {
         BonesParser.Shell_ruleContext commandParseTree = parser.shell_rule();
 
         /* SYNTAX ERROR CHECK */
-        printErrorsAndExit(errorListener, false);
+        printErrorsAndExit(errorListener, false, SEMANTIC_ERROR_EXIT);
 
         if (errorListener.hasError())
           return new Context(null, null, errorListener);
@@ -78,7 +78,7 @@ public class Compile {
 
         /* SEMANTIC ERROR CHECK */
         command.semanticErrorCheck(forCommandsOnly, errorListener);
-        printErrorsAndExit(errorListener, false);
+        printErrorsAndExit(errorListener, false, SEMANTIC_ERROR_EXIT);
 
         return new Context(command, forCommandsOnly, errorListener);
       case CLASS:
@@ -86,7 +86,7 @@ public class Compile {
         BonesParser.Class_ruleContext parseTree = parser.class_rule();
 
         /* SYNTAX ERROR CHECK */
-        printErrorsAndExit(errorListener, true);
+        printErrorsAndExit(errorListener, true, SEMANTIC_ERROR_EXIT);
 
         BonesVisitor visitor = new BonesVisitor();
         ClassAtom structure = (ClassAtom) visitor.visit(parseTree);
@@ -95,26 +95,24 @@ public class Compile {
 
         /* SEMANTIC ERROR CHECK */
         structure.semanticErrorCheck(rootTable, errorListener);
-        printErrorsAndExit(errorListener, true);
+        printErrorsAndExit(errorListener, true, SEMANTIC_ERROR_EXIT);
 
         return new Context(structure, rootTable, errorListener);
     }
   }
 
-  private static void printErrorsAndExit(BonesErrorListener errorListener,
-                                         boolean quit) {
+  public static void printErrorsAndExit(BonesErrorListener errorListener,
+                                         boolean quit, int exitCode) {
     if (errorListener.hasError()) {
 
       ANSIFormatting.setBold();
       ANSIFormatting.setRed();
 
-      for (BonesError error : errorListener.getErrors()) {
-        System.out.println(error);
-      }
+      errorListener.getErrors().forEach(System.out::println);
 
       ANSIFormatting.resetANSI();
 
-      if (quit) System.exit(BAD_EXIT_CODE);
+      if (quit) System.exit(exitCode);
     }
   }
 }

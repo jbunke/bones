@@ -188,7 +188,7 @@ public class ShellMain {
 
         if (!directory.isDirectory()) {
 
-          ANSIFormatting.setYellow();
+          ANSIFormatting.setRed();
           System.out.println("[Not a directory]");
 
           directoryPath.remove(directoryPath.size() - 1);
@@ -230,7 +230,7 @@ public class ShellMain {
     ANSIFormatting.resetANSI();
   }
 
-  private static String generateDirectoryPath() {
+  public static String generateDirectoryPath() {
     StringBuilder sb = new StringBuilder();
 
     for (int i = 0; i < directoryPath.size(); i++) {

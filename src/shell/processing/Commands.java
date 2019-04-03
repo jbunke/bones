@@ -2,6 +2,9 @@ package shell.processing;
 
 import formatting.ANSIFormatting;
 import shell.ShellMain;
+import structural_representation.Compile;
+import structural_representation.Context;
+import structural_representation.atoms.special.ClassAtom;
 import structural_representation.atoms.special.FunctionAtom;
 import structural_representation.symbol_table.Symbol;
 import structural_representation.symbol_table.SymbolTable;
@@ -21,6 +24,8 @@ public class Commands {
   private static final String[] changeDir = new String[] { "cd" };
   private static final String[] variables = new String[] { "v", "variables" };
   private static final String[] functions = new String[] { "f", "functions" };
+  private static final String[] run =
+          new String[] { "run", "bones", "runbones" };
 
   public enum Status {
     QUIT,
@@ -75,8 +80,14 @@ public class Commands {
 
         if (contents != null) {
           for (String file : contents) System.out.println(file);
-        } else System.out.println("[Nothing in directory]");
-      } else System.out.println("[Not currently in a directory]");
+        } else {
+          ANSIFormatting.setRed();
+          System.out.println("[Nothing in directory]");
+        }
+      } else {
+        ANSIFormatting.setRed();
+        System.out.println("[Not currently in a directory]");
+      }
     } else if (matchesCommand(input, changeDir)) {
       /* :cd .. | :cd someFolder | :cd folder1/+ */
       String[] commandParts = commandParts(input);
@@ -94,6 +105,28 @@ public class Commands {
       showVariables();
     } else if (matchesCommand(input, functions)) {
       showFunctions();
+    } else if (matchesCommand(input, run)) {
+      /* :run FILE.b | :bones FILE.b | :runbones FILE.b */
+      String[] commandParts = commandParts(input);
+
+      if (commandParts.length == 1) {
+        ANSIFormatting.setRed();
+        System.out.println("[This command executes a Bones file (*.b) and " +
+                "expects a filename corresponding with a file in the " +
+                "current directory as an argument]");
+        ANSIFormatting.resetANSI();
+      } else {
+        ANSIFormatting.setYellow();
+        String filename =
+                ShellMain.generateDirectoryPath() + "/" + commandParts[1];
+        /* TODO: program argument support + program argument processing from commandParts */
+        Context context = Compile.createStructure(filename,
+                Compile.SourceType.FILE,
+                Compile.InputType.CLASS, null);
+        ClassAtom program = (ClassAtom) context.getStructure();
+        SymbolTable programTable = context.getSymbolTable();
+        program.execute(programTable, context.getErrorListener());
+      }
     }
     ANSIFormatting.resetANSI();
   }
