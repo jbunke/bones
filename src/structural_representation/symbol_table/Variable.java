@@ -32,6 +32,9 @@ public class Variable implements Symbol {
 
   @Override
   public String toString() {
+    if (value == null)
+      return "( " + type.toString() + " ) " + ident;
+
     return "( " + type.toString() + " ) " + ident + " -> " + value.toString();
   }
 }
