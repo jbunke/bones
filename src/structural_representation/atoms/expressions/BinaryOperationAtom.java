@@ -5,7 +5,7 @@ import error.ErrorMessages;
 import error.Position;
 import execution.BonesArray;
 import execution.BonesList;
-import execution.RuntimeErrorExit;
+import structural_representation.Compile;
 import structural_representation.atoms.types.BonesType;
 import structural_representation.atoms.types.collections.ArrayType;
 import structural_representation.atoms.types.collections.ListType;
@@ -248,13 +248,13 @@ public class BinaryOperationAtom extends ExpressionAtom {
             case DIVIDE:
               if (right.equals(0)) errorListener.runtimeError(
                       ErrorMessages.divideByZero(),
-                      true, RuntimeErrorExit.RUNTIME_ERROR_EXIT,
+                      true, Compile.RUNTIME_ERROR_EXIT,
                       getPosition().getLine(), getPosition().getPositionInLine());
               return lefti / righti;
             case MOD:
               if (right.equals(0)) errorListener.runtimeError(
                       ErrorMessages.divideByZero(),
-                      true, RuntimeErrorExit.RUNTIME_ERROR_EXIT,
+                      true, Compile.RUNTIME_ERROR_EXIT,
                       getPosition().getLine(), getPosition().getPositionInLine());
               return lefti % righti;
           }
@@ -280,13 +280,13 @@ public class BinaryOperationAtom extends ExpressionAtom {
             case DIVIDE:
               if (right.equals(0f)) errorListener.runtimeError(
                       ErrorMessages.divideByZero(),
-                      true, RuntimeErrorExit.RUNTIME_ERROR_EXIT,
+                      true, Compile.RUNTIME_ERROR_EXIT,
                       getPosition().getLine(), getPosition().getPositionInLine());
               return leftf / rightf;
             case MOD:
               if (right.equals(0f)) errorListener.runtimeError(
                       ErrorMessages.divideByZero(),
-                      true, RuntimeErrorExit.RUNTIME_ERROR_EXIT,
+                      true, Compile.RUNTIME_ERROR_EXIT,
                       getPosition().getLine(), getPosition().getPositionInLine());
               return leftf % rightf;
           }

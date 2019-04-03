@@ -3,7 +3,7 @@ package structural_representation.atoms.expressions.assignables;
 import error.BonesErrorListener;
 import error.ErrorMessages;
 import error.Position;
-import execution.RuntimeErrorExit;
+import structural_representation.Compile;
 import structural_representation.symbol_table.Symbol;
 import structural_representation.symbol_table.SymbolTable;
 import structural_representation.atoms.types.BonesType;
@@ -31,7 +31,7 @@ public class IdentifierAtom extends AssignableAtom {
     Object value =  variable.getValue();
 
     if (value == null) errorListener.runtimeError(ErrorMessages.nullPointer(),
-            true, RuntimeErrorExit.RUNTIME_ERROR_EXIT,
+            true, Compile.RUNTIME_ERROR_EXIT,
             getPosition().getLine(), getPosition().getPositionInLine());
 
     return value;

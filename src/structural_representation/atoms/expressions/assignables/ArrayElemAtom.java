@@ -5,11 +5,9 @@ import error.ErrorMessages;
 import error.Position;
 import execution.BonesArray;
 import execution.BonesList;
-import execution.RuntimeErrorExit;
+import structural_representation.Compile;
 import structural_representation.atoms.types.BonesType;
 import structural_representation.atoms.types.collections.ArrayType;
-import structural_representation.atoms.types.collections.ListType;
-import structural_representation.atoms.types.primitives.VoidType;
 import structural_representation.symbol_table.Symbol;
 import structural_representation.symbol_table.SymbolTable;
 import structural_representation.symbol_table.Variable;
@@ -46,7 +44,7 @@ public class ArrayElemAtom extends AssignableAtom {
     Object value =  variable.getValue();
 
     if (value == null) errorListener.runtimeError(ErrorMessages.nullPointer(),
-            true, RuntimeErrorExit.RUNTIME_ERROR_EXIT,
+            true, Compile.RUNTIME_ERROR_EXIT,
             getPosition().getLine(), getPosition().getPositionInLine());
 
     for (int i : indices) {

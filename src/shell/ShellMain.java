@@ -2,6 +2,7 @@ package shell;
 
 import shell.processing.Commands;
 import shell.processing.Commands.Status;
+import shell.processing.MultilineInput;
 import structural_representation.Compile;
 import structural_representation.Context;
 import structural_representation.atoms.Atom;
@@ -26,7 +27,7 @@ public class ShellMain {
           new SymbolTable(null, null);
 
   public static String username = "user";
-  private static List<String> directoryPath = new ArrayList<>();
+  public static List<String> directoryPath = new ArrayList<>();
   public static File directory = null;
 
   public static void main(String[] args) {
@@ -39,6 +40,7 @@ public class ShellMain {
     do {
       prompt();
       String input = scanner.nextLine().trim();
+      input = MultilineInput.checkMultiline(input, scanner);
 
       Status status = Commands.checkIfMatched(input);
 
@@ -216,10 +218,7 @@ public class ShellMain {
         System.out.print("/" + directoryPath.get(i));
       }
     } else {
-      for (int i = 0; i < directoryPath.size(); i++) {
-        if (i > 0) System.out.print("/" + directoryPath.get(i));
-        else System.out.print(directoryPath.get(i));
-      }
+      System.out.print(generateDirectoryPath());
     }
 
     ANSIFormatting.setBold();
