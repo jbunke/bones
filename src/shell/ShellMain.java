@@ -11,6 +11,7 @@ import structural_representation.symbol_table.SymbolTable;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
@@ -56,9 +57,7 @@ public class ShellMain {
   private static void startupSequence() {
     startupText();
     loadUsername();
-
-    directoryPath.add("res");
-    directory = new File(generateDirectoryPath());
+    loadDirectory();
   }
 
   private static void startupText() {
@@ -88,8 +87,33 @@ public class ShellMain {
     }
   }
 
+  private static void loadDirectory() {
+    File file = new File("res/shell_settings/directory");
+
+    try {
+      if (!file.createNewFile()) {
+        FileReader reader = new FileReader(file);
+        BufferedReader br = new BufferedReader(reader);
+        List<String> lines = br.lines().collect(Collectors.toList());
+        if (lines.size() > 0) {
+          String firstLine = lines.get(0).trim();
+          String[] folders = firstLine.split("/");
+          directoryPath = new ArrayList<>();
+          directoryPath.addAll(Arrays.asList(folders));
+          directory = new File(generateDirectoryPath());
+        }
+      } else {
+        directoryPath = new ArrayList<>();
+        directory = null;
+      }
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
   private static void quitSequence() {
     saveUsername();
+    saveDirectory();
     quitText();
   }
 
@@ -105,6 +129,17 @@ public class ShellMain {
       FileWriter writer = new FileWriter(
               new File("res/shell_settings/username"), false);
       writer.write(username);
+      writer.close();
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+
+  private static void saveDirectory() {
+    try {
+      FileWriter writer = new FileWriter(
+              new File("res/shell_settings/directory"), false);
+      writer.write(generateDirectoryPath());
       writer.close();
     } catch (IOException e) {
       e.printStackTrace();
@@ -133,18 +168,37 @@ public class ShellMain {
   }
 
   public static void changeDirectory(String dir) {
-    if (dir.equals("..")) {
-      if (directoryPath.size() > 1) {
-        directoryPath.remove(directoryPath.size() - 1);
-        directory = new File(generateDirectoryPath());
-      } else if (directoryPath.size() > 0) {
+    switch (dir) {
+      case "..":
+        if (directoryPath.size() > 1) {
+          directoryPath.remove(directoryPath.size() - 1);
+          directory = new File(generateDirectoryPath());
+        } else if (directoryPath.size() > 0) {
+          directoryPath = new ArrayList<>();
+          directory = directory.getParentFile();
+        }
+        break;
+      case "":
         directoryPath = new ArrayList<>();
-        directory = directory.getParentFile();
-      }
-    } else {
-      directoryPath.add(dir);
-      directory = new File(generateDirectoryPath());
+        directory = null;
+        break;
+      default:
+        directoryPath.add(dir);
+        directory = new File(generateDirectoryPath());
+
+        if (!directory.isDirectory()) {
+
+          ANSIFormatting.setYellow();
+          System.out.println("[Not a directory]");
+
+          directoryPath.remove(directoryPath.size() - 1);
+          directory = new File(generateDirectoryPath());
+        }
+        break;
     }
+
+    saveDirectory();
+    ANSIFormatting.resetANSI();
   }
 
   /* TEXT UTILITIES */

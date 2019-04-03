@@ -80,6 +80,11 @@ public class Commands {
       /* :cd .. | :cd someFolder | :cd folder1/+ */
       String[] commandParts = commandParts(input);
 
+      if (commandParts.length <= 1) {
+        ShellMain.changeDirectory("");
+        return;
+      }
+
       String[] path = commandParts[1].split("/");
 
       for (String stage : path) ShellMain.changeDirectory(stage);
