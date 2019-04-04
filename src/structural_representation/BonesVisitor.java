@@ -411,6 +411,15 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
   }
 
   @Override
+  public Atom visitCAST_EXPR(BonesParser.CAST_EXPRContext ctx) {
+    ExpressionAtom expression = (ExpressionAtom) visit(ctx.expr());
+    BonesType type = (BonesType) visit(ctx.type());
+
+    return new CastingExpressionAtom(type, expression,
+            Position.fromToken(ctx.LPAREN().getSymbol()));
+  }
+
+  @Override
   public Atom visitASSIGNABLE_EXPR(BonesParser.ASSIGNABLE_EXPRContext ctx) {
     return visit(ctx.assignable());
   }

@@ -11,20 +11,30 @@ Grammar:
 
   x non-trivial import statements
   x classes with callable functions
+  - access fields in imported classes
+  - instances / objects
 
-  - casting for primitives
-    - (bool)
-      - string -> "true" & "false"
-      - int -> 0 & 1
-    - (int)
-      - string -> Integer.parseInt
-      - bool -> true: 1 & false: 0
-      - float -> Math.floor
-      - char -> ASCII code
-    - (char)
-      - int -> char for ASCII
-    - (string)
-      - bool
-      - int
-      - float
-      - char
+  x casting for primitives
+    x (bool)
+      x string -> "true" & "false"
+      x int -> 0 & 1
+    x (int)
+      x string -> Integer.parseInt
+      x bool -> true: 1 & false: 0
+      x float -> Math.floor
+      x char -> ASCII code
+    x (char)
+      x int -> char for ASCII
+    x (string)
+      x bool
+      x int
+      x float
+      x char
+    x (float)
+      x int
+
+  - adding elements & removing elements from lists
+
+  - random()
+
+  - concatenation

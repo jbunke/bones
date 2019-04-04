@@ -6,6 +6,15 @@ public class ErrorMessages {
 
   /* SEMANTIC */
 
+  public static String castingTypeInvalid(String type) {
+    return "Type " + type + " is invalid as a casting type";
+  }
+
+  public static String cannotCastTypeToType(String castType,
+                                            String expressionType) {
+    return "Cannot cast " + castType + " to type " + expressionType;
+  }
+
   public static String invalidTypeIdentifier(String ident) {
     return "Invalid type identifier \"" + ident +
             "\"; typo or missing/incorrect import statement";
@@ -100,5 +109,9 @@ public class ErrorMessages {
 
   public static String nullPointer() {
     return "Null pointer: Value is queried before it is assigned a value";
+  }
+
+  public static String castError(String castType) {
+    return "Evaluated expression could not be cast to type " + castType;
   }
 }
