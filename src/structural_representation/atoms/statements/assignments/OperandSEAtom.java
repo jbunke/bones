@@ -29,7 +29,7 @@ public class OperandSEAtom extends AssignmentAtom {
   @Override
   public StatementControl execute(SymbolTable table, BonesErrorListener errorListener) {
     Object increment = expression.evaluate(table, errorListener);
-    Object value = assignable.getInitialCollectionValue(table);
+    Object value = assignable.getInitialCollectionValue(table, errorListener);
 
     switch (operator) {
       case OR_ASSIGN:
@@ -93,7 +93,7 @@ public class OperandSEAtom extends AssignmentAtom {
         break;
     }
 
-    assignable.assignmentSymbolTableUpdate(table, value);
+    assignable.assignmentSymbolTableUpdate(table, value, errorListener);
 
     return StatementControl.cont();
   }

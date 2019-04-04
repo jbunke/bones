@@ -7,6 +7,7 @@ import execution.BonesArray;
 import execution.BonesList;
 import structural_representation.Compile;
 import structural_representation.atoms.types.BonesType;
+import structural_representation.atoms.types.DeterminedAtRuntimeType;
 import structural_representation.atoms.types.collections.ArrayType;
 import structural_representation.atoms.types.collections.ListType;
 import structural_representation.atoms.types.primitives.*;
@@ -198,6 +199,13 @@ public class BinaryOperationAtom extends ExpressionAtom {
       case AND:
       case OR:
         return new BoolType();
+      case AT_INDEX:
+        if (leftType instanceof ListType) {
+          return ((ListType) leftType).getElementType();
+        } else if (leftType instanceof ArrayType) {
+          return ((ArrayType) leftType).getElementType();
+        } else if (leftType.equals(new StringType())) return new CharType();
+        return new DeterminedAtRuntimeType();
       default:
         return new VoidType();
     }
@@ -217,6 +225,8 @@ public class BinaryOperationAtom extends ExpressionAtom {
           return ((BonesList) left).at((Integer) right);
         } else if (left instanceof BonesArray) {
           return ((BonesArray) left).at((Integer) right);
+        } else if (left instanceof String) {
+          return ((String) left).charAt((Integer) right);
         }
         break;
       case RAISE:

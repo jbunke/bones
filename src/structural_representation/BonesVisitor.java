@@ -485,11 +485,10 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
   public Atom visitList_elem(BonesParser.List_elemContext ctx) {
     String identifier = ctx.ident().IDENTIFIER().getSymbol().getText();
 
-    List<Integer> indices = new ArrayList<>();
+    List<ExpressionAtom> indices = new ArrayList<>();
 
-    for (BonesParser.Int_literalContext intContext : ctx.int_literal()) {
-      Integer index = Integer.parseInt(
-              intContext.INT_LIT().getSymbol().getText());
+    for (BonesParser.ExprContext intContext : ctx.expr()) {
+      ExpressionAtom index = (ExpressionAtom) visit(intContext);
       indices.add(index);
     }
 
@@ -501,11 +500,10 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
   public Atom visitArray_elem(BonesParser.Array_elemContext ctx) {
     String identifier = ctx.ident().IDENTIFIER().getSymbol().getText();
 
-    List<Integer> indices = new ArrayList<>();
+    List<ExpressionAtom> indices = new ArrayList<>();
 
-    for (BonesParser.Int_literalContext intContext : ctx.int_literal()) {
-      Integer index = Integer.parseInt(
-              intContext.INT_LIT().getSymbol().getText());
+    for (BonesParser.ExprContext intContext : ctx.expr()) {
+      ExpressionAtom index = (ExpressionAtom) visit(intContext);
       indices.add(index);
     }
 

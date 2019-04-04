@@ -71,7 +71,7 @@ public class NoOperandSEAtom extends AssignmentAtom {
   @Override
   public StatementControl execute(SymbolTable table,
                                   BonesErrorListener errorListener) {
-    Object value = assignable.getInitialCollectionValue(table);
+    Object value = assignable.getInitialCollectionValue(table, errorListener);
 
     switch (operator) {
       case NEGATE:
@@ -93,7 +93,7 @@ public class NoOperandSEAtom extends AssignmentAtom {
         break;
     }
 
-    assignable.assignmentSymbolTableUpdate(table, value);
+    assignable.assignmentSymbolTableUpdate(table, value, errorListener);
 
     return StatementControl.cont();
   }

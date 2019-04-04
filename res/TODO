@@ -34,7 +34,7 @@ Grammar:
       x int
 
   - adding elements & removing elements from lists
-  - indexing lists and arrays with non-integer literal expressions
+  x indexing lists and arrays with non-integer literal expressions
 
   - random()
 

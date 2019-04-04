@@ -6,6 +6,10 @@ public class ErrorMessages {
 
   /* SEMANTIC */
 
+  public static String collectionIndexType() {
+    return "Collection index is not of type (int)";
+  }
+
   public static String invalidTypesForPlusConcat() {
     return "Plus / concatenation operator (+) given operands of invalid types";
   }

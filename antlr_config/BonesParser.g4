@@ -71,10 +71,10 @@ expr: int_literal                             #INT_EXPR
 ;
 
 list_elem: ident
-(LPAREN int_literal RPAREN)+ ;
+(LPAREN expr RPAREN)+ ;
 
 array_elem: ident
-(LBRACKET int_literal RBRACKET)+ ;
+(LBRACKET expr RBRACKET)+ ;
 
 list_literal: LISTINIT
 LCURLY (rhs (COMMA rhs)*)? RCURLY ;

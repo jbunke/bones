@@ -23,7 +23,7 @@ public class StandardAssignmentAtom extends AssignmentAtom {
   public StatementControl execute(SymbolTable table,
                                   BonesErrorListener errorListener) {
     assignable.assignmentSymbolTableUpdate(table,
-            RHS.evaluate(table, errorListener));
+            RHS.evaluate(table, errorListener), errorListener);
 
     return StatementControl.cont();
   }

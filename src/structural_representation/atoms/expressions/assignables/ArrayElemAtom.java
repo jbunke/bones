@@ -6,8 +6,10 @@ import error.Position;
 import execution.BonesArray;
 import execution.BonesList;
 import structural_representation.Compile;
+import structural_representation.atoms.expressions.ExpressionAtom;
 import structural_representation.atoms.types.BonesType;
 import structural_representation.atoms.types.collections.ArrayType;
+import structural_representation.atoms.types.primitives.IntType;
 import structural_representation.symbol_table.Symbol;
 import structural_representation.symbol_table.SymbolTable;
 import structural_representation.symbol_table.Variable;
@@ -16,9 +18,9 @@ import java.util.List;
 
 public class ArrayElemAtom extends AssignableAtom {
   private final String identifier;
-  private final List<Integer> indices;
+  private final List<ExpressionAtom> indices;
 
-  public ArrayElemAtom(String identifier, List<Integer> indices,
+  public ArrayElemAtom(String identifier, List<ExpressionAtom> indices,
                        Position position) {
     this.identifier = identifier;
     this.indices = indices;
@@ -29,7 +31,7 @@ public class ArrayElemAtom extends AssignableAtom {
     return identifier;
   }
 
-  public List<Integer> getIndices() {
+  public List<ExpressionAtom> getIndices() {
     return indices;
   }
 
@@ -47,7 +49,10 @@ public class ArrayElemAtom extends AssignableAtom {
             true, Compile.RUNTIME_ERROR_EXIT,
             getPosition().getLine(), getPosition().getPositionInLine());
 
-    for (int i : indices) {
+    for (ExpressionAtom index : indices) {
+
+      int i = (Integer) index.evaluate(table, errorListener);
+
       if (value instanceof BonesArray) {
         value = ((BonesArray) value).at(i);
       } else if (value instanceof BonesList) {
@@ -68,6 +73,14 @@ public class ArrayElemAtom extends AssignableAtom {
       errorListener.semanticError(ErrorMessages.
               variableIsNotArrayInThisContext(identifier),
               getPosition().getLine(), getPosition().getPositionInLine());
+    }
+
+    for (ExpressionAtom index : indices) {
+      if (!index.getType(symbolTable).equals(new IntType())) {
+        errorListener.semanticError(ErrorMessages.collectionIndexType(),
+                index.getPosition().getLine(),
+                index.getPosition().getPositionInLine());
+      }
     }
   }
 
