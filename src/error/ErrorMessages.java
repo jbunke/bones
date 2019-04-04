@@ -6,6 +6,10 @@ public class ErrorMessages {
 
   /* SEMANTIC */
 
+  public static String invalidTypesForPlusConcat() {
+    return "Plus / concatenation operator (+) given operands of invalid types";
+  }
+
   public static String castingTypeInvalid(String type) {
     return "Type " + type + " is invalid as a casting type";
   }

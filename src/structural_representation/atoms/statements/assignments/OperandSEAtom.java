@@ -11,6 +11,7 @@ import structural_representation.atoms.types.BonesType;
 import structural_representation.atoms.types.primitives.BoolType;
 import structural_representation.atoms.types.primitives.FloatType;
 import structural_representation.atoms.types.primitives.IntType;
+import structural_representation.atoms.types.primitives.StringType;
 import structural_representation.symbol_table.SymbolTable;
 
 public class OperandSEAtom extends AssignmentAtom {
@@ -40,6 +41,8 @@ public class OperandSEAtom extends AssignmentAtom {
       case ADD_ASSIGN:
         if (value instanceof Integer && increment instanceof Integer) {
           value = (Integer) value + (Integer) increment;
+        } else if (value instanceof String && increment instanceof String) {
+          value = value.toString() + increment.toString();
         } else {
           value = (Float) value + (Float) increment;
         }
@@ -108,6 +111,8 @@ public class OperandSEAtom extends AssignmentAtom {
         operands = OperatorOperands.BOOL;
         break;
       case ADD_ASSIGN:
+        operands = OperatorOperands.INT_FLOAT_STRING;
+        break;
       case SUB_ASSIGN:
       case MUL_ASSIGN:
       case DIV_ASSIGN:
@@ -159,7 +164,7 @@ public class OperandSEAtom extends AssignmentAtom {
   }
 
   public enum OperatorOperands {
-    BOOL, ALL, INT, INT_FLOAT
+    BOOL, ALL, INT, INT_FLOAT, INT_FLOAT_STRING
   }
 
   private boolean compliant(BonesType type, OperatorOperands operands) {
@@ -167,9 +172,13 @@ public class OperandSEAtom extends AssignmentAtom {
       return operands == OperatorOperands.BOOL;
     } else if (type instanceof IntType) {
       return operands == OperatorOperands.INT
-              || operands == OperatorOperands.INT_FLOAT;
+              || operands == OperatorOperands.INT_FLOAT
+              || operands == OperatorOperands.INT_FLOAT_STRING;
     } else if (type instanceof FloatType) {
-      return operands == OperatorOperands.INT_FLOAT;
+      return operands == OperatorOperands.INT_FLOAT ||
+              operands == OperatorOperands.INT_FLOAT_STRING;
+    } else if (type instanceof StringType) {
+      return operands == OperatorOperands.INT_FLOAT_STRING;
     }
     return false;
   }

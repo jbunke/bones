@@ -18,7 +18,7 @@ public abstract class AssignableAtom extends ExpressionAtom {
                                      String identifier,
                                      List<Integer> indices) {
     if (indices == null || indices.size() == 0) {
-      return new VoidType();
+      return new VoidType(); // TODO
     }
 
     Symbol symbol = table.get(identifier);
