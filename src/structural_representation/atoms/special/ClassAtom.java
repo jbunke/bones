@@ -6,12 +6,12 @@ import formatting.Tabs;
 import structural_representation.atoms.expressions.assignables.IdentifierAtom;
 import structural_representation.atoms.statements.DeclarationAtom;
 import structural_representation.atoms.types.BonesType;
-import structural_representation.symbol_table.Symbol;
+import structural_representation.atoms.types.ClassType;
 import structural_representation.symbol_table.SymbolTable;
 
 import java.util.List;
 
-public class ClassAtom extends BonesType implements Symbol {
+public class ClassAtom extends BonesType {
   private final PathAtom path;
   private final List<ImportAtom> imports;
   private final IdentifierAtom className;
@@ -45,9 +45,23 @@ public class ClassAtom extends BonesType implements Symbol {
     }
   }
 
+  public void processImports(String classFilepath, SymbolTable table) {
+    String rootPath = path.cutoffPathFromFilepath(classFilepath);
+
+    imports.forEach(x -> x.process(rootPath, table));
+  }
+
+  String getClassName() {
+    return className.toString();
+  }
+
   @Override
   public void semanticErrorCheck(SymbolTable symbolTable,
                                  BonesErrorListener errorListener) {
+    /* populate this class as a type */
+    symbolTable.put(className.toString(),
+            new ClassType(this, symbolTable));
+
     path.semanticErrorCheck(symbolTable, errorListener);
     imports.forEach(x -> x.semanticErrorCheck(symbolTable, errorListener));
 
@@ -59,11 +73,6 @@ public class ClassAtom extends BonesType implements Symbol {
   @Override
   public Object defaultValue() {
     return null;
-  }
-
-  @Override
-  public BonesType getType() {
-    return this;
   }
 
   @Override

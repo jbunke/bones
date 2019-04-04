@@ -6,6 +6,11 @@ public class ErrorMessages {
 
   /* SEMANTIC */
 
+  public static String invalidTypeIdentifier(String ident) {
+    return "Invalid type identifier \"" + ident +
+            "\"; typo or missing/incorrect import statement";
+  }
+
   public static String expectedTypeButExpressionIs(String statementType,
                                                    BonesType expected,
                                                    BonesType got) {

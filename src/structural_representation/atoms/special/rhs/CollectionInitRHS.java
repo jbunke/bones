@@ -63,6 +63,6 @@ public class CollectionInitRHS extends RHSAtom {
   @Override
   public void semanticErrorCheck(SymbolTable symbolTable,
                                  BonesErrorListener errorListener) {
-
+    elementType.semanticErrorCheck(symbolTable, errorListener);
   }
 }

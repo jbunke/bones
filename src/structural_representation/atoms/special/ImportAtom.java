@@ -2,7 +2,10 @@ package structural_representation.atoms.special;
 
 import error.BonesErrorListener;
 import error.Position;
+import structural_representation.Compile;
+import structural_representation.Context;
 import structural_representation.atoms.Atom;
+import structural_representation.atoms.types.ClassType;
 import structural_representation.symbol_table.SymbolTable;
 
 import java.util.List;
@@ -35,5 +38,30 @@ public class ImportAtom extends Atom {
     sb.append(";");
 
     return sb.toString();
+  }
+
+  void process(String rootPath, SymbolTable rootTable) {
+    /* Generate filepath */
+    StringBuilder filepath = new StringBuilder(rootPath);
+
+    for (int i = 0; i < path.size(); i++) {
+      filepath.append("/");
+      filepath.append(path.get(i));
+      if (i == path.size() - 1) filepath.append(".b");
+    }
+
+    Context context = Compile.createStructure(filepath.toString(),
+            Compile.SourceType.FILE, Compile.InputType.CLASS, null);
+
+    if (context.getErrorListener().hasError())
+      Compile.printErrorsAndExit(context.getErrorListener(), true,
+              Compile.SEMANTIC_ERROR_EXIT);
+
+    ClassAtom importClass = (ClassAtom) context.getStructure();
+
+    ClassType importType =
+            new ClassType(importClass, context.getSymbolTable());
+
+    rootTable.put(importClass.getClassName(), importType);
   }
 }

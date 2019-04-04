@@ -63,6 +63,9 @@ public class FunctionAtom extends Atom implements Symbol {
   @Override
   public void semanticErrorCheck(SymbolTable symbolTable,
                                  BonesErrorListener errorListener) {
+    if (!(returnType.equals(new VoidType())))
+      returnType.semanticErrorCheck(symbolTable, errorListener);
+
     symbolTable.put(name, this);
 
     SymbolTable functionTable = new SymbolTable(this, symbolTable);

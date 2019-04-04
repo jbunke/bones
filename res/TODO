@@ -1,7 +1,7 @@
 Grammar:
 
-  - Standard IO
-    - read() statement
+  x Standard IO
+    x read() statement
     x print(expr) statement
     x println(expr) statement
 
@@ -9,3 +9,22 @@ Grammar:
 
   x array literals !BUT THEY AREN'T EXPRESSIONS!
 
+  x non-trivial import statements
+  x classes with callable functions
+
+  - casting for primitives
+    - (bool)
+      - string -> "true" & "false"
+      - int -> 0 & 1
+    - (int)
+      - string -> Integer.parseInt
+      - bool -> true: 1 & false: 0
+      - float -> Math.floor
+      - char -> ASCII code
+    - (char)
+      - int -> char for ASCII
+    - (string)
+      - bool
+      - int
+      - float
+      - char

@@ -2,34 +2,61 @@ package structural_representation.atoms.expressions;
 
 import error.BonesErrorListener;
 import error.ErrorMessages;
+import error.Position;
 import structural_representation.atoms.special.FunctionAtom;
 import structural_representation.atoms.special.ParamAtom;
 import structural_representation.atoms.types.BonesType;
+import structural_representation.atoms.types.ClassType;
 import structural_representation.symbol_table.SymbolTable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FunctionCallAtom extends ExpressionAtom {
-  private final String name;
+  private final String className;
+  private final String functionName;
   private final List<ExpressionAtom> arguments;
+  private final Scope scope;
   private FunctionAtom function = null;
 
-  public FunctionCallAtom(String name, List<ExpressionAtom> arguments) {
-    this.name = name;
+  public FunctionCallAtom(String functionName,
+                          List<ExpressionAtom> arguments, Position position) {
+    this.className = null;
+    this.functionName = functionName;
     this.arguments = arguments;
+    this.position = position;
+    this.scope = Scope.INTERNAL;
+  }
+
+  public FunctionCallAtom(String className, String functionName,
+                          List<ExpressionAtom> arguments, Position position) {
+    this.className = className;
+    this.functionName = functionName;
+    this.arguments = arguments;
+    this.position = position;
+    this.scope = Scope.EXTERNAL;
+  }
+
+  public enum Scope {
+    INTERNAL, EXTERNAL
   }
 
   @Override
   public BonesType getType(SymbolTable table) {
-    if (function == null) function = (FunctionAtom) table.root().get(name);
+    if (function == null) function = (FunctionAtom) table.root().get(functionName);
 
     return function.getType();
   }
 
   @Override
   public Object evaluate(SymbolTable table, BonesErrorListener errorListener) {
-    SymbolTable functionTable = table.tableForFunction(function);
+    SymbolTable functionTable;
+
+    if (scope == Scope.EXTERNAL) {
+      ClassType classType = (ClassType) table.root().get(className);
+      functionTable = classType.getClassTable().tableForFunction(function);
+    } else functionTable = table.tableForFunction(function);
+
     List<String> params = new ArrayList<>();
     if (function.getParamList() != null)
       function.getParamList().getParams().forEach(x ->
@@ -49,23 +76,30 @@ public class FunctionCallAtom extends ExpressionAtom {
   @Override
   public void semanticErrorCheck(SymbolTable symbolTable,
                                  BonesErrorListener errorListener) {
-    if (symbolTable.root().get(name) == null) {
+    SymbolTable rootTable;
+
+    if (scope == Scope.EXTERNAL) {
+      ClassType classType = (ClassType) symbolTable.root().get(className);
+      rootTable = classType.getClassTable();
+    } else rootTable = symbolTable.root();
+
+    if (rootTable.get(functionName) == null) {
       errorListener.semanticError(ErrorMessages.
-              identifierIsNotAFunction(name),
+              identifierIsNotAFunction(functionName),
               getPosition().getLine(), getPosition().getPositionInLine());
       return;
-    } else if (!(symbolTable.root().get(name) instanceof FunctionAtom)) {
+    } else if (!(rootTable.get(functionName) instanceof FunctionAtom)) {
       errorListener.semanticError(ErrorMessages.
-              identifierIsNotAFunction(name),
+              identifierIsNotAFunction(functionName),
               getPosition().getLine(), getPosition().getPositionInLine());
       return;
     } else if (function == null) {
-      function = (FunctionAtom) symbolTable.root().get(name);
+      function = (FunctionAtom) rootTable.get(functionName);
     }
 
     /* Semantic check the function if it hasn't been done */
     if (!function.hasBeenChecked()) {
-      SymbolTable functionTable = symbolTable.tableForFunction(function);
+      SymbolTable functionTable = rootTable.tableForFunction(function);
 
       if (functionTable != null)
         function.semanticErrorCheck(functionTable, errorListener);
@@ -97,7 +131,7 @@ public class FunctionCallAtom extends ExpressionAtom {
     StringBuilder sb = new StringBuilder();
 
     sb.append("call ");
-    sb.append(name);
+    sb.append(functionName);
     sb.append("(");
 
     for (int i = 0; i < arguments.size(); i++) {

@@ -26,6 +26,7 @@ import structural_representation.atoms.statements.control_flow.IfStatementAtom;
 import structural_representation.atoms.statements.control_flow.WhileStatementAtom;
 import structural_representation.atoms.statements.io.PrintStatementAtom;
 import structural_representation.atoms.types.BonesType;
+import structural_representation.atoms.types.ClassType;
 import structural_representation.atoms.types.collections.ArrayType;
 import structural_representation.atoms.types.collections.ListType;
 import structural_representation.atoms.types.primitives.*;
@@ -124,6 +125,12 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
   @Override
   public Atom visitINT_TYPE(BonesParser.INT_TYPEContext ctx) {
     return new IntType();
+  }
+
+  @Override
+  public Atom visitCLASS_TYPE(BonesParser.CLASS_TYPEContext ctx) {
+    return new ClassType(ctx.ident().getText(),
+            Position.fromToken(ctx.ident().start));
   }
 
   @Override
@@ -386,7 +393,6 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
 
   @Override
   public Atom visitFUNCTION_CALL_EXPR(BonesParser.FUNCTION_CALL_EXPRContext ctx) {
-    // TODO: temp fix - currently only looking at last part of method path
     String name = ctx.ident(ctx.ident().size() - 1).
             IDENTIFIER().getSymbol().getText();
 
@@ -394,7 +400,14 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
 
     ctx.expr().forEach(x -> expressions.add((ExpressionAtom) visit(x)));
 
-    return new FunctionCallAtom(name, expressions);
+    if (ctx.ident().size() > 1) {
+      String className = ctx.ident(0).IDENTIFIER().getSymbol().getText();
+      return new FunctionCallAtom(className, name, expressions,
+              Position.fromToken(ctx.CALL().getSymbol()));
+    }
+
+    return new FunctionCallAtom(name, expressions,
+            Position.fromToken(ctx.CALL().getSymbol()));
   }
 
   @Override

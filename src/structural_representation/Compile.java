@@ -15,7 +15,7 @@ import structural_representation.symbol_table.SymbolTable;
 import java.io.IOException;
 
 public class Compile {
-  private static final int SEMANTIC_ERROR_EXIT = 100;
+  public static final int SEMANTIC_ERROR_EXIT = 100;
   public static final int RUNTIME_ERROR_EXIT = 1;
 
   public enum SourceType {
@@ -92,6 +92,9 @@ public class Compile {
         ClassAtom structure = (ClassAtom) visitor.visit(parseTree);
 
         SymbolTable rootTable = new SymbolTable(structure, null);
+
+        if (sourceMode == SourceType.FILE)
+          structure.processImports(source, rootTable);
 
         /* SEMANTIC ERROR CHECK */
         structure.semanticErrorCheck(rootTable, errorListener);

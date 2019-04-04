@@ -17,6 +17,7 @@ type: BOOL                                    #BOOL_TYPE
 | CHAR                                        #CHAR_TYPE
 | STRING                                      #STRING_TYPE
 | VOID                                        #VOID_TYPE
+| ident                                       #CLASS_TYPE
 | type LPAREN RPAREN                          #LIST_TYPE
 | type LBRACKET RBRACKET                      #ARRAY_TYPE
 ;
@@ -54,7 +55,7 @@ expr: int_literal                             #INT_EXPR
 | string_literal                              #STRING_EXPR
 | assignable                                  #ASSIGNABLE_EXPR
 | READ LPAREN RPAREN                          #READ_EXPR
-| CALL (ident PERIOD)* ident
+| CALL ident (PERIOD ident)?
   LPAREN (expr (COMMA expr)* )? RPAREN        #FUNCTION_CALL_EXPR
 | op=(NOT | SIZE | MINUS) expr                #UNARY_OP_EXPR
 | expr RAISE expr                             #EXPONENTIATION_EXPR
