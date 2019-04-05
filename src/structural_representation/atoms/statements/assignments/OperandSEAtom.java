@@ -3,11 +3,13 @@ package structural_representation.atoms.statements.assignments;
 import error.BonesErrorListener;
 import error.ErrorMessages;
 import error.Position;
+import execution.BonesList;
 import execution.StatementControl;
 import structural_representation.Compile;
 import structural_representation.atoms.expressions.ExpressionAtom;
 import structural_representation.atoms.expressions.assignables.AssignableAtom;
 import structural_representation.atoms.types.BonesType;
+import structural_representation.atoms.types.collections.ListType;
 import structural_representation.atoms.types.primitives.BoolType;
 import structural_representation.atoms.types.primitives.FloatType;
 import structural_representation.atoms.types.primitives.IntType;
@@ -32,6 +34,18 @@ public class OperandSEAtom extends AssignmentAtom {
     Object value = assignable.getInitialCollectionValue(table, errorListener);
 
     switch (operator) {
+      case REM_AT_INDEX:
+        Integer index = (Integer) expression.evaluate(table, errorListener);
+
+        if (index < 0 || index >= ((BonesList) value).size())
+          errorListener.runtimeError(
+                  ErrorMessages.collectionIndexOutOfBounds("List"),
+                  true, Compile.RUNTIME_ERROR_EXIT,
+                  expression.getPosition().getLine(),
+                  expression.getPosition().getPositionInLine());
+
+        ((BonesList) value).remove((int) index);
+        break;
       case OR_ASSIGN:
         value = (Boolean) value || (Boolean) increment;
         break;
@@ -119,6 +133,25 @@ public class OperandSEAtom extends AssignmentAtom {
       case MOD_ASSIGN:
         operands = OperatorOperands.INT_FLOAT;
         break;
+      case REM_AT_INDEX:
+        BonesType exprType = expression.getType(symbolTable);
+
+        if (!exprType.equals(new IntType())) {
+          errorListener.semanticError(ErrorMessages.collectionIndexType(),
+                  expression.getPosition().getLine(),
+                  expression.getPosition().getPositionInLine());
+          return;
+        }
+
+        BonesType assignableType = assignable.getType(symbolTable);
+
+        if (!(assignableType instanceof ListType)) {
+          errorListener.semanticError(
+                  ErrorMessages.compoundAssignmentListOpOnNonList(),
+                  assignable.getPosition().getLine(),
+                  assignable.getPosition().getPositionInLine());
+        }
+        return;
     }
 
     if (!compliant(assignable.getType(symbolTable), operands)) {
@@ -139,7 +172,8 @@ public class OperandSEAtom extends AssignmentAtom {
   public enum Operator {
     ADD_ASSIGN, SUB_ASSIGN,
     MUL_ASSIGN, DIV_ASSIGN, MOD_ASSIGN,
-    AND_ASSIGN, OR_ASSIGN
+    AND_ASSIGN, OR_ASSIGN,
+    REM_AT_INDEX
   }
 
   private String operatorToString() {
@@ -158,6 +192,8 @@ public class OperandSEAtom extends AssignmentAtom {
         return "&=";
       case OR_ASSIGN:
         return "|=";
+      case REM_AT_INDEX:
+        return "-@";
       default:
         return "";
     }

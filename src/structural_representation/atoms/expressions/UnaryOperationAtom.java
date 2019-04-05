@@ -25,6 +25,10 @@ public class UnaryOperationAtom extends ExpressionAtom {
   @Override
   public void semanticErrorCheck(SymbolTable symbolTable,
                                  BonesErrorListener errorListener) {
+    expr.semanticErrorCheck(symbolTable, errorListener);
+
+    if (errorListener.hasError()) return;
+
     switch (operator) {
       case NOT:
         if (!expr.getType(symbolTable).equals(new BoolType())) {
@@ -52,8 +56,6 @@ public class UnaryOperationAtom extends ExpressionAtom {
         }
         break;
     }
-
-    expr.semanticErrorCheck(symbolTable, errorListener);
   }
 
   private enum Operator {

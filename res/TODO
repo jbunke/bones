@@ -39,3 +39,5 @@ Grammar:
   - random()
 
   x concatenation
+
+  - error messages display file

@@ -6,6 +6,11 @@ public class ErrorMessages {
 
   /* SEMANTIC */
 
+  public static String compoundAssignmentListOpOnNonList() {
+    return "Attempted to use a compound assignment operator for lists " +
+            "on a non-list assignable";
+  }
+
   public static String collectionIndexType() {
     return "Collection index is not of type (int)";
   }
@@ -121,5 +126,9 @@ public class ErrorMessages {
 
   public static String castError(String castType) {
     return "Evaluated expression could not be cast to type " + castType;
+  }
+
+  public static String collectionIndexOutOfBounds(String collectionType) {
+    return collectionType + " index out of bounds";
   }
 }

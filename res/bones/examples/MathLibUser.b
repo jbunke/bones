@@ -20,7 +20,7 @@ class MathLibUser {
     int[] toPopulate = int[6];
     int[] expected = arrayinit{ 5, 7, 2, 18, 45, -1 };
     
-    for (int i = 0; i < #toPopulate; i++;) {
+    for (int i = 0; i < #toPopulate; i++) {
       toPopulate[i] = call Math.round(floats[i]);
       println(toPopulate[i] == expected[i]);
     }

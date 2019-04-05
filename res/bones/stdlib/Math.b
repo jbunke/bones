@@ -11,6 +11,10 @@ class Math {
   }
   
   int ceiling(float num) {
+    if (num < 0.0) {
+      return ((int) num);
+    }
+
     return ((int) num) + 1;
   }
   

@@ -101,17 +101,19 @@ assignable: ident                             #IDENT_ASSIGNABLE
 ;
 
 assignment:
-assignable ASSIGN rhs SEMICOLON               #STANDARD_ASSIGNMENT
-| assignable NEGATE SEMICOLON                 #NEGATE_ASSIGNMENT
-| assignable INCREMENT SEMICOLON              #INCREMENT_ASSIGNMENT
-| assignable DECREMENT SEMICOLON              #DECREMENT_ASSIGNMENT
-| assignable ADD_ASSIGN expr SEMICOLON        #ADD_ASSIGNMENT
-| assignable SUB_ASSIGN expr SEMICOLON        #SUB_ASSIGNMENT
-| assignable MUL_ASSIGN expr SEMICOLON        #MUL_ASSIGNMENT
-| assignable DIV_ASSIGN expr SEMICOLON        #DIV_ASSIGNMENT
-| assignable MOD_ASSIGN expr SEMICOLON        #MOD_ASSIGNMENT
-| assignable AND_ASSIGN expr SEMICOLON        #AND_ASSIGNMENT
-| assignable OR_ASSIGN expr SEMICOLON         #OR_ASSIGNMENT
+assignable ASSIGN rhs                         #STANDARD_ASSIGNMENT
+| assignable NEGATE                           #NEGATE_ASSIGNMENT
+| assignable INCREMENT                        #INCREMENT_ASSIGNMENT
+| assignable DECREMENT                        #DECREMENT_ASSIGNMENT
+| assignable ADD_ELEM_AT rhs COMMA expr       #ADD_ELEM_AT_ASSIGNMENT
+| assignable REM_ELEM_AT expr                 #REM_ELEM_AT_ASSIGNMENT
+| assignable ADD_ASSIGN expr                  #ADD_ASSIGNMENT
+| assignable SUB_ASSIGN expr                  #SUB_ASSIGNMENT
+| assignable MUL_ASSIGN expr                  #MUL_ASSIGNMENT
+| assignable DIV_ASSIGN expr                  #DIV_ASSIGNMENT
+| assignable MOD_ASSIGN expr                  #MOD_ASSIGNMENT
+| assignable AND_ASSIGN expr                  #AND_ASSIGNMENT
+| assignable OR_ASSIGN expr                   #OR_ASSIGNMENT
 ;
 
 body: LCURLY stat* RCURLY ;
@@ -130,7 +132,7 @@ stat: FOR LPAREN init expr
 | RETURN expr SEMICOLON                       #RETURN_STAT
 | decl                                        #DECLARATION_STAT
 | init                                        #INITIALISATION_STAT
-| assignment                                  #ASSIGNMENT_STAT
+| assignment SEMICOLON                        #ASSIGNMENT_STAT
 | expr SEMICOLON                              #EXPRESSION_STAT
 ;
 

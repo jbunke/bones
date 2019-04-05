@@ -29,6 +29,8 @@ DIV_ASSIGN: '/=';
 MOD_ASSIGN: '%=';
 AND_ASSIGN: '&=';
 OR_ASSIGN: '|=';
+ADD_ELEM_AT: '+@';
+REM_ELEM_AT: '-@';
 
 // Binary Operators
 EQUAL: '==';

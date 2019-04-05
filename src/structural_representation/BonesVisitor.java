@@ -16,10 +16,7 @@ import structural_representation.atoms.special.rhs.CollectionInitRHS;
 import structural_representation.atoms.special.rhs.CollectionLiteralRHS;
 import structural_representation.atoms.special.rhs.RHSAtom;
 import structural_representation.atoms.statements.*;
-import structural_representation.atoms.statements.assignments.AssignmentAtom;
-import structural_representation.atoms.statements.assignments.NoOperandSEAtom;
-import structural_representation.atoms.statements.assignments.OperandSEAtom;
-import structural_representation.atoms.statements.assignments.StandardAssignmentAtom;
+import structural_representation.atoms.statements.assignments.*;
 import structural_representation.atoms.statements.control_flow.ForEachStatementAtom;
 import structural_representation.atoms.statements.control_flow.ForStatementAtom;
 import structural_representation.atoms.statements.control_flow.IfStatementAtom;
@@ -556,6 +553,27 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
     AssignableAtom assignable = (AssignableAtom) visit(ctx.assignable());
 
     return new NoOperandSEAtom(assignable, NoOperandSEAtom.Operator.DECREMENT,
+            Position.fromToken(ctx.assignable().getStart()));
+  }
+
+  @Override
+  public Atom visitADD_ELEM_AT_ASSIGNMENT(BonesParser.ADD_ELEM_AT_ASSIGNMENTContext ctx) {
+    AssignableAtom assignable = (AssignableAtom) visit(ctx.assignable());
+    RHSAtom rhs = (RHSAtom) visit(ctx.rhs());
+    ExpressionAtom index = (ExpressionAtom) visit(ctx.expr());
+
+    return new TwoOperandSEAtom(assignable,
+            TwoOperandSEAtom.Operator.ADD_AT_INDEX, rhs, index,
+            Position.fromToken(ctx.assignable().getStart()));
+  }
+
+  @Override
+  public Atom visitREM_ELEM_AT_ASSIGNMENT(BonesParser.REM_ELEM_AT_ASSIGNMENTContext ctx) {
+    AssignableAtom assignable = (AssignableAtom) visit(ctx.assignable());
+    ExpressionAtom expression = (ExpressionAtom) visit(ctx.expr());
+
+    return new OperandSEAtom(assignable,
+            OperandSEAtom.Operator.REM_AT_INDEX, expression,
             Position.fromToken(ctx.assignable().getStart()));
   }
 
