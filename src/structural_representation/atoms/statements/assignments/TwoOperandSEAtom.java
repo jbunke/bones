@@ -102,9 +102,12 @@ public class TwoOperandSEAtom extends AssignmentAtom {
     ListType assignableList = (ListType) assignableType;
 
     if (!assignableList.getElementType().equals(rhsType)) {
-      errorListener.semanticError("",
-              rhsType.getPosition().getLine(),
-              rhsType.getPosition().getPositionInLine());
+      errorListener.semanticError(
+              ErrorMessages.expectedTypeButExpressionIs(
+                      "List addition",
+                      assignableList.getElementType(), rhsType),
+              rhs.getPosition().getLine(),
+              rhs.getPosition().getPositionInLine());
     }
   }
 

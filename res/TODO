@@ -41,3 +41,14 @@ Grammar:
   x concatenation
 
   - error messages display file
+
+  - disjunction
+    - Example:
+
+      int x = (int) (random() * 20);
+      if (x == disj { 12 | 15 | 18 }) {
+        println("Match found");
+      }
+
+    - Consider semantics of disj { someCollection } as well.
+      This would generate a disjunction of the elements of the collection.
