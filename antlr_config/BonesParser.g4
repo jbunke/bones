@@ -67,6 +67,9 @@ expr: int_literal                             #INT_EXPR
 | expr op=(EQUAL | NOT_EQUAL) expr            #EQUALITY_EXPR
 | expr AND expr                               #AND_EXPR
 | expr OR expr                                #OR_EXPR
+| expr op=(EQUAL | NOT_EQUAL | GEQ |
+  LEQ | GT | LT) DISJUNCTION LCURLY expr
+  (VERTBAR expr)+ RCURLY                      #DISJUNCT_EXPR
 | LPAREN expr RPAREN                          #PARENTHETICAL
 ;
 

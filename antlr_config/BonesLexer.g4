@@ -16,6 +16,7 @@ SEMICOLON: ';';
 COLON: ':';
 COMMA: ',';
 PERIOD: '.';
+VERTBAR: '|';
 
 // Assignment
 ASSIGN: '=';
@@ -79,6 +80,7 @@ PRINT: 'print';
 READ: 'read';
 LISTINIT: 'listinit';
 ARRAYINIT: 'arrayinit';
+DISJUNCTION: 'disj';
 
 // numbers
 fragment DIGIT: '0'..'9';

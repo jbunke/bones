@@ -43,7 +43,7 @@ Grammar:
   - error messages display file
 
   - disjunction
-    - Example:
+    x Example:
 
       int x = (int) (random() * 20);
       if (x == disj { 12 | 15 | 18 }) {

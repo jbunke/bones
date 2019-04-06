@@ -86,4 +86,10 @@ public class ClassType extends BonesType implements Symbol {
   public BonesType getType() {
     return this;
   }
+
+  @Override
+  public String toString() {
+    if (classAtom == null) return ident;
+    return classAtom.getClassName();
+  }
 }
