@@ -408,6 +408,21 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
   }
 
   @Override
+  public Atom visitDISJUNCT_EXPR(BonesParser.DISJUNCT_EXPRContext ctx) {
+    ExpressionAtom LHS = (ExpressionAtom) visit(ctx.expr(0));
+    String opString = ctx.op.getText();
+    List<ExpressionAtom> alternatives = new ArrayList<>();
+
+    for (int i = 1; i < ctx.expr().size(); i++) {
+      ExpressionAtom alternative = (ExpressionAtom) visit(ctx.expr(i));
+      alternatives.add(alternative);
+    }
+
+    return new DisjunctExpressionAtom(LHS, alternatives, opString,
+            Position.fromToken(ctx.expr(0).getStart()));
+  }
+
+  @Override
   public Atom visitCAST_EXPR(BonesParser.CAST_EXPRContext ctx) {
     ExpressionAtom expression = (ExpressionAtom) visit(ctx.expr());
     BonesType type = (BonesType) visit(ctx.type());

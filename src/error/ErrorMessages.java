@@ -6,6 +6,10 @@ public class ErrorMessages {
 
   /* SEMANTIC */
 
+  public static String invalidOperatorForDisjunctExpression() {
+    return "A disjunctive expression operator must have bool answer type";
+  }
+
   public static String compoundAssignmentListOpOnNonList() {
     return "Attempted to use a compound assignment operator for lists " +
             "on a non-list assignable";

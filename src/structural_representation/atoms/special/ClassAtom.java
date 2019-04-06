@@ -51,7 +51,7 @@ public class ClassAtom extends BonesType {
     imports.forEach(x -> x.process(rootPath, table));
   }
 
-  String getClassName() {
+  public String getClassName() {
     return className.toString();
   }
 
