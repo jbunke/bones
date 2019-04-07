@@ -78,6 +78,7 @@ MAIN: 'main';
 PRINTLN: 'println';
 PRINT: 'print';
 READ: 'read';
+RANDOM: 'random';
 LISTINIT: 'listinit';
 ARRAYINIT: 'arrayinit';
 DISJUNCTION: 'disj';

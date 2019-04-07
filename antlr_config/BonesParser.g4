@@ -55,6 +55,7 @@ expr: int_literal                             #INT_EXPR
 | string_literal                              #STRING_EXPR
 | assignable                                  #ASSIGNABLE_EXPR
 | READ LPAREN RPAREN                          #READ_EXPR
+| RANDOM LPAREN RPAREN                        #RANDOM_EXPR
 | LPAREN type RPAREN expr                     #CAST_EXPR
 | CALL ident (PERIOD ident)?
   LPAREN (expr (COMMA expr)* )? RPAREN        #FUNCTION_CALL_EXPR

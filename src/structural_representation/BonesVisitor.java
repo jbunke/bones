@@ -51,6 +51,12 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
   }
 
   @Override
+  public Atom visitRANDOM_EXPR(BonesParser.RANDOM_EXPRContext ctx) {
+    return new RandomExpressionAtom(
+            Position.fromToken(ctx.RANDOM().getSymbol()));
+  }
+
+  @Override
   public Atom visitREAD_EXPR(BonesParser.READ_EXPRContext ctx) {
     return new ReadExpressionAtom(Position.fromToken(ctx.READ().getSymbol()));
   }
