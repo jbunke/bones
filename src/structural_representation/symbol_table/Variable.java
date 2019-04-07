@@ -19,10 +19,18 @@ public class Variable implements Symbol {
     this.value = value;
   }
 
+  Variable cloneVar() {
+    return new Variable(type, ident, value);
+  }
+
   void update(Object value) { this.value = value; }
 
   public Object getValue() {
     return value;
+  }
+
+  public String identAndValue() {
+    return ident + ": " + value.toString();
   }
 
   @Override

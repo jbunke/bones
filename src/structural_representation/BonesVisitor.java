@@ -271,6 +271,24 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
   }
 
   @Override
+  public Atom visitConstructor(BonesParser.ConstructorContext ctx) {
+    ParamListAtom paramList = null;
+
+    if (ctx.param_list() != null) paramList =
+            (ParamListAtom) visitParam_list(ctx.param_list());
+
+    List<StatementAtom> statements = new ArrayList<>();
+
+    for (BonesParser.StatContext stat : ctx.body().stat()) {
+      StatementAtom statement = (StatementAtom) visit(stat);
+      statements.add(statement);
+    }
+
+    return new ConstructorAtom(paramList, statements,
+            Position.fromToken(ctx.CONSTRUCTOR().getSymbol()));
+  }
+
+  @Override
   public Atom visitFunct(BonesParser.FunctContext ctx) {
     BonesType returnType = (BonesType) visit(ctx.type());
     String name = ctx.ident().IDENTIFIER().getSymbol().getText();
@@ -392,6 +410,17 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
   @Override
   public Atom visitINT_EXPR(BonesParser.INT_EXPRContext ctx) {
     return visitInt_literal(ctx.int_literal());
+  }
+
+  @Override
+  public Atom visitCONSTRUCTOR_CALL_EXPR(BonesParser.CONSTRUCTOR_CALL_EXPRContext ctx) {
+    String className = ctx.ident().IDENTIFIER().getSymbol().getText();
+
+    List<ExpressionAtom> arguments = new ArrayList<>();
+    ctx.expr().forEach(x -> arguments.add((ExpressionAtom) visit(x)));
+
+    return new ConstructorCallAtom(className, arguments,
+            Position.fromToken(ctx.NEW().getSymbol()));
   }
 
   @Override
@@ -795,6 +824,15 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
       fields.add(field);
     }
 
+    List<ConstructorAtom> constructors = new ArrayList<>();
+
+    for (BonesParser.ConstructorContext constructorContext :
+            ctx.constructor()) {
+      ConstructorAtom constructor =
+              (ConstructorAtom) visitConstructor(constructorContext);
+      constructors.add(constructor);
+    }
+
     List<FunctionAtom> functions = new ArrayList<>();
 
     if (ctx.main() != null) {
@@ -807,8 +845,8 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
       functions.add(function);
     }
 
-    return new ClassAtom(path, imports, className, fields, functions,
-            Position.fromToken(ctx.CLASS().getSymbol()));
+    return new ClassAtom(path, imports, className, fields, constructors,
+            functions, Position.fromToken(ctx.CLASS().getSymbol()));
   }
 
   /* Shell functions */

@@ -13,6 +13,14 @@ public class SymbolTable {
   private final Map<Atom, SymbolTable> children;
   private final Map<String, Symbol> contents;
 
+  private SymbolTable(Atom scope, SymbolTable parent,
+                      Map<String, Symbol> contents) {
+    this.scope = scope;
+    this.parent = parent;
+    this.children = new HashMap<>();
+    this.contents = contents;
+  }
+
   public SymbolTable(Atom scope, SymbolTable parent) {
     this.scope = scope;
     this.parent = parent;
@@ -89,8 +97,8 @@ public class SymbolTable {
   public Symbol get(String key) {
     if (contents.containsKey(key)) {
       return contents.get(key);
-    } else if (contents.containsKey("param_" + key)) {
-      return contents.get("param_" + key);
+    } else if (contents.containsKey("param!" + key)) {
+      return contents.get("param!" + key);
     } else if (parent != null) {
       return parent.get(key);
     }
@@ -135,7 +143,7 @@ public class SymbolTable {
     return parent.root();
   }
 
-  public SymbolTable tableForFunction(FunctionAtom function) {
+  public SymbolTable tableForFunction(Atom function) {
     if (scope != null && scope.equals(function)) return this;
 
     SymbolTable table = this;
@@ -145,5 +153,26 @@ public class SymbolTable {
       return table.children.get(function);
 
     return null;
+  }
+
+  public SymbolTable cloneTable(Atom scope, SymbolTable parent) {
+    Map<String, Symbol> contents = new HashMap<>();
+
+    for (String key : this.contents.keySet()) {
+      Symbol symbol = this.contents.get(key);
+
+      if (symbol instanceof Variable)
+        contents.put(key, ((Variable) symbol).cloneVar());
+    }
+
+    SymbolTable clone = new SymbolTable(scope, parent, contents);
+
+    for (Atom child : children.keySet()) {
+      SymbolTable childClone =
+              this.children.get(child).cloneTable(child, clone);
+      clone.addChild(child, childClone);
+    }
+
+    return clone;
   }
 }

@@ -57,6 +57,7 @@ public class CastingExpressionAtom extends ExpressionAtom {
         Float flt = (Float) evalExpression;
         return flt.intValue();
       } else if (evalExpression instanceof String) {
+        // TODO - runtime error for NumberFormatException
         return Integer.parseInt((String) evalExpression);
       } else if (evalExpression instanceof Character) {
         Character character = (Character) evalExpression;
