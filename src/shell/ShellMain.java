@@ -217,6 +217,7 @@ public class ShellMain {
     ANSIFormatting.setBlue();
 
     if (directoryPath.size() > 3) {
+      System.out.print("...");
       for (int i = directoryPath.size() - 3; i < directoryPath.size(); i++) {
         System.out.print("/" + directoryPath.get(i));
       }

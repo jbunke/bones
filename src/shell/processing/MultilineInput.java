@@ -26,6 +26,7 @@ public class MultilineInput {
     int length = ("(" + ShellMain.username + ") ").length();
 
     if (ShellMain.directoryPath.size() > 3) {
+      length += 3; // ...
       for (int i = ShellMain.directoryPath.size() - 3;
            i < ShellMain.directoryPath.size(); i++) {
         length += ("/" + ShellMain.directoryPath.get(i)).length();
