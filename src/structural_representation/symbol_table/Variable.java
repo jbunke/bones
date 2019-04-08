@@ -1,5 +1,6 @@
 package structural_representation.symbol_table;
 
+import execution.Instance;
 import structural_representation.atoms.types.BonesType;
 
 public class Variable implements Symbol {
@@ -30,7 +31,8 @@ public class Variable implements Symbol {
   }
 
   public String identAndValue() {
-    return ident + ": " + value.toString();
+    return ident + " -> " +
+            ((value instanceof Instance ? "\n" : "")) + value.toString();
   }
 
   @Override
