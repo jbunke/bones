@@ -60,7 +60,7 @@ public class FunctionCallAtom extends ExpressionAtom {
     List<String> params = new ArrayList<>();
     if (function.getParamList() != null)
       function.getParamList().getParams().forEach(x ->
-              params.add("param_" + x.getIdent().toString()));
+              params.add("param!" + x.getIdent().toString()));
     List<Object> argValues = new ArrayList<>();
     arguments.forEach(x -> argValues.add(x.evaluate(table, errorListener)));
 
@@ -76,6 +76,8 @@ public class FunctionCallAtom extends ExpressionAtom {
   @Override
   public void semanticErrorCheck(SymbolTable symbolTable,
                                  BonesErrorListener errorListener) {
+    arguments.forEach(x -> x.semanticErrorCheck(symbolTable, errorListener));
+
     SymbolTable rootTable;
 
     if (scope == Scope.EXTERNAL) {

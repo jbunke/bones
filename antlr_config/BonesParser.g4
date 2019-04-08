@@ -34,6 +34,9 @@ param: type ident ;
 
 param_list: param (COMMA param)* ;
 
+constructor: CONSTRUCTOR LPAREN param_list?
+RPAREN body;
+
 main: VOID MAIN LPAREN STRING LBRACKET
 RBRACKET ident RPAREN LCURLY stat* RCURLY ;
 
@@ -57,6 +60,8 @@ expr: int_literal                             #INT_EXPR
 | READ LPAREN RPAREN                          #READ_EXPR
 | RANDOM LPAREN RPAREN                        #RANDOM_EXPR
 | LPAREN type RPAREN expr                     #CAST_EXPR
+| NEW ident LPAREN (expr (COMMA expr)* )?
+  RPAREN                                      #CONSTRUCTOR_CALL_EXPR
 | CALL ident (PERIOD ident)?
   LPAREN (expr (COMMA expr)* )? RPAREN        #FUNCTION_CALL_EXPR
 | op=(NOT | SIZE | MINUS) expr                #UNARY_OP_EXPR
@@ -150,4 +155,5 @@ shell_rule: command EOF ;
 
 // root-level program rule
 class_rule: path? import_stat* CLASS
-ident LCURLY field* main? funct* RCURLY EOF ;
+ident LCURLY field* constructor* main?
+funct* RCURLY EOF ;

@@ -82,6 +82,8 @@ RANDOM: 'random';
 LISTINIT: 'listinit';
 ARRAYINIT: 'arrayinit';
 DISJUNCTION: 'disj';
+CONSTRUCTOR: 'constructor';
+NEW: 'new';
 
 // numbers
 fragment DIGIT: '0'..'9';

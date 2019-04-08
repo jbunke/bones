@@ -6,6 +6,16 @@ public class ErrorMessages {
 
   /* SEMANTIC */
 
+  public static String noConstructorInClassMatches(String className) {
+    return "No constructor in class \"" + className +
+            "\" matches the signature of the constructor call";
+  }
+
+  public static String multipleConstructorsSameSignature() {
+    return "Multiple constructors have the same argument " +
+            "and return type signatures";
+  }
+
   public static String invalidOperatorForDisjunctExpression() {
     return "A disjunctive expression operator must have bool answer type";
   }

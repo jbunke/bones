@@ -3,6 +3,7 @@ package structural_representation.atoms.types;
 import error.BonesErrorListener;
 import error.ErrorMessages;
 import error.Position;
+import execution.Instance;
 import structural_representation.atoms.special.ClassAtom;
 import structural_representation.symbol_table.Symbol;
 import structural_representation.symbol_table.SymbolTable;
@@ -71,10 +72,10 @@ public class ClassType extends BonesType implements Symbol {
     if (!(obj instanceof ClassType)) return false;
 
     ClassType other = (ClassType) obj;
-    if (resolved != other.resolved) return false;
 
-    if (resolved) return classAtom.equals(other.classAtom);
-    else return ident.equals(other.ident);
+    if (resolved)
+      return classAtom.getClassName().equals(other.classAtom.getClassName());
+    return ident.equals(other.ident);
   }
 
   @Override
@@ -91,5 +92,10 @@ public class ClassType extends BonesType implements Symbol {
   public String toString() {
     if (classAtom == null) return ident;
     return classAtom.getClassName();
+  }
+
+  public Object generateInstance() {
+    return new Instance(classAtom,
+            classTable.cloneTable(classAtom, null));
   }
 }

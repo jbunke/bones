@@ -1,6 +1,7 @@
 package structural_representation.atoms.special;
 
 import error.BonesErrorListener;
+import error.ErrorMessages;
 import error.Position;
 import formatting.Tabs;
 import structural_representation.atoms.expressions.assignables.IdentifierAtom;
@@ -15,15 +16,18 @@ public class ClassAtom extends BonesType {
   private final PathAtom path;
   private final List<ImportAtom> imports;
   private final IdentifierAtom className;
+  private final List<ConstructorAtom> constructors;
   private final List<DeclarationAtom> fields;
   private final List<FunctionAtom> functions;
 
   public ClassAtom(PathAtom path, List<ImportAtom> imports,
                    IdentifierAtom className, List<DeclarationAtom> fields,
+                   List<ConstructorAtom> constructors,
                    List<FunctionAtom> functions, Position position) {
     this.path = path;
     this.imports = imports;
     this.className = className;
+    this.constructors = constructors;
     this.fields = fields;
     this.functions = functions;
     this.position = position;
@@ -51,8 +55,26 @@ public class ClassAtom extends BonesType {
     imports.forEach(x -> x.process(rootPath, table));
   }
 
+  List<DeclarationAtom> getFields() {
+    return fields;
+  }
+
   public String getClassName() {
     return className.toString();
+  }
+
+  private void uniqueConstructors(BonesErrorListener errorListener) {
+    for (ConstructorAtom c1 : constructors) {
+      for (ConstructorAtom c2 : constructors) {
+        if (!c1.equals(c2) &&
+                c1.generateSymbolTableID().equals(c2.generateSymbolTableID())) {
+          errorListener.semanticError(
+                  ErrorMessages.multipleConstructorsSameSignature(),
+                  c2.getPosition().getLine(),
+                  c2.getPosition().getPositionInLine());
+        }
+      }
+    }
   }
 
   @Override
@@ -66,6 +88,12 @@ public class ClassAtom extends BonesType {
     imports.forEach(x -> x.semanticErrorCheck(symbolTable, errorListener));
 
     fields.forEach(x -> x.semanticErrorCheck(symbolTable, errorListener));
+
+    uniqueConstructors(errorListener);
+    ClassType classType = (ClassType) symbolTable.get(className.toString());
+    constructors.forEach(x -> x.populateReturnType(classType));
+    constructors.forEach(x -> x.semanticErrorCheck(symbolTable, errorListener));
+
     functions.forEach(x -> symbolTable.put(x.getName(), x));
     functions.forEach(x -> x.semanticErrorCheck(symbolTable, errorListener));
   }
