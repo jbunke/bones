@@ -9,8 +9,8 @@ import structural_representation.symbol_table.Variable;
 import java.util.List;
 
 public class Instance {
-  private final ClassAtom classAtom;
-  private final SymbolTable instanceTable;
+  public final ClassAtom classAtom;
+  public final SymbolTable instanceTable;
 
   public Instance(ClassAtom classAtom, SymbolTable instanceTable) {
     this.classAtom = classAtom;

@@ -12,4 +12,16 @@ class Person {
     givenName = setGivenName;
     surname = setSurname;
   }
+
+  int age(Date now) {
+    return 0;
+  }
+
+  string name() {
+    return givenName + " " + surname;
+  }
+
+  string birthdate() {
+    string res = "TODO";
+  }
 }

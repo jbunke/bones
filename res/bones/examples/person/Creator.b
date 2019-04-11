@@ -8,7 +8,7 @@ class Creator {
     Person jordan = new Person(new Date(16, 4, 1999), "Jordan", "Bunke");
     Person chelsea = new Person(new Date(31, 1, 2003), "Chelsea", "Bunke");
 
-    println(jordan);
-    println(chelsea);
+    println(call jordan.name());
+    println(call chelsea.name());
   }
 }
