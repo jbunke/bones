@@ -11,6 +11,7 @@ import structural_representation.atoms.expressions.ExpressionAtom;
 import structural_representation.atoms.expressions.assignables.IdentifierAtom;
 import structural_representation.atoms.statements.StatementAtom;
 import structural_representation.atoms.types.BonesType;
+import structural_representation.atoms.types.ClassType;
 import structural_representation.atoms.types.collections.ArrayType;
 import structural_representation.atoms.types.collections.ListType;
 import structural_representation.atoms.types.primitives.CharType;
@@ -105,14 +106,24 @@ public class ForEachStatementAtom extends StatementAtom {
               getPosition().getLine(), getPosition().getPositionInLine());
     } else if (collection.getType(localTable) instanceof ArrayType) {
       ArrayType arrayType = (ArrayType) collection.getType(localTable);
+      BonesType elementType = arrayType.getElementType();
 
       localTable.put(token.toString(),
-              new Variable(arrayType.getElementType(), token.toString()));
+              new Variable(elementType, token.toString()));
+
+      if (elementType instanceof ClassType)
+        localTable.update(token.toString(),
+                ((ClassType) elementType).generateInstance());
     } else if (collection.getType(localTable) instanceof ListType) {
       ListType listType = (ListType) collection.getType(localTable);
+      BonesType elementType = listType.getElementType();
 
       localTable.put(token.toString(),
-              new Variable(listType.getElementType(), token.toString()));
+              new Variable(elementType, token.toString()));
+
+      if (elementType instanceof ClassType)
+        localTable.update(token.toString(),
+                ((ClassType) elementType).generateInstance());
     } else if (collection.getType(localTable) instanceof StringType) {
       localTable.put(token.toString(),
               new Variable(new CharType(), token.toString()));

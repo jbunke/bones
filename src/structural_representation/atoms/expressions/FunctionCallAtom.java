@@ -61,7 +61,7 @@ public class FunctionCallAtom extends ExpressionAtom {
 
       if (symbol instanceof Variable) {
         Instance instance = (Instance) ((Variable) symbol).getValue();
-        functionTable = instance.instanceTable;
+        functionTable = instance.instanceTable.tableForFunction(function);
       } else {
         ClassType classType = (ClassType) symbol;
         functionTable = classType.getClassTable().tableForFunction(function);

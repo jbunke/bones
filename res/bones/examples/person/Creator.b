@@ -10,10 +10,14 @@ class Creator {
 
     Date today = new Date(11, 4, 2019);
 
-    println(call jordan.summary());
-    println("Age: " + (string) call jordan.age(today));
-    println("");
-    println(call chelsea.summary());
-    println("Age: " + (string) call chelsea.age(today));
+    Person() people = listinit { jordan, chelsea,
+                                  new Person(new Date(14, 6, 1968), "Priscilla", "Bunke"),
+                                  new Person(new Date(14, 10, 1965), "Olaf", "Bunke") };
+
+    foreach (person : people) {
+      println(call person.summary());
+      println(call person.age(today));
+      println("");
+    }
   }
 }

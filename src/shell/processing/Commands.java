@@ -116,19 +116,35 @@ public class Commands {
                 "current directory as an argument]");
         ANSIFormatting.resetANSI();
       } else {
-        ANSIFormatting.setYellow();
-        String filename =
-                ShellMain.generateDirectoryPath() + "/" + commandParts[1];
-        /* TODO: program argument support + program argument processing from commandParts */
-        Context context = Compile.createStructure(filename,
-                Compile.SourceType.FILE,
-                Compile.InputType.CLASS, null);
-        ClassAtom program = (ClassAtom) context.getStructure();
-        SymbolTable programTable = context.getSymbolTable();
-        program.execute(programTable, context.getErrorListener());
+        runFile(input);
       }
     }
     ANSIFormatting.resetANSI();
+  }
+
+  private static void runFile(String input) {
+    String[] commandParts = commandParts(input);
+
+    ANSIFormatting.setYellow();
+    String filename =
+            ShellMain.generateDirectoryPath() + "/" + commandParts[1];
+    if (!new File(filename).exists() && !input.endsWith(".b"))
+      filename += ".b";
+
+    if (!new File(filename).exists()) {
+      ANSIFormatting.setRed();
+      System.out.println("[This file does not exist]");
+      ANSIFormatting.resetANSI();
+      return;
+    }
+
+        /* TODO: program argument support + program argument processing from commandParts */
+    Context context = Compile.createStructure(filename,
+            Compile.SourceType.FILE,
+            Compile.InputType.CLASS, null);
+    ClassAtom program = (ClassAtom) context.getStructure();
+    SymbolTable programTable = context.getSymbolTable();
+    program.execute(programTable, context.getErrorListener());
   }
 
   private static void showFunctions() {

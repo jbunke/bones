@@ -80,4 +80,13 @@ public class ExternalAssignableAtom extends AssignableAtom {
         break;
     }
   }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+
+    idents.forEach(x -> sb.append(".").append(x.toString()));
+
+    return sb.toString().substring(1);
+  }
 }

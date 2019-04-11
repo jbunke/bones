@@ -126,4 +126,9 @@ public class CastingExpressionAtom extends ExpressionAtom {
                       castType.toString(), expressionType.toString()),
               position.getLine(), position.getPositionInLine());
   }
+
+  @Override
+  public String toString() {
+    return "(" + castType.toString() + ") " + expression.toString();
+  }
 }

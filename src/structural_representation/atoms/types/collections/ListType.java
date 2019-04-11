@@ -1,8 +1,10 @@
 package structural_representation.atoms.types.collections;
 
+import error.BonesErrorListener;
 import error.Position;
 import execution.BonesList;
 import structural_representation.atoms.types.BonesType;
+import structural_representation.symbol_table.SymbolTable;
 
 public class ListType extends BonesType {
   private final BonesType elementType;
@@ -14,6 +16,14 @@ public class ListType extends BonesType {
   public ListType(BonesType elementType, Position position) {
     this.elementType = elementType;
     this.position = position;
+  }
+
+  @Override
+  public void semanticErrorCheck(SymbolTable symbolTable,
+                                 BonesErrorListener errorListener) {
+    super.semanticErrorCheck(symbolTable, errorListener);
+
+    elementType.semanticErrorCheck(symbolTable, errorListener);
   }
 
   @Override
