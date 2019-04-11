@@ -7,7 +7,6 @@ import execution.StatementControl;
 import structural_representation.atoms.expressions.assignables.IdentifierAtom;
 import structural_representation.atoms.special.rhs.RHSAtom;
 import structural_representation.atoms.types.BonesType;
-import structural_representation.atoms.types.ClassType;
 import structural_representation.symbol_table.SymbolTable;
 
 public class InitialisationAtom extends DeclarationAtom {
@@ -44,10 +43,6 @@ public class InitialisationAtom extends DeclarationAtom {
                               type, rhsType),
               getPosition().getLine(), getPosition().getPositionInLine());
     }
-
-    if (type instanceof ClassType)
-      symbolTable.update(ident.toString(),
-              ((ClassType) type).generateInstance());
   }
 
   @Override

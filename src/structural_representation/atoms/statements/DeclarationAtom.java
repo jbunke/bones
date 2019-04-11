@@ -6,6 +6,7 @@ import error.Position;
 import execution.StatementControl;
 import structural_representation.atoms.expressions.assignables.IdentifierAtom;
 import structural_representation.atoms.types.BonesType;
+import structural_representation.atoms.types.ClassType;
 import structural_representation.symbol_table.SymbolTable;
 import structural_representation.symbol_table.Variable;
 
@@ -32,6 +33,10 @@ public class DeclarationAtom extends StatementAtom {
     }
 
     symbolTable.put(ident.toString(), new Variable(type, ident.toString()));
+
+    if (type instanceof ClassType)
+      symbolTable.update(ident.toString(),
+              ((ClassType) type).generateInstance());
   }
 
   @Override

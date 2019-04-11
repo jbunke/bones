@@ -5,6 +5,7 @@ import error.Position;
 import structural_representation.atoms.Atom;
 import structural_representation.atoms.expressions.assignables.IdentifierAtom;
 import structural_representation.atoms.types.BonesType;
+import structural_representation.atoms.types.ClassType;
 import structural_representation.symbol_table.SymbolTable;
 import structural_representation.symbol_table.Variable;
 
@@ -24,6 +25,10 @@ public class ParamAtom extends Atom {
     type.semanticErrorCheck(symbolTable, errorListener);
     symbolTable.put("param!" + ident.toString(),
             new Variable(type, "param!" + ident.toString()));
+
+    if (type instanceof ClassType)
+      symbolTable.update("param!" + ident.toString(),
+              ((ClassType) type).generateInstance());
   }
 
   public BonesType getType() {
