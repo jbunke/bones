@@ -3,16 +3,20 @@ package structural_representation.atoms.expressions;
 import error.BonesErrorListener;
 import error.ErrorMessages;
 import error.Position;
+import execution.Instance;
 import structural_representation.atoms.special.FunctionAtom;
 import structural_representation.atoms.special.ParamAtom;
 import structural_representation.atoms.types.BonesType;
 import structural_representation.atoms.types.ClassType;
+import structural_representation.symbol_table.Symbol;
 import structural_representation.symbol_table.SymbolTable;
+import structural_representation.symbol_table.Variable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FunctionCallAtom extends ExpressionAtom {
+  /* could also be the object variable identifier */
   private final String className;
   private final String functionName;
   private final List<ExpressionAtom> arguments;
@@ -53,8 +57,16 @@ public class FunctionCallAtom extends ExpressionAtom {
     SymbolTable functionTable;
 
     if (scope == Scope.EXTERNAL) {
-      ClassType classType = (ClassType) table.root().get(className);
-      functionTable = classType.getClassTable().tableForFunction(function);
+      Symbol symbol = table.get(className);
+
+      if (symbol instanceof Variable) {
+        Instance instance = (Instance) ((Variable) symbol).getValue();
+        functionTable = instance.instanceTable.tableForFunction(function);
+      } else {
+        ClassType classType = (ClassType) symbol;
+        functionTable = classType.getClassTable().tableForFunction(function);
+      }
+
     } else functionTable = table.tableForFunction(function);
 
     List<String> params = new ArrayList<>();
@@ -81,8 +93,16 @@ public class FunctionCallAtom extends ExpressionAtom {
     SymbolTable rootTable;
 
     if (scope == Scope.EXTERNAL) {
-      ClassType classType = (ClassType) symbolTable.root().get(className);
-      rootTable = classType.getClassTable();
+      Symbol symbol = symbolTable.get(className);
+
+      if (symbol instanceof Variable) {
+        Instance instance = (Instance) ((Variable) symbol).getValue();
+        rootTable = instance.instanceTable;
+      } else {
+        ClassType classType = (ClassType) symbol;
+        rootTable = classType.getClassTable().tableForFunction(function);
+      }
+
     } else rootTable = symbolTable.root();
 
     if (rootTable.get(functionName) == null) {
@@ -133,6 +153,10 @@ public class FunctionCallAtom extends ExpressionAtom {
     StringBuilder sb = new StringBuilder();
 
     sb.append("call ");
+
+    if (className != null)
+      sb.append(className).append(".");
+
     sb.append(functionName);
     sb.append("(");
 

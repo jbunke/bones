@@ -6,11 +6,8 @@ import error.Position;
 import org.antlr.v4.runtime.Token;
 import structural_representation.atoms.Atom;
 import structural_representation.atoms.expressions.*;
-import structural_representation.atoms.expressions.assignables.ArrayElemAtom;
-import structural_representation.atoms.expressions.assignables.AssignableAtom;
-import structural_representation.atoms.expressions.assignables.ListElemAtom;
+import structural_representation.atoms.expressions.assignables.*;
 import structural_representation.atoms.expressions.literals.*;
-import structural_representation.atoms.expressions.assignables.IdentifierAtom;
 import structural_representation.atoms.special.*;
 import structural_representation.atoms.special.rhs.CollectionInitRHS;
 import structural_representation.atoms.special.rhs.CollectionLiteralRHS;
@@ -556,6 +553,18 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
 
     return new ArrayElemAtom(identifier, indices,
             Position.fromToken(ctx.ident().IDENTIFIER().getSymbol()));
+  }
+
+  @Override
+  public Atom visitEXTERNAL_ASSIGNABLE(BonesParser.EXTERNAL_ASSIGNABLEContext ctx) {
+    List<IdentifierAtom> idents = new ArrayList<>();
+
+    for (BonesParser.IdentContext idContext : ctx.ident()) {
+      idents.add((IdentifierAtom) visitIdent(idContext));
+    }
+
+    return new ExternalAssignableAtom(idents,
+            Position.fromToken(ctx.ident(0).IDENTIFIER().getSymbol()));
   }
 
   @Override

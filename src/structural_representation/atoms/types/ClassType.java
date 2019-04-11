@@ -73,7 +73,7 @@ public class ClassType extends BonesType implements Symbol {
 
     ClassType other = (ClassType) obj;
 
-    if (resolved)
+    if (resolved && other.resolved)
       return classAtom.getClassName().equals(other.classAtom.getClassName());
     return ident.equals(other.ident);
   }

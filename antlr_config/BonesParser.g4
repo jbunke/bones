@@ -105,6 +105,7 @@ rhs: expr                                     #EXPR_RHS
 ;
 
 assignable: ident                             #IDENT_ASSIGNABLE
+| ident (PERIOD ident)+                       #EXTERNAL_ASSIGNABLE
 | list_elem                                   #LIST_ELEM_ASSIGNABLE
 | array_elem                                  #ARRAY_ELEM_ASSIGNABLE
 ;

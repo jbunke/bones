@@ -65,6 +65,7 @@ public class CollectionLiteralRHS extends RHSAtom {
     if (!elements.isEmpty()) {
       BonesType elementType = elements.get(0).getType(symbolTable);
       for (RHSAtom element : elements) {
+        element.semanticErrorCheck(symbolTable, errorListener);
         if (!elementType.equals(element.getType(symbolTable))) {
           errorListener.semanticError(
                   ErrorMessages.typesOfCollectionLiteralElementsDontMatch(

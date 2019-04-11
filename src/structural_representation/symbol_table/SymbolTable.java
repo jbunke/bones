@@ -163,6 +163,8 @@ public class SymbolTable {
 
       if (symbol instanceof Variable)
         contents.put(key, ((Variable) symbol).cloneVar());
+      else
+        contents.put(key, symbol);
     }
 
     SymbolTable clone = new SymbolTable(scope, parent, contents);

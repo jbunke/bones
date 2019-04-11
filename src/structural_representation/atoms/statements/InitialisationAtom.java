@@ -8,7 +8,6 @@ import structural_representation.atoms.expressions.assignables.IdentifierAtom;
 import structural_representation.atoms.special.rhs.RHSAtom;
 import structural_representation.atoms.types.BonesType;
 import structural_representation.symbol_table.SymbolTable;
-import structural_representation.symbol_table.Variable;
 
 public class InitialisationAtom extends DeclarationAtom {
   private final RHSAtom RHS;
@@ -22,9 +21,7 @@ public class InitialisationAtom extends DeclarationAtom {
   @Override
   public StatementControl execute(SymbolTable table,
                                   BonesErrorListener errorListener) {
-    table.put(ident.toString(),
-            new Variable(type, ident.toString(),
-                    RHS.evaluate(table, errorListener)));
+    table.update(ident.toString(), RHS.evaluate(table, errorListener));
 
     return StatementControl.cont();
   }
