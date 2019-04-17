@@ -8,5 +8,7 @@ class StringLibUser {
     string lastName = call String.substringToEnd("Jordan Bunke", 7);
     println("My first name is " + firstName);
     println("and my last name is " + lastName);
+    println(call String.indexOf("ord", firstName));
+    println(call String.indexOf("test", firstName));
   }
 }
