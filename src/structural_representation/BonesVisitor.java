@@ -336,7 +336,7 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
   @Override
   public Atom visitInt_literal(BonesParser.Int_literalContext ctx) {
     String text = ctx.INT_LIT().getSymbol().getText();
-    Integer value = Integer.parseInt(text);
+    int value = Integer.parseInt(text);
 
     return new IntLiteralAtom(value,
             Position.fromToken(ctx.INT_LIT().getSymbol()));
@@ -345,7 +345,7 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
   @Override
   public Atom visitFloat_literal(BonesParser.Float_literalContext ctx) {
     String text = ctx.FLOAT_LIT().getSymbol().getText();
-    Float value = Float.parseFloat(text);
+    float value = Float.parseFloat(text);
 
     return new FloatLiteralAtom(value,
             Position.fromToken(ctx.FLOAT_LIT().getSymbol()));
@@ -872,6 +872,11 @@ public class BonesVisitor extends BonesParserBaseVisitor<Atom> {
   @Override
   public Atom visitFUNCT_COMMAND(BonesParser.FUNCT_COMMANDContext ctx) {
     return visit(ctx.funct());
+  }
+
+  @Override
+  public Atom visitIMPORT_COMMAND(BonesParser.IMPORT_COMMANDContext ctx) {
+    return visitImport_stat(ctx.import_stat());
   }
 
   @Override

@@ -17,7 +17,7 @@ public class PathAtom extends Atom {
     this.position = position;
   }
 
-  String cutoffPathFromFilepath(String filepath) {
+  public String cutoffPathFromFilepath(String filepath) {
     List<String> fp =
             new LinkedList<>(Arrays.asList(filepath.split("/")));
 

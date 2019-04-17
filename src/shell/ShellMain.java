@@ -1,5 +1,6 @@
 package shell;
 
+import error.Position;
 import shell.processing.Commands;
 import shell.processing.Commands.Status;
 import shell.processing.MultilineInput;
@@ -7,6 +8,8 @@ import structural_representation.Compile;
 import structural_representation.Context;
 import structural_representation.atoms.Atom;
 import structural_representation.atoms.expressions.ExpressionAtom;
+import structural_representation.atoms.special.ImportAtom;
+import structural_representation.atoms.special.PathAtom;
 import structural_representation.atoms.statements.StatementAtom;
 import structural_representation.symbol_table.SymbolTable;
 
@@ -168,7 +171,20 @@ public class ShellMain {
     } else if (structure instanceof StatementAtom) {
       ((StatementAtom) structure).execute(shellTable,
               context.getErrorListener());
+    } else if (structure instanceof ImportAtom) {
+      String path = generateDirectoryPath().substring(generateDirectoryPath().indexOf("/") + 1);
+
+      PathAtom tempPath = new PathAtom(
+              Arrays.asList(path.split("/")),
+              new Position(-1, -1));
+
+
+      ((ImportAtom) structure).process(
+              tempPath.cutoffPathFromFilepath(
+                      generateDirectoryPath() + "/" +
+                              ((ImportAtom) structure).getClassName()), shellTable);
     }
+
     ANSIFormatting.resetANSI();
   }
 

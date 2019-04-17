@@ -149,6 +149,7 @@ stat: FOR LPAREN init expr
 command: expr                                 #EXPR_COMMAND
 | stat                                        #STAT_COMMAND
 | funct                                       #FUNCT_COMMAND
+| import_stat                                 #IMPORT_COMMAND
 ;
 
 // root-level command rule

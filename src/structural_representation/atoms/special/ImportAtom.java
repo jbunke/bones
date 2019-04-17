@@ -18,6 +18,10 @@ public class ImportAtom extends Atom {
     this.position = position;
   }
 
+  public String getClassName() {
+    return path.get(path.size() - 1);
+  }
+
   @Override
   public void semanticErrorCheck(SymbolTable symbolTable,
                                  BonesErrorListener errorListener) {
@@ -40,7 +44,7 @@ public class ImportAtom extends Atom {
     return sb.toString();
   }
 
-  void process(String rootPath, SymbolTable rootTable) {
+  public void process(String rootPath, SymbolTable rootTable) {
     /* Generate filepath */
     StringBuilder filepath = new StringBuilder(rootPath);
 
